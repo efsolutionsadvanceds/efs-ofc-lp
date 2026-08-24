@@ -93,3 +93,12 @@ Esta seção deve ser revisada assim que a EFSA tiver resultados de clientes ver
 - **Google Analytics** — uso futuro previsto; ainda não implementado nesta fase.
 
 Nenhuma dessas integrações está implementada nesta etapa do projeto, que cobre apenas a fundação técnica e o sistema de design.
+
+## Status de implementação — Fase 1 (Header e Hero)
+
+- **Site Header** e **Hero completa** implementados (`src/components/layout/SiteHeader.tsx`, `src/components/sections/HeroSection.tsx`).
+- **Dependências adicionadas:** `motion` (animações e microinterações, via `motion/react`) e `lucide-react` (ícones). Nenhuma outra biblioteca de animação, partículas, 3D, formulário, UI ou analytics foi instalada.
+- **EFSA Business Engine** (`src/components/visuals/BusinessEngine.tsx`) é uma **demonstração conceitual interativa**, sinalizada visivelmente com o rótulo "DEMONSTRAÇÃO CONCEITUAL". Ela não representa dados reais, métricas, contadores ou resultados de clientes.
+- **Nenhum resultado de cliente verificado é representado** em nenhuma parte da interface implementada até aqui — reforça o princípio já documentado em "Prova social e credibilidade".
+- **WhatsApp é a única integração de conversão** implementada nesta fase, centralizada em `src/config/contact.ts`. Não há Supabase, backend, analytics, cookies ou coleta de dados nesta etapa.
+- **Vídeo de fundo na Hero** permanece como possível **melhoria futura opcional**, não implementado nesta fase (a Hero atual usa apenas animação nativa em código: React, styled-components, Motion, CSS e um SVG inline).

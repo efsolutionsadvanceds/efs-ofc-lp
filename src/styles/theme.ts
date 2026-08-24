@@ -13,6 +13,8 @@ const colors = {
 
 const typography = {
   fontFamily: "'Inter Variable', 'Inter', system-ui, sans-serif",
+  fontFamilyMono:
+    "ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace",
   weights: {
     regular: 400,
     medium: 500,
