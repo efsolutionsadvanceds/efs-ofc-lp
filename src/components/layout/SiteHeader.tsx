@@ -50,6 +50,30 @@ const WordmarkTagline = styled.span`
   letter-spacing: 0.03em;
 `
 
+const Nav = styled.nav`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.lg};
+  margin-right: auto;
+  margin-left: ${({ theme }) => theme.spacing['2xl']};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    display: none;
+  }
+`
+
+const NavLink = styled.a`
+  font-size: ${({ theme }) => theme.typography.sizes.sm};
+  font-weight: ${({ theme }) => theme.typography.weights.medium};
+  color: ${({ theme }) => theme.colors.textMuted};
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.white};
+  }
+`
+
 const CtaLink = styled.a`
   display: inline-flex;
   align-items: center;
@@ -124,6 +148,10 @@ export function SiteHeader() {
         <WordmarkTitle>EFSA</WordmarkTitle>
         <WordmarkTagline>Engenharia de Software</WordmarkTagline>
       </Wordmark>
+      <Nav aria-label="Navegação principal">
+        <NavLink href="#diagnostico">Diagnóstico</NavLink>
+        <NavLink href="#solucoes">Soluções</NavLink>
+      </Nav>
       <CtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
         <MessageCircle aria-hidden="true" />
         <CtaFullLabel>FALAR COM UM ESPECIALISTA</CtaFullLabel>

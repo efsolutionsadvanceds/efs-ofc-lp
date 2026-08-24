@@ -33,8 +33,11 @@ Consulte [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) para o briefing completo
 - ✅ Site Header e Hero (Fase 1) implementados: [src/components/layout/SiteHeader.tsx](src/components/layout/SiteHeader.tsx) e [src/components/sections/HeroSection.tsx](src/components/sections/HeroSection.tsx).
 - ✅ `motion` e `lucide-react` adicionados para animações de entrada, microinterações e ícones.
 - ✅ EFSA Business Engine ([src/components/visuals/BusinessEngine.tsx](src/components/visuals/BusinessEngine.tsx)) é uma **demonstração conceitual** (rótulo visível "DEMONSTRAÇÃO CONCEITUAL") — não representa dados, métricas ou resultados reais de clientes.
-- ✅ WhatsApp é a única integração de conversão implementada nesta fase (configuração centralizada em [src/config/contact.ts](src/config/contact.ts)).
-- ⚠️ Nenhum resultado de cliente verificado é representado em nenhuma parte da interface.
-- ⏳ Vídeo de fundo na Hero permanece como possível melhoria futura opcional — não implementado nesta fase.
-- ⏳ Demais seções finais da landing page (serviços, processo, diferenciais e demonstrações, CTA final, etc.) ainda não implementadas.
+- ✅ WhatsApp é a única integração de conversão implementada até aqui (configuração centralizada em [src/config/contact.ts](src/config/contact.ts), reutilizada em todos os CTAs).
+- ✅ Seção de Diagnóstico do Negócio (Fase 2) implementada: [src/components/sections/BusinessDiagnosisSection.tsx](src/components/sections/BusinessDiagnosisSection.tsx) (`#diagnostico`). A interação de diagnóstico é **conteúdo explicativo controlado pelo usuário**, não uma auditoria automatizada da empresa do visitante.
+- ✅ Seção de Arquitetura de Soluções (Fase 2) implementada: [src/components/sections/SolutionArchitectureSection.tsx](src/components/sections/SolutionArchitectureSection.tsx) (`#solucoes`), com o portfólio de serviços agrupado por resultado de negócio (aquisição/conversão e eficiência operacional/escala) e um CTA final reaproveitando o mesmo link do WhatsApp.
+- ✅ Header atualizado com navegação de desktop (`Diagnóstico`, `Soluções`) usando âncoras nativas e rolagem suave acessível — sem rastreamento de scroll ativo e sem menu hambúrguer.
+- ⚠️ Nenhum resultado de cliente verificado, prova social, depoimento ou métrica é representado em nenhuma parte da interface.
+- ⏳ Vídeo de fundo na Hero permanece como possível melhoria futura opcional, adiado até a estrutura completa da página estar pronta.
+- ⏳ Demais seções finais da landing page (processo detalhado, FAQ, rodapé, etc.) ainda não implementadas.
 - ⏳ Integrações futuras (Supabase, Google Analytics) ainda não implementadas.

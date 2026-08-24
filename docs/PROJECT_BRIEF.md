@@ -102,3 +102,13 @@ Nenhuma dessas integrações está implementada nesta etapa do projeto, que cobr
 - **Nenhum resultado de cliente verificado é representado** em nenhuma parte da interface implementada até aqui — reforça o princípio já documentado em "Prova social e credibilidade".
 - **WhatsApp é a única integração de conversão** implementada nesta fase, centralizada em `src/config/contact.ts`. Não há Supabase, backend, analytics, cookies ou coleta de dados nesta etapa.
 - **Vídeo de fundo na Hero** permanece como possível **melhoria futura opcional**, não implementado nesta fase (a Hero atual usa apenas animação nativa em código: React, styled-components, Motion, CSS e um SVG inline).
+
+## Status de implementação — Fase 2 (Diagnóstico e Arquitetura de Soluções)
+
+- **Seção de Diagnóstico do Negócio** implementada (`src/components/sections/BusinessDiagnosisSection.tsx`, `#diagnostico`): três cartões de diagnóstico controlados pelo usuário (sem rotação automática) que atualizam um painel "Como a EFSA atua". **A interação é conteúdo explicativo, não uma análise ou auditoria automatizada da empresa do visitante** — nenhum dado do visitante é coletado ou processado.
+- **Seção de Arquitetura de Soluções** implementada (`src/components/sections/SolutionArchitectureSection.tsx`, `#solucoes`): dois pilares de solução com o portfólio de serviços permanece **agrupado por resultado de negócio** (Aquisição e conversão / Eficiência operacional e escala), conectados por um visual conceitual nativo em código (CSS + SVG inline, sem Canvas/WebGL, sem dados falsos ou "ao vivo").
+- **CTA do WhatsApp reutilizado**: o bloco de CTA final da Arquitetura de Soluções consome a mesma configuração central (`src/config/contact.ts`) já usada no Header e na Hero — nenhuma URL ou lógica de contato foi duplicada.
+- **Nenhuma prova social, depoimento, métrica, logotipo de cliente ou resultado fabricado** foi adicionado nesta fase, reforçando "Prova social e credibilidade".
+- **Nenhuma nova dependência foi instalada** — reutiliza exclusivamente `motion` e `lucide-react` já presentes desde a Fase 1.
+- **Header** ganhou navegação de desktop (`Diagnóstico`, `Soluções`) por âncoras nativas com rolagem suave acessível (`scroll-behavior: smooth` + `scroll-margin-top` nas seções-alvo); oculta em telas estreitas, sem menu hambúrguer e sem rastreamento de scroll ativo.
+- **Vídeo de fundo** continua adiado até a estrutura completa da página estar pronta.

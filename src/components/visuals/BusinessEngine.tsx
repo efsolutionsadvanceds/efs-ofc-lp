@@ -2,9 +2,10 @@ import { forwardRef, useEffect, useRef, useState } from 'react'
 import type { KeyboardEvent } from 'react'
 import { Terminal as TerminalIcon } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import styled, { useTheme } from 'styled-components'
+import styled from 'styled-components'
 import { heroCodeSnippet, heroStages, STAGE_ROTATION_INTERVAL_MS } from '../../data/heroStages'
 import { usePageVisibility } from '../../hooks/usePageVisibility'
+import { AnimatedCheck } from './AnimatedCheck'
 
 const Panel = styled.div`
   display: flex;
@@ -116,12 +117,6 @@ const RowContent = styled.span`
   gap: ${({ theme }) => theme.spacing.sm};
 `
 
-const CheckmarkSvg = styled.svg`
-  width: 22px;
-  height: 22px;
-  flex-shrink: 0;
-`
-
 const TerminalWindow = styled.div`
   border-radius: ${({ theme }) => theme.radii.md};
   border: 1px solid ${({ theme }) => theme.colors.borderSubtle};
@@ -206,46 +201,6 @@ const CodeBlock = styled.pre`
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 `
-
-interface StageCheckmarkProps {
-  isActive: boolean
-}
-
-function StageCheckmark({ isActive }: StageCheckmarkProps) {
-  const theme = useTheme()
-  const shouldReduceMotion = useReducedMotion()
-  const transitionDuration = shouldReduceMotion ? 0 : 0.35
-
-  return (
-    <CheckmarkSvg viewBox="0 0 24 24" aria-hidden="true">
-      <motion.circle
-        cx="12"
-        cy="12"
-        r="9.5"
-        fill="none"
-        strokeWidth="1.5"
-        animate={{
-          stroke: isActive ? theme.colors.gold : theme.colors.metallicGray,
-          opacity: isActive ? 1 : 0.45,
-          scale: isActive ? 1 : 0.94,
-        }}
-        transition={{ duration: transitionDuration, ease: 'easeOut' }}
-        style={{ transformOrigin: '12px 12px' }}
-      />
-      <motion.path
-        d="M7.5 12.5l3 3 6-6.5"
-        fill="none"
-        stroke={theme.colors.gold}
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        initial={false}
-        animate={{ pathLength: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
-        transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: 'easeOut' }}
-      />
-    </CheckmarkSvg>
-  )
-}
 
 export const BusinessEngine = forwardRef<HTMLDivElement>(function BusinessEngine(_props, ref) {
   const [activeIndex, setActiveIndex] = useState(0)
@@ -350,7 +305,7 @@ export const BusinessEngine = forwardRef<HTMLDivElement>(function BusinessEngine
                 />
               )}
               <RowContent>
-                <StageCheckmark isActive={isActive} />
+                <AnimatedCheck isActive={isActive} />
                 <span>{stage.title}</span>
               </RowContent>
             </StageRow>
