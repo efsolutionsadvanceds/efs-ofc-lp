@@ -2,7 +2,7 @@
 
 Landing page institucional da **E.F Solutions Advanced's** (apresentação pública: **EFSA | Engenharia de Software**), voltada a empresas de alto ticket dos segmentos de reforma, arquitetura, construção e correlatos. O objetivo de conversão principal é direcionar o visitante para o WhatsApp através do CTA "QUERO TER MAIS RESULTADOS".
 
-Consulte [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) para o briefing completo de marca, público, copy e diretrizes visuais.
+Consulte [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) para o briefing completo de marca, público, copy e diretrizes visuais, e [docs/CODEBASE_STATE.md](docs/CODEBASE_STATE.md) para um resumo técnico do estado atual do código (handoff).
 
 ## Stack
 
@@ -36,8 +36,11 @@ Consulte [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) para o briefing completo
 - ✅ WhatsApp é a única integração de conversão implementada até aqui (configuração centralizada em [src/config/contact.ts](src/config/contact.ts), reutilizada em todos os CTAs).
 - ✅ Seção de Diagnóstico do Negócio (Fase 2) implementada: [src/components/sections/BusinessDiagnosisSection.tsx](src/components/sections/BusinessDiagnosisSection.tsx) (`#diagnostico`). A interação de diagnóstico é **conteúdo explicativo controlado pelo usuário**, não uma auditoria automatizada da empresa do visitante.
 - ✅ Seção de Arquitetura de Soluções (Fase 2) implementada: [src/components/sections/SolutionArchitectureSection.tsx](src/components/sections/SolutionArchitectureSection.tsx) (`#solucoes`), com o portfólio de serviços agrupado por resultado de negócio (aquisição/conversão e eficiência operacional/escala) e um CTA final reaproveitando o mesmo link do WhatsApp.
-- ✅ Header atualizado com navegação de desktop (`Diagnóstico`, `Soluções`) usando âncoras nativas e rolagem suave acessível — sem rastreamento de scroll ativo e sem menu hambúrguer.
+- ✅ Header atualizado com navegação de desktop (`Diagnóstico`, `Soluções`, `Como atuamos`) usando âncoras nativas e rolagem suave acessível — sem rastreamento de scroll ativo e sem menu hambúrguer.
+- ✅ Seção "Como Atuamos" (Fase 3) implementada: [src/components/sections/WorkProcessSection.tsx](src/components/sections/WorkProcessSection.tsx) (`#como-atuamos`), com processo em 4 etapas guiado por scroll e o painel cinematográfico **EFSA Engineering Blueprint** ([src/components/visuals/EngineeringBlueprint.tsx](src/components/visuals/EngineeringBlueprint.tsx)) — sticky apenas em telas amplas (≥1280px), com resumo estático em tablets/mobile e em `prefers-reduced-motion` (rota completa sem animação, nenhuma informação ocultada).
+- ✅ Seção de Diferenciais (Fase 3) implementada: [src/components/sections/DifferentialsSection.tsx](src/components/sections/DifferentialsSection.tsx) (`#diferenciais`), em composição editorial (coluna de afirmação + trilho de diferenciais), com a declaração de transparência e um checkpoint de conversão final integrado à seção, reutilizando o mesmo CTA do WhatsApp.
+- ✅ Processo e boas práticas técnicas (não prova social) são usados como elementos de credibilidade nas novas seções, conforme [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md).
 - ⚠️ Nenhum resultado de cliente verificado, prova social, depoimento ou métrica é representado em nenhuma parte da interface.
-- ⏳ Vídeo de fundo na Hero permanece como possível melhoria futura opcional, adiado até a estrutura completa da página estar pronta.
-- ⏳ Demais seções finais da landing page (processo detalhado, FAQ, rodapé, etc.) ainda não implementadas.
+- ⏳ Vídeo de fundo permanece adiado até a estrutura completa da página estar pronta.
+- ⏳ Próxima fase planejada: objeções, FAQ, formulário de lead, política de privacidade e rodapé.
 - ⏳ Integrações futuras (Supabase, Google Analytics) ainda não implementadas.

@@ -151,6 +151,7 @@ export function SiteHeader() {
       <Nav aria-label="Navegação principal">
         <NavLink href="#diagnostico">Diagnóstico</NavLink>
         <NavLink href="#solucoes">Soluções</NavLink>
+        <NavLink href="#como-atuamos">Como atuamos</NavLink>
       </Nav>
       <CtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
         <MessageCircle aria-hidden="true" />

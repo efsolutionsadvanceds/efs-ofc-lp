@@ -112,3 +112,37 @@ Nenhuma dessas integrações está implementada nesta etapa do projeto, que cobr
 - **Nenhuma nova dependência foi instalada** — reutiliza exclusivamente `motion` e `lucide-react` já presentes desde a Fase 1.
 - **Header** ganhou navegação de desktop (`Diagnóstico`, `Soluções`) por âncoras nativas com rolagem suave acessível (`scroll-behavior: smooth` + `scroll-margin-top` nas seções-alvo); oculta em telas estreitas, sem menu hambúrguer e sem rastreamento de scroll ativo.
 - **Vídeo de fundo** continua adiado até a estrutura completa da página estar pronta.
+
+## Status de implementação — Fase 3 (Como Atuamos, Diferenciais e checkpoint de conversão)
+
+- **Seção "Como Atuamos"** implementada (`src/components/sections/WorkProcessSection.tsx`,
+  `#como-atuamos`): processo em 4 etapas (Diagnóstico → Arquitetura → Construção →
+  Evolução) guiado por scroll, com o painel cinematográfico **EFSA Engineering
+  Blueprint** (`src/components/visuals/EngineeringBlueprint.tsx`). O painel fica
+  sticky apenas em telas amplas (≥1280px) e é substituído por um resumo estático em
+  tablets/celulares e sob `prefers-reduced-motion` — a rota completa é sempre exibida,
+  sem ocultar informação, apenas sem movimento.
+- **Detecção de etapa ativa** feita com `useInView` do Motion (IntersectionObserver),
+  nunca por listener de scroll manual ou atualização de estado a cada frame.
+- **Seção de Diferenciais** implementada (`src/components/sections/DifferentialsSection.tsx`,
+  `#diferenciais`): composição editorial (coluna de afirmação + trilho numerado de
+  diferenciais), não um grid genérico de cards. Inclui a declaração de transparência
+  ("Sem promessas genéricas. Sem tecnologia por moda. Sem automação sem controle.")
+  como princípio, não como selos de marketing.
+- **Checkpoint de conversão** integrado ao final da seção de Diferenciais (não é uma
+  seção separada), reutilizando a mesma configuração central do WhatsApp
+  (`src/config/contact.ts`) — nenhum número ou mensagem duplicados.
+- **Processo, transparência e práticas técnicas seguem sendo os únicos elementos de
+  credibilidade** — nenhuma prova social, depoimento, métrica, garantia de resultado
+  ou promessa de resposta imediata foi adicionada.
+- **Nenhuma nova dependência foi instalada** — reutiliza exclusivamente `motion` e
+  `lucide-react` já presentes desde a Fase 1.
+- **Header** ganhou o link "Como atuamos" (`#como-atuamos`), mantendo a navegação
+  visualmente secundária; o link "Diferenciais" foi deliberadamente omitido para
+  preservar o equilíbrio visual do Header.
+- **Vídeo de fundo** continua adiado até a estrutura completa da página estar pronta.
+- **Próxima fase planejada:** objeções, FAQ, formulário de lead, política de
+  privacidade e rodapé.
+
+Consulte [docs/CODEBASE_STATE.md](CODEBASE_STATE.md) para o handoff técnico completo
+do estado atual do código.
