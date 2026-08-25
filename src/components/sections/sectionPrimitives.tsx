@@ -13,7 +13,7 @@ export const SectionContainer = styled.section`
 `
 
 export const ContentWrapper = styled.div`
-  max-width: 1280px;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
 `
 
@@ -21,7 +21,7 @@ export const SectionIntro = styled(motion.div)`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.md};
-  max-width: 640px;
+  max-width: ${({ theme }) => theme.layout.readableWidth};
   margin-bottom: ${({ theme }) => theme.spacing['2xl']};
 `
 

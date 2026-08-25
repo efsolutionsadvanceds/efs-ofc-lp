@@ -3,18 +3,16 @@ import { MessageCircle } from 'lucide-react'
 import { useMotionValueEvent, useScroll } from 'motion/react'
 import styled from 'styled-components'
 import { contact } from '../../config/contact'
+import { ContentWrapper } from '../sections/sectionPrimitives'
+import { goldActionStyles } from '../../styles/actions'
 
 const SCROLL_THRESHOLD = 24
 
 const Header = styled.header<{ $isScrolled: boolean }>`
   position: sticky;
   top: 0;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.xl};
+  z-index: ${({ theme }) => theme.zIndex.header};
+  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.layout.gutterDesktop};
   border-bottom: 1px solid
     ${({ theme, $isScrolled }) => ($isScrolled ? theme.colors.borderSubtle : 'transparent')};
   background: ${({ $isScrolled }) => ($isScrolled ? 'rgba(5, 7, 11, 0.78)' : 'transparent')};
@@ -26,8 +24,15 @@ const Header = styled.header<{ $isScrolled: boolean }>`
     backdrop-filter 0.3s ease;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.md};
+    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.layout.gutterMobile};
   }
+`
+
+const HeaderInner = styled(ContentWrapper)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing.md};
 `
 
 const Wordmark = styled.div`
@@ -75,44 +80,13 @@ const NavLink = styled.a`
 `
 
 const CtaLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  min-height: 44px;
-  padding: 0 ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.black};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  white-space: nowrap;
+  ${goldActionStyles}
   flex-shrink: 0;
-  transition:
-    transform 0.2s ease,
-    filter 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.05);
-    box-shadow: 0 8px 20px rgba(253, 207, 69, 0.25);
-  }
-
-  &:active {
-    transform: translateY(0);
-    filter: brightness(0.97);
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
+  white-space: nowrap;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    padding: 0 ${({ theme }) => theme.spacing.md};
+    padding-left: ${({ theme }) => theme.spacing.md};
+    padding-right: ${({ theme }) => theme.spacing.md};
   }
 `
 
@@ -144,20 +118,22 @@ export function SiteHeader() {
 
   return (
     <Header id="topo" $isScrolled={isScrolled}>
-      <Wordmark>
-        <WordmarkTitle>EFSA</WordmarkTitle>
-        <WordmarkTagline>Engenharia de Software</WordmarkTagline>
-      </Wordmark>
-      <Nav aria-label="Navegação principal">
-        <NavLink href="#diagnostico">Diagnóstico</NavLink>
-        <NavLink href="#solucoes">Soluções</NavLink>
-        <NavLink href="#como-atuamos">Como atuamos</NavLink>
-      </Nav>
-      <CtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
-        <MessageCircle aria-hidden="true" />
-        <CtaFullLabel>FALAR COM UM ESPECIALISTA</CtaFullLabel>
-        <CtaShortLabel>FALAR NO WHATSAPP</CtaShortLabel>
-      </CtaLink>
+      <HeaderInner>
+        <Wordmark>
+          <WordmarkTitle>EFSA</WordmarkTitle>
+          <WordmarkTagline>Engenharia de Software</WordmarkTagline>
+        </Wordmark>
+        <Nav aria-label="Navegação principal">
+          <NavLink href="#diagnostico">Diagnóstico</NavLink>
+          <NavLink href="#solucoes">Soluções</NavLink>
+          <NavLink href="#como-atuamos">Como atuamos</NavLink>
+        </Nav>
+        <CtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+          <MessageCircle aria-hidden="true" />
+          <CtaFullLabel>FALAR COM UM ESPECIALISTA</CtaFullLabel>
+          <CtaShortLabel>FALAR NO WHATSAPP</CtaShortLabel>
+        </CtaLink>
+      </HeaderInner>
     </Header>
   )
 }

@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { contact } from '../../config/contact'
 import { differentiators } from '../../data/differentiators'
 import type { Differentiator } from '../../data/differentiators'
+import { goldActionStyles } from '../../styles/actions'
 import { buildViewportRevealProps } from '../../utils/motionPresets'
 import {
   ContentWrapper,
@@ -16,7 +17,7 @@ import {
 
 const EditorialLayout = styled.div`
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
   gap: ${({ theme }) => theme.spacing['2xl']};
   align-items: start;
   padding-top: ${({ theme }) => theme.spacing['2xl']};
@@ -116,9 +117,31 @@ const RowDescription = styled.p`
 `
 
 const Checkpoint = styled.div`
-  padding-top: ${({ theme }) => theme.spacing['2xl']};
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing['2xl']};
   margin-top: ${({ theme }) => theme.spacing['2xl']};
-  border-top: 1px solid ${({ theme }) => theme.colors.borderSubtle};
+  padding: ${({ theme }) => theme.spacing['2xl']};
+  border: 1px solid ${({ theme }) => theme.colors.borderSubtle};
+  border-top: 2px solid ${({ theme }) => theme.colors.gold};
+  border-radius: ${({ theme }) => theme.radii.md};
+  background: ${({ theme }) => theme.colors.surfaceElevated};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    grid-template-columns: 1fr;
+    gap: ${({ theme }) => theme.spacing.lg};
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    padding: ${({ theme }) => theme.spacing.lg};
+  }
+`
+
+const CheckpointCopy = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.xs};
 `
 
 const CheckpointHeading = styled.h3`
@@ -130,50 +153,29 @@ const CheckpointHeading = styled.h3`
 `
 
 const CheckpointText = styled.p`
-  margin: ${({ theme }) => theme.spacing.sm} 0 0;
+  margin: 0;
   max-width: 52ch;
   font-size: ${({ theme }) => theme.typography.sizes.md};
   color: ${({ theme }) => theme.colors.textMuted};
 `
 
-const CheckpointCtaLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  min-height: 44px;
-  margin-top: ${({ theme }) => theme.spacing.lg};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.black};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    filter 0.2s ease,
-    box-shadow 0.2s ease;
+const CheckpointActions = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: ${({ theme }) => theme.spacing.xs};
 
-  &:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 28px rgba(253, 207, 69, 0.28);
-  }
-
-  &:active {
-    transform: translateY(0);
-    filter: brightness(0.97);
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    align-items: flex-start;
   }
 `
 
+const CheckpointCtaLink = styled.a`
+  ${goldActionStyles}
+`
+
 const CheckpointSupportLine = styled.p`
-  margin: ${({ theme }) => theme.spacing.xs} 0 0;
+  margin: 0;
   font-size: ${({ theme }) => theme.typography.sizes.xs};
   color: ${({ theme }) => theme.colors.metallicGray};
 `
@@ -240,16 +242,20 @@ export function DifferentialsSection() {
         </EditorialLayout>
 
         <Checkpoint>
-          <CheckpointHeading>Seu próximo passo deve começar pelo gargalo certo.</CheckpointHeading>
-          <CheckpointText>
-            Conte brevemente o seu cenário e converse diretamente com a EFSA sobre a prioridade da
-            sua empresa.
-          </CheckpointText>
-          <CheckpointCtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
-            <MessageCircle aria-hidden="true" />
-            QUERO TER MAIS RESULTADOS
-          </CheckpointCtaLink>
-          <CheckpointSupportLine>Conversa direta pelo WhatsApp</CheckpointSupportLine>
+          <CheckpointCopy>
+            <CheckpointHeading>Seu próximo passo deve começar pelo gargalo certo.</CheckpointHeading>
+            <CheckpointText>
+              Conte brevemente o seu cenário e converse diretamente com a EFSA sobre a prioridade
+              da sua empresa.
+            </CheckpointText>
+          </CheckpointCopy>
+          <CheckpointActions>
+            <CheckpointCtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+              <MessageCircle aria-hidden="true" />
+              QUERO TER MAIS RESULTADOS
+            </CheckpointCtaLink>
+            <CheckpointSupportLine>Conversa direta pelo WhatsApp</CheckpointSupportLine>
+          </CheckpointActions>
         </Checkpoint>
       </ContentWrapper>
     </SectionContainer>

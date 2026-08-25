@@ -13,7 +13,7 @@ const SkipLink = styled.a`
   position: fixed;
   top: ${({ theme }) => theme.spacing.md};
   left: ${({ theme }) => theme.spacing.md};
-  z-index: 100;
+  z-index: ${({ theme }) => theme.zIndex.skipLink};
   padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.gold};

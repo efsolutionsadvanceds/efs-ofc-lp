@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import { EngineeringBlueprint } from '../visuals/EngineeringBlueprint'
 import { processSteps } from '../../data/processSteps'
 import type { ProcessStep } from '../../data/processSteps'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
+import { theme } from '../../styles/theme'
 import { buildViewportRevealProps } from '../../utils/motionPresets'
 import {
   ContentWrapper,
@@ -14,13 +16,15 @@ import {
   SectionParagraph,
 } from './sectionPrimitives'
 
+const DESKTOP_PROCESS_QUERY = `(min-width: ${theme.breakpoints.xl})`
+
 const ScrollArea = styled.div`
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: ${({ theme }) => theme.spacing['2xl']};
   align-items: start;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+  @media (max-width: calc(${({ theme }) => theme.breakpoints.xl} - 1px)) {
     grid-template-columns: 1fr;
   }
 `
@@ -28,19 +32,11 @@ const ScrollArea = styled.div`
 const StickyColumn = styled.div`
   position: sticky;
   top: ${({ theme }) => theme.spacing['4xl']};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    display: none;
-  }
+  z-index: ${({ theme }) => theme.zIndex.sticky};
 `
 
 const MobileBlueprintTeaser = styled.div`
-  display: none;
   margin-bottom: ${({ theme }) => theme.spacing.xl};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    display: block;
-  }
 `
 
 const StepsColumn = styled.div`
@@ -65,6 +61,10 @@ const StepBlock = styled.div<{ $isActive: boolean }>`
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.xl}) and (max-height: 760px) {
+    min-height: 38vh;
   }
 `
 
@@ -124,6 +124,7 @@ function StepEntry({ step, index, onActiveChange }: StepEntryProps) {
 
 export function WorkProcessSection() {
   const shouldReduceMotion = useReducedMotion()
+  const isDesktopProcess = useMediaQuery(DESKTOP_PROCESS_QUERY)
   const [activeIndex, setActiveIndex] = useState(0)
   const activeFlagsRef = useRef<boolean[]>(processSteps.map((_, index) => index === 0))
 
@@ -154,24 +155,28 @@ export function WorkProcessSection() {
           </SectionParagraph>
         </SectionIntro>
 
-        <MobileBlueprintTeaser>
-          <EngineeringBlueprint
-            activeIndex={processSteps.length - 1}
-            totalSteps={processSteps.length}
-            status="Visão geral do processo"
-            variant="static"
-          />
-        </MobileBlueprintTeaser>
+        {!isDesktopProcess && (
+          <MobileBlueprintTeaser>
+            <EngineeringBlueprint
+              activeIndex={processSteps.length - 1}
+              totalSteps={processSteps.length}
+              status="Visão geral do processo"
+              variant="static"
+            />
+          </MobileBlueprintTeaser>
+        )}
 
         <ScrollArea>
-          <StickyColumn>
-            <EngineeringBlueprint
-              activeIndex={activeIndex}
-              totalSteps={processSteps.length}
-              status={activeStep.cinematicStatus}
-              variant="interactive"
-            />
-          </StickyColumn>
+          {isDesktopProcess && (
+            <StickyColumn>
+              <EngineeringBlueprint
+                activeIndex={activeIndex}
+                totalSteps={processSteps.length}
+                status={activeStep.cinematicStatus}
+                variant="interactive"
+              />
+            </StickyColumn>
+          )}
           <StepsColumn>
             {processSteps.map((step, index) => (
               <StepEntry

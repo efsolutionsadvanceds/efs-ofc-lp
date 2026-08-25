@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: ${({ theme }) => theme.zIndex.decorative};
 `
 
 const Atmosphere = styled.div`

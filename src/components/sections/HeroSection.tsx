@@ -5,8 +5,8 @@ import styled from 'styled-components'
 import { AmbientHeroBackground } from '../visuals/AmbientHeroBackground'
 import { BusinessEngine } from '../visuals/BusinessEngine'
 import { contact } from '../../config/contact'
-
-const EASE = [0.16, 1, 0.3, 1] as const
+import { goldActionStyles } from '../../styles/actions'
+import { EASE } from '../../utils/motionPresets'
 
 const Section = styled.section`
   position: relative;
@@ -22,12 +22,12 @@ const Section = styled.section`
 
 const Layout = styled.div`
   position: relative;
-  z-index: 1;
+  z-index: ${({ theme }) => theme.zIndex.content};
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: ${({ theme }) => theme.spacing['3xl']};
   align-items: center;
-  max-width: 1280px;
+  max-width: ${({ theme }) => theme.layout.maxWidth};
   margin: 0 auto;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
@@ -73,38 +73,7 @@ const CtaRow = styled(motion.div)`
 `
 
 const PrimaryCta = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  min-height: 44px;
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.black};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    filter 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 28px rgba(253, 207, 69, 0.28);
-  }
-
-  &:active {
-    transform: translateY(0);
-    filter: brightness(0.97);
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
+  ${goldActionStyles}
 `
 
 const SecondaryCta = styled.button`

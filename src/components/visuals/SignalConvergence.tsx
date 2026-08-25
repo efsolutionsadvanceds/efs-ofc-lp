@@ -23,7 +23,18 @@ const Panel = styled.div`
     ${({ theme }) => theme.colors.darkBlue} 150%
   );
   padding: ${({ theme }) => theme.spacing.lg};
-  margin-bottom: ${({ theme }) => theme.spacing['2xl']};
+`
+
+const ScanBand = styled(motion.div)`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 40%,
+    rgba(253, 207, 69, 0.14) 50%,
+    transparent 60%
+  );
+  pointer-events: none;
 `
 
 const GridLayer = styled.div`
@@ -60,6 +71,12 @@ const CenterLabel = styled.p`
   color: ${({ theme }) => theme.colors.textMuted};
 `
 
+const SvgLabel = styled.text`
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    display: none;
+  }
+`
+
 export function SignalConvergence() {
   const theme = useTheme()
   const shouldReduceMotion = useReducedMotion()
@@ -69,6 +86,14 @@ export function SignalConvergence() {
     <Panel>
       <GridLayer />
       <Vignette />
+      {!isStatic && (
+        <ScanBand
+          initial={{ x: '-120%', opacity: 0 }}
+          whileInView={{ x: '120%', opacity: [0, 1, 1, 0] }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 0.9, delay: 1.9, ease: 'easeInOut' }}
+        />
+      )}
       <DiagramSvg viewBox="0 0 290 200" aria-hidden="true" focusable="false">
         {SOURCES.map((source, index) =>
           isStatic ? (
@@ -99,7 +124,7 @@ export function SignalConvergence() {
         {SOURCES.map((source) => (
           <g key={`${source.id}-node`}>
             <circle cx={source.x} cy={source.y} r={3.5} fill={theme.colors.metallicGray} />
-            <text
+            <SvgLabel
               x={source.x}
               y={source.y - 10}
               fontSize="9"
@@ -107,7 +132,7 @@ export function SignalConvergence() {
               fill={theme.colors.textMuted}
             >
               {source.label}
-            </text>
+            </SvgLabel>
           </g>
         ))}
 
@@ -135,7 +160,7 @@ export function SignalConvergence() {
             style={{ transformOrigin: `${CENTER.x}px ${CENTER.y}px` }}
           />
         )}
-        <text
+        <SvgLabel
           x={CENTER.x}
           y={CENTER.y + 3}
           textAnchor="middle"
@@ -145,7 +170,7 @@ export function SignalConvergence() {
           fill={theme.colors.gold}
         >
           EFSA
-        </text>
+        </SvgLabel>
 
         {isStatic ? (
           <>

@@ -4,6 +4,7 @@ import styled, { useTheme } from 'styled-components'
 import { contact } from '../../config/contact'
 import { solutionPillars } from '../../data/solutionPillars'
 import type { SolutionPillar } from '../../data/solutionPillars'
+import { goldActionStyles } from '../../styles/actions'
 import { buildViewportRevealProps } from '../../utils/motionPresets'
 import {
   ContentWrapper,
@@ -147,39 +148,8 @@ const CtaText = styled.p`
 `
 
 const CtaLink = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  min-height: 44px;
+  ${goldActionStyles}
   margin-top: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.black};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.03em;
-  text-decoration: none;
-  transition:
-    transform 0.2s ease,
-    filter 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 28px rgba(253, 207, 69, 0.28);
-  }
-
-  &:active {
-    transform: translateY(0);
-    filter: brightness(0.97);
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
 `
 
 const CtaSupportLine = styled.p`

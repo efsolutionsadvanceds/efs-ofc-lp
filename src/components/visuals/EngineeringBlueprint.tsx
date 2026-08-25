@@ -108,6 +108,12 @@ const ScanBand = styled(motion.div)`
   pointer-events: none;
 `
 
+const NodeLabel = styled.text`
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    display: none;
+  }
+`
+
 interface EngineeringBlueprintProps {
   activeIndex: number
   totalSteps: number
@@ -212,7 +218,7 @@ export function EngineeringBlueprint({
                     strokeWidth={isCurrent ? 2 : 1.5}
                     opacity={isReached ? 1 : 0.55}
                   />
-                  <text
+                  <NodeLabel
                     x={node.x}
                     y={node.y - 14}
                     textAnchor="middle"
@@ -221,7 +227,7 @@ export function EngineeringBlueprint({
                     fill={isReached ? theme.colors.gold : theme.colors.metallicGray}
                   >
                     {String(index + 1).padStart(2, '0')}
-                  </text>
+                  </NodeLabel>
                 </g>
               )
             })}

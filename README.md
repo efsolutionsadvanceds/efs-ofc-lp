@@ -50,3 +50,13 @@ Consulte [docs/PROJECT_BRIEF.md](docs/PROJECT_BRIEF.md) para o briefing completo
 - ⚠️ Favicon oficial e imagem de social-preview (og:image) ainda **não existem** — nenhum substituto foi criado; ver checklist de deploy.
 - ⚠️ Nenhum resultado de cliente verificado, prova social, depoimento ou métrica é representado em nenhuma parte da interface.
 - ⏳ Vídeo de fundo permanece adiado para uma fase futura de aprimoramento visual.
+- ✅ **Fase 5 (consolidação visual e correções de layout)** implementada a partir de uma auditoria de arquitetura visual real:
+  - Sistema de design consolidado em `src/styles/theme.ts` (`layout`, `zIndex`, `motion`) e `src/styles/actions.ts` (mixin `goldActionStyles`, usado pelos 6 CTAs dourados do site: Header, Hero, Soluções, Diferenciais, formulário de contato e rodapé).
+  - Header agora usa o mesmo `ContentWrapper` de 1280px das seções e do rodapé — alinhamento horizontal corrigido em telas largas.
+  - Conflito exato de breakpoint em 1280px na seção "Como Atuamos" corrigido (`min-width` e `max-width` não se sobrepõem mais); apenas **uma** instância do `EngineeringBlueprint` fica montada por vez, via o novo hook `useMediaQuery`.
+  - Foco do painel do Business Engine trocado de `:focus` para `:focus-visible`.
+  - Seção de Contato reformulada: grid de duas colunas em desktop (`EFSA Signal Convergence` à esquerda, sticky, + formulário à direita, agora dentro de um `FormShell`).
+  - Seção de Diferenciais reformulada: grid editorial 4/8 colunas e checkpoint de conversão em faixa de largura total.
+  - Rodapé reformulado: três colunas (marca, navegação, contato com CTA "FALAR COM A EFSA"), linha de horizonte dourado-marinho e marca d'água "EFSA" decorativas (`aria-hidden`).
+  - Rótulos pequenos dentro dos SVGs do Blueprint e da Signal Convergence ocultos em telas muito estreitas (≤480px) para evitar texto microscópico — o significado permanece disponível em texto HTML real.
+  - Nenhuma dependência nova; nenhum copy aprovado foi alterado; nenhum vídeo foi adicionado.

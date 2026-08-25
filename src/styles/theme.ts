@@ -65,6 +65,31 @@ const breakpoints = {
   xl: '1280px',
 } as const
 
+const layout = {
+  maxWidth: '1280px',
+  readableWidth: '640px',
+  gutterDesktop: spacing.xl,
+  gutterMobile: spacing.md,
+} as const
+
+const zIndex = {
+  base: 0,
+  decorative: 0,
+  content: 1,
+  sticky: 20,
+  header: 40,
+  skipLink: 100,
+} as const
+
+const motion = {
+  duration: {
+    fast: 0.2,
+    standard: 0.35,
+    deliberate: 0.6,
+  },
+  easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+} as const
+
 export const theme = {
   colors,
   typography,
@@ -72,6 +97,9 @@ export const theme = {
   radii,
   shadows,
   breakpoints,
+  layout,
+  zIndex,
+  motion,
 }
 
 export type AppTheme = typeof theme

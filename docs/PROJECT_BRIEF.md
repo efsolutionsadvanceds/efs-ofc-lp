@@ -184,3 +184,50 @@ social-preview).
 Consulte [docs/CODEBASE_STATE.md](CODEBASE_STATE.md) para o handoff técnico completo
 do estado atual do código e [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)
 para as pendências antes do lançamento.
+
+## Status de implementação — Fase 5 (consolidação visual e correções de layout)
+
+Esta fase não adicionou seções nem alterou copy aprovado. Foi uma manutenção de
+arquitetura visual baseada em uma auditoria de código real, documentada em
+`docs/CODEBASE_STATE.md`.
+
+- **Sistema de design consolidado**: `theme.ts` ganhou `layout` (largura máxima de
+  1280px, largura de leitura, gutters), `zIndex` (base/decorativo/conteúdo/sticky/
+  header/skip-link) e `motion` (durações rápida/padrão/deliberada + easing
+  compartilhado). O tupla de easing do Motion (`EASE`) continua centralizada em
+  `src/utils/motionPresets.ts` como fonte única — a duplicata local na Hero foi
+  removida.
+- **Sistema de ação dourada compartilhado**: `src/styles/actions.ts` exporta o
+  mixin `goldActionStyles`, consumido pelos 6 CTAs dourados do site (Header, Hero,
+  Arquitetura de Soluções, Diferenciais, formulário de Contato e rodapé) — cada um
+  mantendo seu elemento semântico original (`<a>` ou `<button>`).
+- **Header alinhado**: o conteúdo do Header agora usa o mesmo `ContentWrapper` de
+  1280px das seções e do rodapé; o fundo do Header continua ocupando a largura
+  total da viewport.
+- **Conflito de breakpoint em 1280px corrigido**: a seção "Como Atuamos" usa
+  `min-width: 1280px` (desktop) e `max-width: calc(1280px - 1px)` (mobile/tablet),
+  sem sobreposição. Um novo hook `useMediaQuery` (`src/hooks/useMediaQuery.ts`)
+  garante que **apenas uma** variante do `EngineeringBlueprint` fique montada por
+  vez, em vez de ambas simultaneamente ocultas por CSS.
+- **Foco do Business Engine**: `:focus` trocado por `:focus-visible`, alinhado ao
+  padrão global.
+- **Seção de Contato recomposta**: grid de duas colunas em `min-width: 1024px`
+  (`minmax(320px, 0.8fr) minmax(0, 1.2fr)`) — "EFSA Signal Convergence" à esquerda
+  (sticky em desktop, considerando o offset do Header), formulário à direita dentro
+  de um `FormShell` com superfície elevada e destaque sutil na borda superior. Um
+  "scanner" restrito de passagem única foi adicionado à Signal Convergence após a
+  convergência original.
+- **Diferenciais recompostos**: grid editorial de 4/8 colunas (afirmação/trilho) e
+  o checkpoint de conversão virou uma faixa de largura total, com título/texto à
+  esquerda e CTA/linha de apoio à direita em desktop.
+- **Rodapé recomposto**: três colunas (marca, navegação, contato com CTA "FALAR COM
+  A EFSA"), linha de horizonte dourado-marinho e marca d'água "EFSA" de fundo
+  (`aria-hidden`), grid técnico estático sem animação. `id="privacidade"`
+  preservado.
+- **Legibilidade móvel dos SVGs**: rótulos pequenos do `EngineeringBlueprint` e da
+  `SignalConvergence` (dentro de SVGs `aria-hidden`) ficam ocultos em telas
+  ≤480px — o significado continua disponível em texto HTML real (legendas e
+  indicadores de etapa já existentes).
+- **Nenhuma dependência nova** foi instalada. **Nenhum vídeo** foi adicionado.
+  **Nenhum bloqueador de deploy foi marcado como resolvido** — os itens em
+  `docs/DEPLOYMENT_CHECKLIST.md` continuam pendentes.

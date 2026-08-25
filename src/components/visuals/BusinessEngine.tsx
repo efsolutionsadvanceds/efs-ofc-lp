@@ -18,9 +18,9 @@ const Panel = styled.div`
   background: ${({ theme }) => theme.colors.surfaceDark};
   box-shadow: ${({ theme }) => theme.shadows.lg};
 
-  &:focus {
+  &:focus-visible {
     outline: 2px solid ${({ theme }) => theme.colors.gold};
-    outline-offset: 4px;
+    outline-offset: 2px;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -106,12 +106,12 @@ const RowHighlight = styled(motion.span)`
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.surfaceElevated};
   border: 1px solid rgba(253, 207, 69, 0.28);
-  z-index: 0;
+  z-index: ${({ theme }) => theme.zIndex.decorative};
 `
 
 const RowContent = styled.span`
   position: relative;
-  z-index: 1;
+  z-index: ${({ theme }) => theme.zIndex.content};
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.sm};

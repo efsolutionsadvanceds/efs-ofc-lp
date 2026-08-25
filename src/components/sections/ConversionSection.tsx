@@ -5,6 +5,7 @@ import { useReducedMotion } from 'motion/react'
 import styled from 'styled-components'
 import { contact } from '../../config/contact'
 import { priorityOptions, segmentOptions } from '../../data/conversionForm'
+import { goldActionStyles } from '../../styles/actions'
 import { buildViewportRevealProps } from '../../utils/motionPresets'
 import { SignalConvergence } from '../visuals/SignalConvergence'
 import {
@@ -70,11 +71,69 @@ function buildWhatsAppFormMessage(values: FormValues): string {
   ].join('\n')
 }
 
-const FormLayout = styled.div`
-  max-width: 720px;
+const ContactGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({ theme }) => theme.spacing['2xl']};
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    grid-template-columns: minmax(320px, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(${({ theme }) => theme.spacing.xl}, 4vw, ${({ theme }) => theme.spacing['3xl']});
+    align-items: start;
+  }
+`
+
+const VisualColumn = styled.div`
+  max-width: ${({ theme }) => theme.layout.readableWidth};
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    max-width: none;
+    margin: 0;
+    position: sticky;
+    top: ${({ theme }) => theme.spacing['4xl']};
+    z-index: ${({ theme }) => theme.zIndex.sticky};
+  }
+`
+
+const FormColumn = styled.div`
+  max-width: ${({ theme }) => theme.layout.readableWidth};
+  width: 100%;
+  margin: 0 auto;
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
+    max-width: none;
+    margin: 0;
+  }
+`
+
+const FormShell = styled.div`
+  position: relative;
+  overflow: hidden;
+  padding: clamp(${({ theme }) => theme.spacing.lg}, 4vw, ${({ theme }) => theme.spacing['2xl']});
+  border-radius: ${({ theme }) => theme.radii.lg};
+  border: 1px solid ${({ theme }) => theme.colors.borderSubtle};
+  background: linear-gradient(
+    180deg,
+    ${({ theme }) => theme.colors.surfaceElevated},
+    ${({ theme }) => theme.colors.surfaceDark}
+  );
+  box-shadow: ${({ theme }) => theme.shadows.sm};
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
+  }
 `
 
 const Form = styled.form`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.lg};
@@ -85,7 +144,7 @@ const FieldRow = styled.div`
   grid-template-columns: 1fr 1fr;
   gap: ${({ theme }) => theme.spacing.lg};
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     grid-template-columns: 1fr;
   }
 `
@@ -237,45 +296,8 @@ const RadioOption = styled.label`
 `
 
 const SubmitButton = styled.button`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  min-height: 44px;
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.xl};
+  ${goldActionStyles}
   align-self: flex-start;
-  border: none;
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.gold};
-  color: ${({ theme }) => theme.colors.black};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.03em;
-  cursor: pointer;
-  transition:
-    transform 0.2s ease,
-    filter 0.2s ease,
-    box-shadow 0.2s ease;
-
-  &:hover:not(:disabled) {
-    transform: translateY(-2px);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 28px rgba(253, 207, 69, 0.28);
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0);
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
-  }
 `
 
 const SupportText = styled.p`
@@ -379,10 +401,14 @@ export function ConversionSection() {
           </SectionParagraph>
         </SectionIntro>
 
-        <SignalConvergence />
+        <ContactGrid>
+          <VisualColumn>
+            <SignalConvergence />
+          </VisualColumn>
 
-        <FormLayout>
-          <Form onSubmit={handleSubmit} noValidate>
+          <FormColumn>
+            <FormShell>
+              <Form onSubmit={handleSubmit} noValidate>
             <FieldRow>
               <FieldBlock>
                 <FieldLabelRow>
@@ -523,8 +549,10 @@ export function ConversionSection() {
                 .
               </FallbackNotice>
             )}
-          </Form>
-        </FormLayout>
+              </Form>
+            </FormShell>
+          </FormColumn>
+        </ContactGrid>
       </ContentWrapper>
     </SectionContainer>
   )
