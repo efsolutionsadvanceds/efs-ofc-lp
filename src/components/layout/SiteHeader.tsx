@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { MessageCircle } from 'lucide-react'
 import { useMotionValueEvent, useScroll } from 'motion/react'
 import styled from 'styled-components'
+import { trackEvent } from '../../analytics/analytics'
 import { contact } from '../../config/contact'
 import { ContentWrapper } from '../sections/sectionPrimitives'
 import { goldActionStyles } from '../../styles/actions'
@@ -128,7 +129,12 @@ export function SiteHeader() {
           <NavLink href="#solucoes">Soluções</NavLink>
           <NavLink href="#como-atuamos">Como atuamos</NavLink>
         </Nav>
-        <CtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+        <CtaLink
+          href={contact.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackEvent('generate_lead', { placement_id: 'header' })}
+        >
           <MessageCircle aria-hidden="true" />
           <CtaFullLabel>FALAR COM UM ESPECIALISTA</CtaFullLabel>
           <CtaShortLabel>FALAR NO WHATSAPP</CtaShortLabel>

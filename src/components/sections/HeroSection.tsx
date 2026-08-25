@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import styled from 'styled-components'
 import { AmbientHeroBackground } from '../visuals/AmbientHeroBackground'
 import { BusinessEngine } from '../visuals/BusinessEngine'
+import { trackEvent } from '../../analytics/analytics'
 import { contact } from '../../config/contact'
 import { goldActionStyles } from '../../styles/actions'
 import { EASE } from '../../utils/motionPresets'
@@ -139,6 +140,8 @@ export function HeroSection() {
   const shouldReduceMotion = useReducedMotion()
 
   function handleSecondaryCtaClick() {
+    trackEvent('cta_click', { placement_id: 'hero_secondary' })
+
     const node = engineRef.current
     if (!node) return
 
@@ -166,7 +169,12 @@ export function HeroSection() {
             uma estratégia única de crescimento.
           </Paragraph>
           <CtaRow {...buildEntranceProps(0.24, !!shouldReduceMotion)}>
-            <PrimaryCta href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+            <PrimaryCta
+              href={contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('generate_lead', { placement_id: 'hero_primary' })}
+            >
               <MessageCircle aria-hidden="true" />
               QUERO TER MAIS RESULTADOS
             </PrimaryCta>

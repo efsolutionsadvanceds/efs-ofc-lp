@@ -6,12 +6,13 @@ engenheiro ou assistente de IA entenda o projeto rapidamente. Este documento
 
 ## 1. Última atualização
 
-2026-08-25 (Fase 5 — consolidação do sistema de design, reposicionamento
-estratégico de layout, correções responsivas e polimento cinematográfico, a
-partir de uma auditoria de arquitetura visual real). A estrutura de conteúdo da
-versão 1 (Fase 4) não mudou nesta fase — nenhuma seção foi adicionada, removida,
-reordenada ou teve copy alterado. **Isso não significa que o projeto está pronto
-para produção**; ver [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
+2026-08-25 (Fase 6 — segurança de aplicação, fundação de dados/privacidade,
+Analytics opt-in, validação com Zod, testes automatizados e descoberta
+técnica/SEO). Nenhuma seção visual foi adicionada, removida, reordenada ou
+teve copy alterado nesta fase — apenas lógica de validação, infraestrutura de
+consentimento/Analytics e documentação. **Isso não significa que o projeto
+está pronto para produção**; ver
+[docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
 
 ## 2. Objetivo do projeto
 
@@ -25,11 +26,10 @@ briefing completo de marca e posicionamento.
 ## 3. Git
 
 - **Branch atual:** `main`
-- **Último checkpoint committado:** `8873ce01f10a7897cb807bf2202c03d49ca0dda3` —
-  `feat: complete EFSA landing page v1` (Fase 4)
-- A Fase 5 (consolidação visual e correções de layout) está implementada no
-  working tree **sem commit** no momento em que este documento foi escrito (ver
-  seção 20).
+- **Último checkpoint committado:** `e45d5a935393621af50c8cd4316d0403ddee2ac1` —
+  `refactor: consolidate EFSA visual system and responsive layout` (Fase 5)
+- A Fase 6 (segurança, dados e descoberta) está implementada no working tree
+  **sem commit** no momento em que este documento foi escrito (ver seção 24).
 
 ## 4. Dependências de produção exatas
 
@@ -42,6 +42,7 @@ motion                      ^13.1.1
 react                       ^19.2.8
 react-dom                   ^19.2.8
 styled-components           6
+zod                         4 (resolvido: 4.4.3)
 ```
 
 **devDependencies:**
@@ -54,11 +55,16 @@ styled-components           6
 oxlint                ^1.79.0
 typescript            ~6.0.2
 vite                  ^8.2.2
+vitest                ^4.1.11
 ```
 
-Nenhuma dependência nova foi instalada em nenhuma das cinco fases além das
-listadas acima. Sem Tailwind, GSAP, Three.js, bibliotecas de partícula, kits de
-UI, formulário, validação, roteamento, analytics ou Supabase.
+`zod` (validação de schema, runtime) e `vitest` (dev, testes) foram
+adicionadas na Fase 6 — compatibilidade verificada previamente (Vitest 4.1.11
+exige Node `^20 || ^22 || >=24` e Vite `^6 || ^7 || ^8`; este projeto usa Node
+22.17.0 e Vite 8.2.2). Nenhuma outra dependência foi instalada em nenhuma das
+seis fases. Sem Tailwind, GSAP, Three.js, bibliotecas de partícula, kits de
+UI, biblioteca de formulário/validação além do Zod, roteamento, SDK de
+analytics, CAPTCHA, DOMPurify, Helmet, criptografia ou Supabase.
 
 ## 5. Sistema de design consolidado (Fase 5)
 
@@ -245,14 +251,31 @@ Estado local via `useState` (`values`, `errors`, `isSubmitting`, `fallbackUrl`)
 (texto, obrigatório, máx. 100), segmento (select nativo, obrigatório),
 prioridade (`fieldset`/`legend` com rádios nativos, obrigatório), contexto
 (textarea, opcional, máx. 500, com contador de caracteres sem `aria-live`).
-Validação própria em `validate()`; erros em português, associados via
+
+**Validação (Fase 6):** migrada para **Zod v4**, fonte única de verdade em
+`src/schemas/conversionFormSchema.ts`. `parseConversionForm()` faz
+`safeParse`, nunca lança, e devolve `{ success: true, data }` ou
+`{ success: false, errors }` no mesmo formato que a UI já esperava. `segmento`
+e `prioridade` usam `z.enum(segmentOptions)`/`z.enum(priorityOptions)`
+(reexportados de `src/data/conversionForm.ts`, sem duplicar os valores) — um
+valor fora do conjunto permitido é rejeitado mesmo que a UI seja contornada.
+`nome`/`empresa`/`contexto` usam `.trim()` + `.min()`/`.max()`; nenhuma
+sanitização agressiva (escaping de HTML não é tratado como validação — o
+valor nunca é renderizado como HTML). Erros em português, associados via
 `aria-describedby` + `role="alert"`; foco move para o primeiro campo inválido
-após tentativa de envio. `buildWhatsAppFormMessage()` monta o texto;
-`contact.buildWhatsAppUrl(message)` (extensão da configuração central em
-`src/config/contact.ts`) constrói a URL com `URLSearchParams`. `window.open`
-abre o WhatsApp; a URL gerada é sempre exibida como link de fallback visível
-após a tentativa de envio, já que a detecção de bloqueio de pop-up é
-inerentemente pouco confiável entre navegadores.
+após tentativa de envio.
+
+`buildWhatsAppFormMessage()` (agora em `src/utils/whatsappMessage.ts`, extraído
+do componente para ser testável) monta o texto a partir do `data` já validado
+pelo Zod; `contact.buildWhatsAppUrl(message)` (extensão da configuração
+central em `src/config/contact.ts`, assinatura simplificada para receber só a
+mensagem) constrói a URL com `URLSearchParams`. `window.open` abre o
+WhatsApp; a URL gerada é sempre exibida como link de fallback visível após a
+tentativa de envio, já que a detecção de bloqueio de pop-up é inerentemente
+pouco confiável entre navegadores. **A validação do Zod é uma melhoria de
+correção e UX — não é uma fronteira de segurança**; se um backend for
+introduzido no futuro, a mesma validação precisa rodar também no servidor
+(ver `docs/SECURITY.md`).
 
 ## 19. Decisões de acessibilidade, redução de movimento e segurança (acumuladas)
 

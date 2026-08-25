@@ -1,6 +1,7 @@
 import { MessageCircle } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import styled, { useTheme } from 'styled-components'
+import { trackEvent } from '../../analytics/analytics'
 import { contact } from '../../config/contact'
 import { solutionPillars } from '../../data/solutionPillars'
 import type { SolutionPillar } from '../../data/solutionPillars'
@@ -280,7 +281,12 @@ export function SolutionArchitectureSection() {
             Converse diretamente com a EFSA para entender qual frente merece prioridade no seu
             cenário.
           </CtaText>
-          <CtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+          <CtaLink
+            href={contact.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackEvent('generate_lead', { placement_id: 'solucoes_cta' })}
+          >
             <MessageCircle aria-hidden="true" />
             QUERO TER MAIS RESULTADOS
           </CtaLink>

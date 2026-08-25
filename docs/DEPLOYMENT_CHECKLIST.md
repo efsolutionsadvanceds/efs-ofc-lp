@@ -52,6 +52,48 @@ pronto para ir ao ar.
 22. **Confirmar que nenhum artefato de desenvolvimento ou source map fica exposto
     sem intenção**, de acordo com a política de deploy escolhida.
 
+## Checklist de segurança — aprovado/reprovado (Fase 6)
+
+Marcar cada item como **Aprovado**, **Reprovado** ou **N/A** somente após a
+verificação real em produção. Nenhum item abaixo pode ser marcado como
+aprovado sem evidência (captura de tela, saída de comando ou relatório de
+ferramenta). Ver [docs/SECURITY.md](SECURITY.md) e
+[docs/PRODUCTION_SECURITY_HEADERS.md](PRODUCTION_SECURITY_HEADERS.md) para o
+detalhamento de cada controle.
+
+| # | Verificação | Status |
+| - | --- | --- |
+| 1 | Propriedade do domínio confirmada | ☐ Pendente |
+| 2 | DNS configurado e propagado | ☐ Pendente |
+| 3 | HTTPS ativo em todas as rotas | ☐ Pendente |
+| 4 | HTTP redireciona para HTTPS | ☐ Pendente |
+| 5 | Renovação automática de certificado configurada | ☐ Pendente |
+| 6 | Cabeçalhos de produção aplicados (ver seção 3 de `PRODUCTION_SECURITY_HEADERS.md`) | ☐ Pendente |
+| 7 | CSP validada em modo `Report-Only` antes da aplicação em bloqueio | ☐ Pendente |
+| 8 | Varredura de mixed content (nenhum recurso `http://` em página `https://`) | ☐ Pendente |
+| 9 | Auditoria de dependências revisada antes do deploy (`yarn audit`) | ☐ Pendente |
+| 10 | Varredura de segredos no repositório (nenhum `.env` real commitado) | ☐ Pendente |
+| 11 | Decisão explícita sobre gerar source maps de produção | ☐ Pendente |
+| 12 | Decisão explícita sobre monitoramento de erros (ferramenta, se houver) | ☐ Pendente |
+| 13 | Console do navegador inspecionado em produção (sem erros/warnings inesperados) | ☐ Pendente |
+| 14 | Teste do banner de consentimento do Analytics (aceitar/recusar) | ☐ Pendente |
+| 15 | Teste de rede antes do consentimento (nenhuma requisição ao Google) | ☐ Pendente |
+| 16 | Teste de rede depois do consentimento (requisição ocorre e é mínima) | ☐ Pendente |
+| 17 | Confirmação de que nenhum evento de Analytics carrega dado pessoal | ☐ Pendente |
+| 18 | Propriedade verificada no Search Console | ☐ Pendente |
+| 19 | Sitemap enviado no Search Console | ☐ Pendente |
+| 20 | `robots.txt` validado na URL real de produção | ☐ Pendente |
+| 21 | JSON-LD validado na ferramenta de Rich Results do Google | ☐ Pendente |
+| 22 | Lighthouse executado em produção | ☐ Pendente |
+| 23 | Navegação completa por teclado testada | ☐ Pendente |
+| 24 | Teste rápido com leitor de tela (smoke test) | ☐ Pendente |
+| 25 | Teste em navegador mobile real | ☐ Pendente |
+| 26 | Validação funcional do formulário (todos os campos e mensagens de erro) | ☐ Pendente |
+| 27 | Validação do fallback de WhatsApp (link visível funciona) | ☐ Pendente |
+| 28 | Teste de backup/restauração — **somente se** armazenamento de leads for introduzido | ☐ N/A por enquanto |
+| 29 | Responsável definido para resposta a incidentes | ☐ Pendente |
+| 30 | Revisão jurídica de privacidade/LGPD concluída | ☐ Pendente |
+
 ## Observações
 
 - Nenhum arquivo específico de provedor (Vercel, Netlify, etc.) foi criado nesta
@@ -59,3 +101,7 @@ pronto para ir ao ar.
 - Nenhuma variável de ambiente, segredo, credencial ou domínio adicional foi
   inventado neste projeto.
 - Este checklist deve ser atualizado conforme cada item for resolvido.
+- Ver também [docs/SECURITY.md](SECURITY.md) (modelo de ameaças e fluxo de
+  dados), [docs/PRODUCTION_SECURITY_HEADERS.md](PRODUCTION_SECURITY_HEADERS.md)
+  (estratégia de cabeçalhos e CSP) e
+  [docs/SEO_AND_DISCOVERY.md](SEO_AND_DISCOVERY.md) (SEO e descoberta).

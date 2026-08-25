@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Variáveis de ambiente reais (nunca commitar segredos ou configuração real)
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+# O arquivo de exemplo é intencionalmente permitido: contém apenas placeholders em branco.
+!.env.example
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

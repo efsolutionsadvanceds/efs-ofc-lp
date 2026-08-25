@@ -231,3 +231,39 @@ arquitetura visual baseada em uma auditoria de código real, documentada em
 - **Nenhuma dependência nova** foi instalada. **Nenhum vídeo** foi adicionado.
   **Nenhum bloqueador de deploy foi marcado como resolvido** — os itens em
   `docs/DEPLOYMENT_CHECKLIST.md` continuam pendentes.
+
+## Status de implementação — Fase 6 (segurança, dados e descoberta)
+
+- **Formulário de contato**: os dados preenchidos **continuam não sendo
+  armazenados por este site**. A validação agora usa Zod v4
+  (`src/schemas/conversionFormSchema.ts`) como fonte única de verdade —
+  reforça, em tempo de execução, que segmento e prioridade só podem ser um
+  dos valores já aprovados, e que nenhum valor além do esperado chega a ser
+  usado na mensagem do WhatsApp.
+- **Google Analytics é opcional e desativado por padrão.** Só é ativado
+  quando um `VITE_GA_MEASUREMENT_ID` real e válido é configurado **e** o
+  visitante consente explicitamente pelo banner de privacidade em pt-BR.
+  Recusar ou ignorar o banner não afeta em nada a navegação, o formulário ou
+  o envio pelo WhatsApp.
+- **Apenas a escolha de consentimento** (aceitar/recusar) pode ficar salva
+  no navegador do visitante quando o Analytics está configurado — nunca
+  nome, empresa, segmento, prioridade, contexto ou qualquer outro dado do
+  formulário.
+- **Nenhum dado de formulário é enviado ao Analytics em nenhuma hipótese** —
+  os únicos eventos rastreados usam identificadores fixos definidos no
+  próprio código (por exemplo, qual botão foi clicado ou qual pergunta do
+  FAQ foi aberta), nunca texto digitado pelo visitante.
+- **O processamento da mensagem depois de aberta no WhatsApp é regido pelo
+  próprio WhatsApp e pelo processo operacional da EFSA** — fora do controle
+  técnico deste site.
+- **Este texto e a divulgação de privacidade do rodapé são informativos e
+  ainda dependem de revisão jurídica específica sobre a LGPD** antes de
+  serem tratados como texto legal definitivo.
+- **Turnstile/CAPTCHA não foi ativado nesta fase** — não existe endpoint de
+  servidor para proteger (o formulário processa tudo localmente no
+  navegador); ativar um CAPTCHA hoje só adicionaria atrito sem benefício de
+  segurança real. Ver `docs/SECURITY.md`.
+- Consulte [docs/SECURITY.md](SECURITY.md) para o modelo de ameaças completo
+  e o fluxo de dados, e
+  [docs/PRODUCTION_SECURITY_HEADERS.md](PRODUCTION_SECURITY_HEADERS.md) para
+  a estratégia de cabeçalhos de produção.

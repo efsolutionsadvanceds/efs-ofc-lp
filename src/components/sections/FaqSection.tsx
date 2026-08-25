@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import { useReducedMotion } from 'motion/react'
 import styled from 'styled-components'
+import { trackEvent } from '../../analytics/analytics'
 import { faqItems } from '../../data/faq'
 import { buildViewportRevealProps } from '../../utils/motionPresets'
 import {
@@ -87,7 +88,15 @@ export function FaqSection() {
 
         <FaqList>
           {faqItems.map((item, index) => (
-            <FaqItemEl key={item.id} open={index === 0}>
+            <FaqItemEl
+              key={item.id}
+              open={index === 0}
+              onToggle={(event) => {
+                if (event.currentTarget.open) {
+                  trackEvent('select_content', { content_type: 'faq', item_id: item.id })
+                }
+              }}
+            >
               <FaqSummary>
                 <FaqQuestion>{item.question}</FaqQuestion>
                 <ChevronDown aria-hidden="true" />

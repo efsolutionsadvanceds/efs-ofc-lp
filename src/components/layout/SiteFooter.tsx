@@ -1,5 +1,6 @@
 import { MessageCircle } from 'lucide-react'
 import styled from 'styled-components'
+import { trackEvent } from '../../analytics/analytics'
 import { contact } from '../../config/contact'
 import { goldActionStyles } from '../../styles/actions'
 import { ContentWrapper } from '../sections/sectionPrimitives'
@@ -217,6 +218,21 @@ const PrivacyText = styled.p`
   color: ${({ theme }) => theme.colors.metallicGray};
 `
 
+const PrivacyPreferencesButton = styled.button`
+  display: inline-flex;
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  padding: 0;
+  border: 0;
+  background: none;
+  color: ${({ theme }) => theme.colors.gold};
+  font-family: inherit;
+  font-size: ${({ theme }) => theme.typography.sizes.xs};
+  font-weight: ${({ theme }) => theme.typography.weights.semibold};
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+`
+
 const Copyright = styled.p`
   margin: 0;
   flex-shrink: 0;
@@ -224,7 +240,11 @@ const Copyright = styled.p`
   color: ${({ theme }) => theme.colors.metallicGray};
 `
 
-export function SiteFooter() {
+interface SiteFooterProps {
+  onOpenPrivacyPreferences?: () => void
+}
+
+export function SiteFooter({ onOpenPrivacyPreferences }: SiteFooterProps) {
   const currentYear = new Date().getFullYear()
 
   return (
@@ -259,7 +279,12 @@ export function SiteFooter() {
 
           <FooterContact>
             <FooterContactLabel>Conversa direta</FooterContactLabel>
-            <FooterCtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+            <FooterCtaLink
+              href={contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('generate_lead', { placement_id: 'footer' })}
+            >
               <MessageCircle aria-hidden="true" />
               FALAR COM A EFSA
             </FooterCtaLink>
@@ -273,8 +298,16 @@ export function SiteFooter() {
               Os dados preenchidos no formulário não são armazenados por este site. Ao continuar,
               eles são inseridos em uma mensagem que você decide enviar pelo WhatsApp. O
               tratamento posterior ocorre pelos canais de atendimento da EFSA e pela plataforma
-              utilizada para a conversa.
+              utilizada para a conversa. Quando o Google Analytics está habilitado, ele só é
+              carregado após o seu consentimento explícito, e apenas essa escolha de
+              consentimento fica salva neste navegador — nunca dados do formulário. Este texto é
+              informativo e ainda depende de revisão jurídica específica sobre a LGPD.
             </PrivacyText>
+            {onOpenPrivacyPreferences && (
+              <PrivacyPreferencesButton type="button" onClick={onOpenPrivacyPreferences}>
+                Preferências de privacidade
+              </PrivacyPreferencesButton>
+            )}
           </PrivacyBlock>
 
           <Copyright>© {currentYear} E.F Solutions Advanced's. Todos os direitos reservados.</Copyright>

@@ -1,4 +1,4 @@
-export const segmentOptions: readonly string[] = [
+export const segmentOptions = [
   'Reforma residencial',
   'Arquitetura e interiores',
   'Construção',
@@ -8,7 +8,7 @@ export const segmentOptions: readonly string[] = [
   'Outro segmento',
 ] as const
 
-export const priorityOptions: readonly string[] = [
+export const priorityOptions = [
   'Atrair mais oportunidades',
   'Melhorar a conversão e o atendimento',
   'Criar um sistema sob medida',

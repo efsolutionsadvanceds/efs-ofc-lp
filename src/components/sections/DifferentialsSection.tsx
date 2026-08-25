@@ -1,6 +1,7 @@
 import { MessageCircle } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
 import styled from 'styled-components'
+import { trackEvent } from '../../analytics/analytics'
 import { contact } from '../../config/contact'
 import { differentiators } from '../../data/differentiators'
 import type { Differentiator } from '../../data/differentiators'
@@ -250,7 +251,12 @@ export function DifferentialsSection() {
             </CheckpointText>
           </CheckpointCopy>
           <CheckpointActions>
-            <CheckpointCtaLink href={contact.whatsappUrl} target="_blank" rel="noopener noreferrer">
+            <CheckpointCtaLink
+              href={contact.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackEvent('generate_lead', { placement_id: 'diferenciais_checkpoint' })}
+            >
               <MessageCircle aria-hidden="true" />
               QUERO TER MAIS RESULTADOS
             </CheckpointCtaLink>

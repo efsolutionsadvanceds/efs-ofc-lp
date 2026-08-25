@@ -1,4 +1,13 @@
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import {
+  denyConsent,
+  getCurrentConsent,
+  grantConsent,
+  initAnalytics,
+  isAnalyticsAvailable,
+} from './analytics/analytics'
+import { ConsentBanner } from './components/analytics/ConsentBanner'
 import { SiteFooter } from './components/layout/SiteFooter'
 import { SiteHeader } from './components/layout/SiteHeader'
 import { BusinessDiagnosisSection } from './components/sections/BusinessDiagnosisSection'
@@ -29,6 +38,28 @@ const SkipLink = styled.a`
 `
 
 function App() {
+  const [isConsentPanelOpen, setIsConsentPanelOpen] = useState(
+    () => isAnalyticsAvailable() && getCurrentConsent() === null,
+  )
+
+  useEffect(() => {
+    initAnalytics()
+  }, [])
+
+  function handleAcceptAnalytics() {
+    grantConsent()
+    setIsConsentPanelOpen(false)
+  }
+
+  function handleRejectAnalytics() {
+    denyConsent()
+    setIsConsentPanelOpen(false)
+  }
+
+  function handleOpenPrivacyPreferences() {
+    setIsConsentPanelOpen(true)
+  }
+
   return (
     <>
       <SkipLink href="#conteudo-principal">Pular para o conteúdo</SkipLink>
@@ -42,7 +73,12 @@ function App() {
         <FaqSection />
         <ConversionSection />
       </main>
-      <SiteFooter />
+      <SiteFooter
+        onOpenPrivacyPreferences={isAnalyticsAvailable() ? handleOpenPrivacyPreferences : undefined}
+      />
+      {isAnalyticsAvailable() && isConsentPanelOpen && (
+        <ConsentBanner onAccept={handleAcceptAnalytics} onReject={handleRejectAnalytics} />
+      )}
     </>
   )
 }

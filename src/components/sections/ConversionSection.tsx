@@ -3,10 +3,22 @@ import type { ChangeEvent, FormEvent } from 'react'
 import { MessageCircle } from 'lucide-react'
 import { useReducedMotion } from 'motion/react'
 import styled from 'styled-components'
+import { trackEvent } from '../../analytics/analytics'
 import { contact } from '../../config/contact'
 import { priorityOptions, segmentOptions } from '../../data/conversionForm'
+import {
+  CONTEXT_MAX_LENGTH,
+  COMPANY_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  parseConversionForm,
+} from '../../schemas/conversionFormSchema'
+import type {
+  ConversionFormErrors,
+  ConversionFormInput,
+} from '../../schemas/conversionFormSchema'
 import { goldActionStyles } from '../../styles/actions'
 import { buildViewportRevealProps } from '../../utils/motionPresets'
+import { buildWhatsAppFormMessage } from '../../utils/whatsappMessage'
 import { SignalConvergence } from '../visuals/SignalConvergence'
 import {
   ContentWrapper,
@@ -17,58 +29,12 @@ import {
   SectionParagraph,
 } from './sectionPrimitives'
 
-const NAME_MAX = 80
-const COMPANY_MAX = 100
-const CONTEXT_MAX = 500
-
-interface FormValues {
-  nome: string
-  empresa: string
-  segmento: string
-  prioridade: string
-  contexto: string
-}
-
-interface FormErrors {
-  nome?: string
-  empresa?: string
-  segmento?: string
-  prioridade?: string
-}
-
-const initialValues: FormValues = {
+const initialValues: ConversionFormInput = {
   nome: '',
   empresa: '',
   segmento: '',
   prioridade: '',
   contexto: '',
-}
-
-function validate(values: FormValues): FormErrors {
-  const errors: FormErrors = {}
-
-  if (!values.nome.trim()) errors.nome = 'Informe o seu nome.'
-  if (!values.empresa.trim()) errors.empresa = 'Informe o nome da empresa.'
-  if (!values.segmento) errors.segmento = 'Selecione o segmento principal.'
-  if (!values.prioridade) errors.prioridade = 'Selecione a prioridade mais importante neste momento.'
-
-  return errors
-}
-
-function buildWhatsAppFormMessage(values: FormValues): string {
-  const contexto = values.contexto.trim() || 'Não informado'
-
-  return [
-    'Olá! Vim pelo site da EFSA e gostaria de conversar sobre o meu cenário.',
-    '',
-    `Nome: ${values.nome.trim()}`,
-    `Empresa: ${values.empresa.trim()}`,
-    `Segmento: ${values.segmento}`,
-    `Principal prioridade: ${values.prioridade}`,
-    `Contexto: ${contexto}`,
-    '',
-    'Gostaria de entender qual solução faz mais sentido para a minha empresa.',
-  ].join('\n')
 }
 
 const ContactGrid = styled.div`
@@ -329,8 +295,8 @@ const FallbackLink = styled.a`
 
 export function ConversionSection() {
   const shouldReduceMotion = useReducedMotion()
-  const [values, setValues] = useState<FormValues>(initialValues)
-  const [errors, setErrors] = useState<FormErrors>({})
+  const [values, setValues] = useState<ConversionFormInput>(initialValues)
+  const [errors, setErrors] = useState<ConversionFormErrors>({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null)
 
@@ -338,9 +304,17 @@ export function ConversionSection() {
   const empresaRef = useRef<HTMLInputElement>(null)
   const segmentoRef = useRef<HTMLSelectElement>(null)
   const primeiraPrioridadeRef = useRef<HTMLInputElement>(null)
+  const hasTrackedFormStartRef = useRef(false)
+
+  function trackFormStartOnce() {
+    if (hasTrackedFormStartRef.current) return
+    hasTrackedFormStartRef.current = true
+    trackEvent('form_start')
+  }
 
   function handleTextChange(field: 'nome' | 'empresa' | 'contexto') {
     return (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      trackFormStartOnce()
       const { value } = event.target
       setValues((prev) => ({ ...prev, [field]: value }))
       if (field === 'nome' || field === 'empresa') {
@@ -350,11 +324,13 @@ export function ConversionSection() {
   }
 
   function handleSegmentoChange(event: ChangeEvent<HTMLSelectElement>) {
+    trackFormStartOnce()
     setValues((prev) => ({ ...prev, segmento: event.target.value }))
     setErrors((prev) => ({ ...prev, segmento: undefined }))
   }
 
   function handlePrioridadeChange(event: ChangeEvent<HTMLInputElement>) {
+    trackFormStartOnce()
     setValues((prev) => ({ ...prev, prioridade: event.target.value }))
     setErrors((prev) => ({ ...prev, prioridade: undefined }))
   }
@@ -363,28 +339,37 @@ export function ConversionSection() {
     event.preventDefault()
     if (isSubmitting) return
 
-    const nextErrors = validate(values)
-    setErrors(nextErrors)
+    const result = parseConversionForm(values)
 
-    if (nextErrors.nome) {
-      nomeRef.current?.focus()
-      return
-    }
-    if (nextErrors.empresa) {
-      empresaRef.current?.focus()
-      return
-    }
-    if (nextErrors.segmento) {
-      segmentoRef.current?.focus()
-      return
-    }
-    if (nextErrors.prioridade) {
-      primeiraPrioridadeRef.current?.focus()
+    if (!result.success) {
+      setErrors(result.errors)
+      trackEvent('form_validation_error', {
+        error_count: Object.values(result.errors).filter(Boolean).length,
+      })
+
+      if (result.errors.nome) {
+        nomeRef.current?.focus()
+        return
+      }
+      if (result.errors.empresa) {
+        empresaRef.current?.focus()
+        return
+      }
+      if (result.errors.segmento) {
+        segmentoRef.current?.focus()
+        return
+      }
+      if (result.errors.prioridade) {
+        primeiraPrioridadeRef.current?.focus()
+        return
+      }
       return
     }
 
+    setErrors({})
     setIsSubmitting(true)
-    const message = buildWhatsAppFormMessage(values)
+    trackEvent('generate_lead', { placement_id: 'formulario_contato' })
+    const message = buildWhatsAppFormMessage(result.data)
     const url = contact.buildWhatsAppUrl(message)
     setFallbackUrl(url)
     window.open(url, '_blank', 'noopener,noreferrer')
@@ -421,7 +406,7 @@ export function ConversionSection() {
                   name="nome"
                   type="text"
                   autoComplete="name"
-                  maxLength={NAME_MAX}
+                  maxLength={NAME_MAX_LENGTH}
                   value={values.nome}
                   onChange={handleTextChange('nome')}
                   aria-invalid={errors.nome ? true : undefined}
@@ -445,7 +430,7 @@ export function ConversionSection() {
                   name="empresa"
                   type="text"
                   autoComplete="organization"
-                  maxLength={COMPANY_MAX}
+                  maxLength={COMPANY_MAX_LENGTH}
                   value={values.empresa}
                   onChange={handleTextChange('empresa')}
                   aria-invalid={errors.empresa ? true : undefined}
@@ -522,12 +507,12 @@ export function ConversionSection() {
               <TextArea
                 id="form-contexto"
                 name="contexto"
-                maxLength={CONTEXT_MAX}
+                maxLength={CONTEXT_MAX_LENGTH}
                 value={values.contexto}
                 onChange={handleTextChange('contexto')}
               />
               <CharCounter>
-                {values.contexto.length}/{CONTEXT_MAX}
+                {values.contexto.length}/{CONTEXT_MAX_LENGTH}
               </CharCounter>
             </FieldBlock>
 
