@@ -6,7 +6,9 @@ engenheiro ou assistente de IA entenda o projeto rapidamente. Este documento
 
 ## 1. Última atualização
 
-2026-08-24 (Fase 3 — Processo de Trabalho, Diferenciais e checkpoint de conversão).
+2026-08-24 (Fase 4 — FAQ, formulário de conversão, composição cinematográfica final,
+rodapé e SEO técnico). **Estrutura da versão 1 completa** — isso não significa que o
+projeto está pronto para produção; ver [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
 
 ## 2. Objetivo do projeto
 
@@ -14,20 +16,19 @@ Landing page institucional da **E.F Solutions Advanced's** (marca pública **EFS
 Engenharia de Software**), em português do Brasil, para empresas de alto ticket dos
 segmentos de reforma, arquitetura, construção, vidraçaria, marmoraria, reforma
 residencial, interiores e limpeza. Objetivo de conversão único: levar o visitante a
-uma conversa no WhatsApp (CTA "QUERO TER MAIS RESULTADOS"). Ver
-[docs/PROJECT_BRIEF.md](PROJECT_BRIEF.md) para o briefing completo de marca e
-posicionamento.
+uma conversa no WhatsApp. Ver [docs/PROJECT_BRIEF.md](PROJECT_BRIEF.md) para o
+briefing completo de marca e posicionamento.
 
 ## 3. Git
 
 - **Branch atual:** `main`
-- **Último checkpoint committado:** `0e83ee28b867570e4e18c14cb96d1e29fd40ec3d` —
-  `feat: add business diagnosis and solution architecture` (Fase 2)
-- A Fase 3 (Processo de Trabalho, Diferenciais, checkpoint de conversão) está
-  implementada no working tree **sem commit** no momento em que este documento foi
-  escrito (ver seção 19).
+- **Último checkpoint committado:** `57e6041933f1136cfdabd7e82ddb1ce1716ef627` —
+  `feat: add cinematic process and technical differentiators` (Fase 3)
+- A Fase 4 (FAQ, formulário, composição final, rodapé, SEO) está implementada no
+  working tree **sem commit** no momento em que este documento foi escrito (ver
+  seção 19).
 
-## 4. Dependências exatas
+## 4. Dependências de produção exatas
 
 **dependencies:**
 
@@ -52,167 +53,140 @@ typescript            ~6.0.2
 vite                  ^8.2.2
 ```
 
-Nenhuma outra dependência foi instalada até o momento (sem Tailwind, GSAP, Three.js,
-bibliotecas de partícula, kits de UI, formulários, analytics ou Supabase).
+Nenhuma dependência nova foi instalada em nenhuma das quatro fases além das listadas
+acima. Sem Tailwind, GSAP, Three.js, bibliotecas de partícula, kits de UI,
+formulário, validação, roteamento, analytics ou Supabase.
 
-## 5. Mapa de diretórios relevante
+## 5. Ordem final da página (versão 1)
 
-```
-src/
-├── App.tsx                              # Composição da página (Header + main + seções)
-├── main.tsx                             # Entry point: ThemeProvider + GlobalStyle + fonte
-├── components/
-│   ├── layout/
-│   │   └── SiteHeader.tsx               # Header sticky, wordmark, nav, CTA WhatsApp
-│   ├── sections/
-│   │   ├── sectionPrimitives.tsx        # Primitivos compartilhados (Section/Eyebrow/H2/...)
-│   │   ├── HeroSection.tsx              # Hero (Fase 1)
-│   │   ├── BusinessDiagnosisSection.tsx # #diagnostico (Fase 2)
-│   │   ├── SolutionArchitectureSection.tsx # #solucoes (Fase 2)
-│   │   ├── WorkProcessSection.tsx       # #como-atuamos (Fase 3)
-│   │   └── DifferentialsSection.tsx     # #diferenciais + checkpoint (Fase 3)
-│   └── visuals/
-│       ├── AmbientHeroBackground.tsx    # Fundo ambiente da Hero (SVG + Motion)
-│       ├── BusinessEngine.tsx           # Painel conceitual da Hero ("DEMONSTRAÇÃO CONCEITUAL")
-│       ├── AnimatedCheck.tsx            # Checkmark SVG animado (reutilizado)
-│       └── EngineeringBlueprint.tsx     # Painel "EFSA ENGINEERING BLUEPRINT" (Fase 3)
-├── data/                                 # Conteúdo estático tipado (sem lógica)
-│   ├── heroStages.ts
-│   ├── businessDiagnosis.ts
-│   ├── solutionPillars.ts
-│   ├── processSteps.ts
-│   └── differentiators.ts
-├── config/
-│   └── contact.ts                       # Configuração central do WhatsApp
-├── hooks/
-│   └── usePageVisibility.ts             # Page Visibility API compartilhada
-├── utils/
-│   └── motionPresets.ts                 # Helper de revelação por viewport (Motion)
-└── styles/
-    ├── theme.ts                          # Tema tipado (tokens)
-    ├── GlobalStyle.ts                    # Reset + acessibilidade + scroll suave
-    └── styled.d.ts                       # Augmentação de tipos do DefaultTheme
-```
+1. Site Header (`#topo`)
+2. Hero
+3. Diagnóstico do Negócio (`#diagnostico`)
+4. Arquitetura de Soluções (`#solucoes`)
+5. Como Atuamos (`#como-atuamos`)
+6. Diferenciais + checkpoint de conversão (`#diferenciais`)
+7. Dúvidas / FAQ (`#duvidas`)
+8. Contato / formulário de conversão (`#contato`)
+9. Rodapé (com bloco de privacidade `#privacidade`)
 
-## 6. Seções implementadas (ordem visual)
+## 6. IDs de seção e alvos de âncora (Header e Footer)
 
-1. **Hero** (`HeroSection.tsx`) — copy principal, CTAs, EFSA Business Engine.
-2. **Diagnóstico do Negócio** (`BusinessDiagnosisSection.tsx`, `#diagnostico`).
-3. **Arquitetura de Soluções** (`SolutionArchitectureSection.tsx`, `#solucoes`).
-4. **Como Atuamos** (`WorkProcessSection.tsx`, `#como-atuamos`) — processo em 4 etapas
-   com painel cinematográfico "EFSA Engineering Blueprint".
-5. **Diferenciais** (`DifferentialsSection.tsx`, `#diferenciais`) — composição
-   editorial + declaração de transparência + checkpoint de conversão final.
+| Alvo               | id                 | Header | Footer |
+| -------------------- | ------------------ | :----: | :----: |
+| Topo da página        | `topo`             | —      | ✅     |
+| Diagnóstico            | `diagnostico`      | ✅     | ✅     |
+| Soluções                | `solucoes`         | ✅     | ✅     |
+| Como Atuamos             | `como-atuamos`     | ✅     | ✅     |
+| Diferenciais              | `diferenciais`     | —      | —      |
+| Dúvidas                    | `duvidas`          | —      | ✅     |
+| Contato                     | `contato`          | —      | ✅     |
+| Privacidade (dentro do rodapé) | `privacidade`  | —      | —      |
+| Painel Business Engine (Hero) | `business-engine` | —   | —      |
+| Landmark principal            | `conteudo-principal` | (skip link) | — |
 
-## 7. IDs de seção e alvos de âncora do Header
+"Diferenciais" foi deliberadamente omitido do Header para preservar o equilíbrio
+visual da navegação (decisão da Fase 3, mantida). O link de skip ("Pular para o
+conteúdo") é o primeiro elemento focável da página e leva a `#conteudo-principal`.
 
-| Seção                    | id             | No menu do Header? |
-| ------------------------- | -------------- | ------------------- |
-| Diagnóstico do Negócio     | `diagnostico`  | Sim (`#diagnostico`) |
-| Arquitetura de Soluções    | `solucoes`     | Sim (`#solucoes`)    |
-| Como Atuamos               | `como-atuamos` | Sim (`#como-atuamos`)|
-| Diferenciais                | `diferenciais` | Não (mantém o Header equilibrado) |
-| Painel Business Engine (Hero) | `business-engine` | Não (alvo de foco/scroll do CTA secundário da Hero, não é link do menu) |
+## 7. Arquitetura da FAQ
 
-## 8. Responsabilidades dos principais componentes
+`src/components/sections/FaqSection.tsx` + `src/data/faq.ts` (7 perguntas/respostas
+estáticas e tipadas). Usa `<details>/<summary>` nativos — funciona sem JavaScript
+para abrir/fechar; nenhum item é forçado a ficar sozinho aberto (apenas o primeiro
+vem aberto por padrão). O indicador visual (chevron) gira via seletor CSS
+`details[open] > & svg`, sem JavaScript. Título de cada pergunta é um `h3` real
+dentro do `<summary>`.
 
-- **`SiteHeader`** — header sticky; muda de aparência após ~24px de scroll
-  (`useScroll`/`useMotionValueEvent`, sem listener manual); navegação secundária por
-  âncoras nativas; CTA único do WhatsApp.
-- **`BusinessEngine`** — demonstração conceitual da Hero (rótulo obrigatório
-  "DEMONSTRAÇÃO CONCEITUAL"); tablist acessível com rotação automática pausável.
-- **`EngineeringBlueprint`** — painel "FLUXO DE ENGENHARIA" do Processo de Trabalho;
-  aceita `activeIndex`/`status`/`variant` (`interactive` no desktop sticky,
-  `static` no resumo mobile e em `prefers-reduced-motion`).
-- **`WorkProcessSection`** — layout de duas colunas com painel sticky (≥1280px) e
-  detecção de etapa ativa via `useInView` (IntersectionObserver) por etapa.
-- **`DifferentialsSection`** — composição editorial (coluna de afirmação + trilho de
-  diferenciais) + checkpoint de conversão integrado ao final da seção.
-- **`sectionPrimitives.tsx`** — `SectionContainer` (com `scroll-margin-top`),
-  `ContentWrapper`, `SectionIntro`, `Eyebrow`, `SectionHeading` (h2), `SectionParagraph`,
-  reutilizados por todas as seções pós-Hero para continuidade visual.
+## 8. Arquitetura do formulário de conversão
 
-## 9. Tema e tokens de design (resumo)
+`src/components/sections/ConversionSection.tsx`. Estado local via `useState`
+(`values`, `errors`, `isSubmitting`, `fallbackUrl`) — nenhuma persistência. Campos:
+nome (texto, obrigatório, máx. 80), empresa (texto, obrigatório, máx. 100), segmento
+(select nativo, obrigatório), prioridade (`fieldset`/`legend` com rádios nativos,
+obrigatório), contexto (textarea, opcional, máx. 500, com contador de caracteres
+sem `aria-live`). Validação própria em `validate()` (não depende de bibliotecas);
+erros em português, associados via `aria-describedby` + `role="alert"`; foco move
+para o primeiro campo inválido após tentativa de envio.
 
-`src/styles/theme.ts` exporta `theme` tipado (`AppTheme`) com:
+## 9. Geração da mensagem do WhatsApp
 
-- **colors:** `background`, `black`, `surfaceDark`, `surfaceElevated`, `metallicGray`,
-  `darkBlue`, `gold`, `white`, `textMuted`, `borderSubtle`.
-- **typography:** `fontFamily` (Inter Variable), `fontFamilyMono` (stack de sistema),
-  `weights` (regular/medium/semibold/bold), `sizes` (xs → 4xl).
-- **spacing:** escala xs → 4xl (rem).
-- **radii:** sm/md/lg/full.
-- **shadows:** sm/md/lg.
-- **breakpoints:** sm (480px) / md (768px) / lg (1024px) / xl (1280px).
+`buildWhatsAppFormMessage()` monta o texto (valores `trim()`, campo opcional vira
+"Não informado"); `contact.buildWhatsAppUrl(message)` (extensão da configuração já
+existente em `src/config/contact.ts`, reutilizando o mesmo número/URL usados em
+todos os outros CTAs) constrói a URL com `URLSearchParams`. `window.open(url,
+'_blank', 'noopener,noreferrer')` abre o WhatsApp; a URL gerada é sempre exibida
+como link de fallback visível após a tentativa de envio (`rel="noopener
+noreferrer"`), já que a detecção de bloqueio de pop-up é inerentemente pouco
+confiável entre navegadores — o fallback fica sempre disponível, não apenas quando
+um bloqueio é "detectado".
 
-Nenhum novo token foi adicionado na Fase 3 além do já existente `fontFamilyMono`
-(Fase 1); todos os novos componentes reutilizam os tokens acima.
+## 10. Comportamento de privacidade
 
-## 10. Arquitetura de Motion e interação
+Nenhum dado do formulário é armazenado pelo site (sem rede, sem `localStorage`,
+`sessionStorage`, cookies ou IndexedDB). Microcopy exibida no formulário: "Este
+site não armazena os dados preenchidos neste formulário." Bloco de privacidade
+completo no rodapé (`#privacidade`) reforça que o tratamento posterior ocorre pelos
+canais de atendimento da EFSA e pela plataforma do WhatsApp.
 
-- **Entrada ao montar (Hero):** helper local `buildEntranceProps` em `HeroSection.tsx`.
-- **Revelação ao entrar no viewport (seções pós-Hero):** `buildViewportRevealProps`
-  em `src/utils/motionPresets.ts`, usa `whileInView` + `viewport:{once:true}`.
-- **Etapa ativa por scroll (Processo de Trabalho):** `useInView` do Motion (uma
-  instância por etapa, via IntersectionObserver interno, `margin: '-42% 0px -42%
-  0px'`) reporta mudanças discretas a um `useCallback` que atualiza um único
-  `useState<number>` (`activeIndex`) — nenhum listener de scroll manual, nenhum
-  `setState` por frame.
-- **Transformações contínuas:** `useScroll` + `useTransform` (paralaxe restrita do
-  Blueprint) e `useSpring` (progresso do traçado dourado) — sempre como *Motion
-  values*, nunca como estado React por frame.
-- **Cabeçalho com estado discreto:** mesmo padrão desde a Fase 1 (`useMotionValueEvent`
-  só dispara `setState` ao cruzar um limiar, não a cada pixel).
+## 11. Comportamento da composição cinematográfica final
 
-## 11. Comportamento de `prefers-reduced-motion`
+"EFSA Signal Convergence" (`src/components/visuals/SignalConvergence.tsx`),
+integrada à seção de contato. Três traçados SVG (Aquisição, Atendimento, Operação)
+convergem para um nó central "EFSA"; um traçado restrito segue em direção ao
+formulário com um sinal dourado percorrendo-o uma única vez. Toca uma vez ao entrar
+no viewport (`whileInView` + `viewport:{once:true}`), nunca em loop. Sob
+`prefers-reduced-motion`, todos os traços/nós são renderizados imediatamente no
+estado final, sem desenho nem sinal em movimento.
 
-- Base global em `GlobalStyle.ts`: reduz durações de animação/transição a ~0 e força
-  `scroll-behavior: auto`.
-- Cada componente animado também consulta `useReducedMotion()` do Motion e
-  desliga individualmente: rotação automática (Business Engine), paralaxe/scan/mola
-  (Engineering Blueprint — passa a renderizar o traçado já completo, sem Motion),
-  stagger de entrada (todas as seções), movimento do ponteiro (Hero).
-- Nenhuma informação é ocultada sob `prefers-reduced-motion` — apenas o movimento é
-  removido.
+## 12. Arquivos de SEO
 
-## 12. Integração com WhatsApp
+- `index.html`: `lang="pt-BR"`, `title`, `meta description`, `canonical`,
+  `robots` (index, follow), Open Graph (type/locale/title/description/url), Twitter
+  Card (summary). **Nenhum `og:image`** foi adicionado — não existe ativo aprovado
+  de social-preview (ver checklist de deploy).
+- **Dado estruturado:** um bloco `Organization` em JSON-LD estático, escrito
+  diretamente no `<head>` do `index.html` (sem `dangerouslySetInnerHTML`, sem React).
+  Contém apenas `name`, `alternateName`, `url`, `description` e `areaServed: "BR"` —
+  nenhum dado não verificado (sem endereço, telefone, e-mail, `sameAs`, avaliações
+  ou prêmios).
+- `public/robots.txt`: permite rastreamento geral e referencia
+  `https://efsa.com.br/sitemap.xml`.
+- `public/sitemap.xml`: contém apenas `https://efsa.com.br/` (sem `lastmod`
+  inventado, sem rotas de desenvolvimento).
 
-Centralizada em `src/config/contact.ts`: um número de telefone (formato somente
-dígitos, com código do país e DDD) e uma mensagem padrão, combinados em uma URL
-`https://wa.me/...` construída com `URLSearchParams`. Todos os CTAs do site (Header,
-Hero, Arquitetura de Soluções, Diferenciais) importam `contact.whatsappUrl` do mesmo
-arquivo — nenhuma URL ou número é duplicado em componentes. Os detalhes exatos do
-número/mensagem não são repetidos aqui; consulte o arquivo de configuração
-diretamente.
+## 13. Decisões de acessibilidade (acumuladas)
 
-## 13. Decisões de acessibilidade
+- Um único `h1` (Hero); títulos de seção `h2`; subtítulos `h3` em hierarquia lógica.
+- Skip link funcional, landmark principal com `id="conteudo-principal"` e
+  `tabIndex={-1}` para garantir o foco ao ativar o link.
+- Todo SVG decorativo é `aria-hidden`; textos com significado próprio (rótulos do
+  Blueprint, da Convergência, categorias) permanecem fora do `aria-hidden`.
+- Nenhum `aria-live` em conteúdo que muda automaticamente; erros de formulário
+  usam `role="alert"` porque são resultado direto de uma ação explícita do usuário.
+- Controles nativos em todo o formulário (`select`, rádios com `accent-color`, sem
+  nenhum primitivo customizado inacessível).
+- `scroll-margin-top` em todas as seções-alvo de âncora.
+- Alvos de toque em torno de 44px em todos os controles interativos.
 
-- Apenas um `h1` na página inteira (Hero); títulos de seção são `h2`; títulos de
-  cartão/etapa/diferencial são `h3`.
-- Semântica de `header`, `main`, `section`, listas e botões nativos.
-- `tablist`/`tab`/`tabpanel` no Business Engine; disclosure (`aria-expanded`/
-  `aria-controls`) no Diagnóstico.
-- Todo SVG decorativo é `aria-hidden="true"`.
-- Nenhum `aria-live` em conteúdo que muda automaticamente (rotação do Business
-  Engine, etapa ativa do Blueprint); o único `aria-live="polite"` existente reage a
-  uma ação explícita do usuário (painel de resposta do Diagnóstico).
-- Foco visível herdado do `GlobalStyle` (`:focus-visible` dourado), reforçado
-  localmente onde necessário.
-- Alvos de toque em torno de 44px nos CTAs e controles interativos.
-- Seções-alvo de âncora usam `scroll-margin-top` para compensar o Header sticky.
-- Nenhuma seleção de texto desabilitada; nenhum cursor customizado inacessível.
+## 14. Decisões de redução de movimento
 
-## 14. Base de segurança e privacidade
+Base global em `GlobalStyle.ts` (`prefers-reduced-motion`) + `useReducedMotion()`
+do Motion consultado individualmente em cada componente animado (Hero, Business
+Engine, Engineering Blueprint, Signal Convergence, revelações de seção). Nenhuma
+lógica de reduced-motion duplicada — todas as seções pós-Hero compartilham o mesmo
+helper `buildViewportRevealProps` de `src/utils/motionPresets.ts`.
 
-- Sem `dangerouslySetInnerHTML`, scripts externos ou CDNs.
-- Sem segredos ou variáveis de ambiente no projeto.
-- Sem coleta de dados do usuário, formulários, cookies ou analytics nesta fase.
-- Conteúdo do Business Engine e do Engineering Blueprint é estático e tipado —
-  nenhum dado "ao vivo", nenhuma execução de código exibido.
-- Links externos sempre com `target="_blank" rel="noopener noreferrer"`.
-- Nenhuma alegação de segurança absoluta ou "total" em nenhum texto do site.
+## 15. Decisões de segurança
 
-## 15. Comandos de verificação
+Sem `dangerouslySetInnerHTML` em nenhum componente React (o único HTML estático
+fora do React é o JSON-LD, escrito diretamente no `index.html`). Sem scripts
+externos, CDNs, segredos, variáveis de ambiente, analytics ou coleta de dados. Sem
+requisição de rede partindo do site. Todos os links externos usam `rel="noopener
+noreferrer"`; `window.open` usa a mesma proteção via `windowFeatures`. Campos do
+formulário têm `maxLength` nativo. Nenhuma alegação de segurança absoluta ou "total"
+em nenhum texto do site.
+
+## 16. Comandos de verificação
 
 ```
 yarn install   # instala dependências
@@ -222,42 +196,48 @@ yarn build     # tsc -b && vite build
 yarn preview   # serve o build de produção localmente
 ```
 
-## 16. Status atual de teste, lint e build
+## 17. Status atual de teste, lint e build
 
 - **Testes:** nenhum runner de testes automatizados está configurado no projeto até
-  o momento (sem Jest/Vitest/Playwright instalado).
-- **Lint:** `yarn lint` (oxlint) — sem erros ou avisos ao final da Fase 3.
+  o momento.
+- **Lint:** `yarn lint` (oxlint) — sem erros ou avisos ao final da Fase 4.
 - **Build:** `yarn build` — sucesso, TypeScript `strict` sem erros.
 
-## 17. Limitações conhecidas
+## 18. Bloqueadores conhecidos de lançamento
 
-- Nenhum vídeo de fundo foi implementado (adiado deliberadamente).
-- Nenhum formulário, FAQ, seção de objeções, política de privacidade ou rodapé
-  existe ainda.
-- Nenhuma integração com Supabase, backend ou analytics existe ainda.
-- A EFSA não possui resultados de clientes verificados; nenhuma prova social,
-  depoimento, métrica ou estudo de caso é exibido em nenhuma parte do site.
-- A validação visual em navegador real (breakpoints, paralaxe, sticky, contraste)
-  não foi realizada neste ambiente — apenas revisão de código, lint e build.
-- O favicon de marca ainda não foi definido (nenhum arquivo foi fornecido).
+Ver [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) para a lista completa.
+Resumo dos principais bloqueadores:
 
-## 18. Próximas fases planejadas
+- Confirmação do número comercial oficial do WhatsApp em produção.
+- Logo oficial, favicon e imagem de social-preview (1200×630) ainda não existem.
+- Hospedagem, DNS de `efsa.com.br` e HTTPS ainda não configurados.
+- Cabeçalhos de segurança de produção (CSP etc.) ainda não configurados nem
+  testados contra styled-components e a fonte autohospedada.
+- Decisão pendente sobre Google Analytics e sobre armazenamento de leads no
+  Supabase.
+- Nenhum teste em dispositivos/navegadores reais nem Lighthouse em produção foi
+  executado.
 
-Objeções, FAQ, formulário de lead, política de privacidade e rodapé.
-
-## 19. Resumo dos arquivos não commitados da Fase 3 (no momento da escrita)
+## 19. Resumo dos arquivos não commitados da Fase 4 (no momento da escrita)
 
 **Criados:**
-`src/data/processSteps.ts`, `src/data/differentiators.ts`,
-`src/components/visuals/EngineeringBlueprint.tsx`,
-`src/components/sections/WorkProcessSection.tsx`,
-`src/components/sections/DifferentialsSection.tsx`,
-`docs/CODEBASE_STATE.md` (este arquivo).
+`src/data/faq.ts`, `src/data/conversionForm.ts`,
+`src/components/sections/FaqSection.tsx`,
+`src/components/sections/ConversionSection.tsx`,
+`src/components/visuals/SignalConvergence.tsx`,
+`src/components/layout/SiteFooter.tsx`,
+`public/robots.txt`, `public/sitemap.xml`,
+`docs/DEPLOYMENT_CHECKLIST.md`,
+`docs/CODEBASE_STATE.md` (este arquivo, reescrito).
 
 **Modificados:**
-`src/App.tsx` (compõe as duas novas seções),
-`src/components/layout/SiteHeader.tsx` (link "Como atuamos"),
-`README.md`, `docs/PROJECT_BRIEF.md` (status da Fase 3).
+`src/App.tsx` (skip link, landmark principal, composição final de todas as seções e
+o rodapé), `src/components/layout/SiteHeader.tsx` (`id="topo"`),
+`src/config/contact.ts` (extensão limpa: `buildWhatsAppUrl` agora aceita apenas a
+mensagem e é exportado para reuso pelo formulário), `src/styles/theme.ts` (token
+`colors.danger` adicionado, único token novo desta fase, usado nos estados de erro
+do formulário), `index.html` (SEO técnico completo + JSON-LD), `README.md`,
+`docs/PROJECT_BRIEF.md`.
 
-Nenhuma dependência nova foi adicionada; `package.json` permanece inalterado desde o
-checkpoint da Fase 2.
+Nenhuma dependência nova foi adicionada; `package.json` permanece inalterado desde
+o checkpoint da Fase 3.

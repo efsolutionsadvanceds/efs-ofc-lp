@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://efsa.com.br/sitemap.xml

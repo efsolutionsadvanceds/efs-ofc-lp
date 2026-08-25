@@ -144,5 +144,43 @@ Nenhuma dessas integrações está implementada nesta etapa do projeto, que cobr
 - **Próxima fase planejada:** objeções, FAQ, formulário de lead, política de
   privacidade e rodapé.
 
+## Status de implementação — Fase 4 (FAQ, formulário, composição final, rodapé e SEO)
+
+Esta fase completa a **estrutura da versão 1** da landing page. "Versão 1 completa"
+refere-se à estrutura de conteúdo e interação da página — **não** significa que o
+site está pronto para produção/deploy (ver [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)
+para as pendências reais, como hospedagem, DNS, favicon oficial e imagem de
+social-preview).
+
+- **FAQ implementada** (`src/components/sections/FaqSection.tsx`, `#duvidas`) com
+  `<details>/<summary>` nativos — funciona sem depender de JavaScript para a
+  acessibilidade básica.
+- **Formulário de conversão pelo WhatsApp implementado** (`src/components/sections/ConversionSection.tsx`,
+  `#contato`). **Os dados preenchidos não são armazenados por este site** — nenhuma
+  requisição de rede, `localStorage`, `sessionStorage`, cookie ou IndexedDB é usada.
+  Ao validar, o site monta a mensagem, codifica com `URLSearchParams` e abre o
+  WhatsApp em uma nova aba; **o visitante revisa e confirma o envio dentro do
+  WhatsApp** — o site nunca afirma que a mensagem foi enviada.
+- **Composição cinematográfica final "EFSA Signal Convergence"** implementada
+  (`src/components/visuals/SignalConvergence.tsx`), integrada à seção de contato,
+  tocando uma única vez ao entrar no viewport (sem loop, sem pulso contínuo).
+- **Rodapé e divulgação de privacidade** implementados
+  (`src/components/layout/SiteFooter.tsx`, bloco `#privacidade`) — sem links de
+  redes sociais, e-mail, CNPJ ou endereço inventados.
+- **SEO técnico** revisado em `index.html` (title, description, canonical, Open
+  Graph, Twitter Card) e dado estruturado `Organization` em JSON-LD estático (sem
+  `dangerouslySetInnerHTML`, direto no HTML). `public/robots.txt` e
+  `public/sitemap.xml` criados, referenciando apenas `https://efsa.com.br/`.
+- **Google Analytics permanece intencionalmente ausente** — nenhuma dependência,
+  script ou ID placeholder foi adicionado.
+- **Armazenamento de leads no Supabase permanece intencionalmente ausente** — o
+  WhatsApp continua sendo o único canal de conversão.
+- **Favicon oficial e imagem de social-preview (1200×630) ainda não existem** —
+  nenhum substituto foi criado; ambos estão listados como bloqueadores de
+  lançamento em [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md).
+- **Nenhuma nova dependência foi instalada** nesta fase.
+- **Vídeo de fundo** permanece adiado para uma fase futura de aprimoramento visual.
+
 Consulte [docs/CODEBASE_STATE.md](CODEBASE_STATE.md) para o handoff técnico completo
-do estado atual do código.
+do estado atual do código e [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)
+para as pendências antes do lançamento.

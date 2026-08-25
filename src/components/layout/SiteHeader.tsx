@@ -143,7 +143,7 @@ export function SiteHeader() {
   })
 
   return (
-    <Header $isScrolled={isScrolled}>
+    <Header id="topo" $isScrolled={isScrolled}>
       <Wordmark>
         <WordmarkTitle>EFSA</WordmarkTitle>
         <WordmarkTagline>Engenharia de Software</WordmarkTagline>

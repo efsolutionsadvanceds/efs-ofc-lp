@@ -9,6 +9,7 @@ const colors = {
   white: '#FFFFFF',
   textMuted: '#AAB2BF',
   borderSubtle: 'rgba(255, 255, 255, 0.12)',
+  danger: '#FF8A8A',
 } as const
 
 const typography = {
