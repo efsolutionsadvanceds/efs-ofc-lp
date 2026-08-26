@@ -8,7 +8,7 @@ const indexHtml = readFileSync(resolve(rootDir, 'index.html'), 'utf-8')
 const robotsTxt = readFileSync(resolve(rootDir, 'public', 'robots.txt'), 'utf-8')
 const sitemapXml = readFileSync(resolve(rootDir, 'public', 'sitemap.xml'), 'utf-8')
 
-const CANONICAL_URL = 'https://efsa.com.br/'
+const CANONICAL_URL = 'https://www.efsolutions.com.br/'
 
 function extractJsonLd(html: string): unknown {
   const match = html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)

@@ -4,16 +4,16 @@ import { isAnalyticsAvailable, sanitizeEventParams, sanitizePageLocation, trackE
 describe('sanitizePageLocation', () => {
   it('mantém apenas origem e caminho', () => {
     const result = sanitizePageLocation({
-      origin: 'https://efsa.com.br',
+      origin: 'https://www.efsolutions.com.br',
       pathname: '/contato',
     })
 
-    expect(result).toBe('https://efsa.com.br/contato')
+    expect(result).toBe('https://www.efsolutions.com.br/contato')
   })
 
   it('nunca inclui query string, mesmo que a origem/caminho a contenham indiretamente', () => {
     const result = sanitizePageLocation({
-      origin: 'https://efsa.com.br',
+      origin: 'https://www.efsolutions.com.br',
       pathname: '/',
     })
 

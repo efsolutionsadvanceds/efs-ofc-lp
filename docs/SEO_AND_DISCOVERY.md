@@ -10,7 +10,7 @@ Verificado diretamente no código (`index.html`, `public/robots.txt`,
 - ✅ Título único e específico: "EFSA | Engenharia de Software para Reforma,
   Arquitetura e Construção".
 - ✅ Meta description precisa e alinhada ao conteúdo real da página.
-- ✅ `<link rel="canonical" href="https://efsa.com.br/">` (uma única tag).
+- ✅ `<link rel="canonical" href="https://www.efsolutions.com.br/">` (uma única tag).
 - ✅ `<meta name="robots" content="index, follow">` — nenhum `noindex`
   acidental.
 - ✅ Open Graph completo: `og:type`, `og:locale`, `og:title`,
@@ -19,7 +19,7 @@ Verificado diretamente no código (`index.html`, `public/robots.txt`,
 - ✅ Twitter Card (`summary`) com título e descrição.
 - ✅ `theme-color` consistente com o fundo da marca (`#05070B`).
 - ✅ `public/robots.txt` permite rastreamento geral e referencia o sitemap.
-- ✅ `public/sitemap.xml` contém apenas `https://efsa.com.br/` — nenhuma URL
+- ✅ `public/sitemap.xml` contém apenas `https://www.efsolutions.com.br/` — nenhuma URL
   de desenvolvimento, nenhum `lastmod` inventado.
 - ✅ Dado estruturado `Organization` em JSON-LD válido, com apenas fatos
   verificados (`name`, `alternateName`, `url`, `description`, `areaServed`) —
@@ -43,12 +43,12 @@ pendentes (ver também [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)):
 - Nenhum logo oficial existe.
 - Nenhum token de verificação do Google Search Console foi adicionado —
   adicionar um token falso ou de exemplo seria pior do que não ter nenhum.
-- O domínio `efsa.com.br` ainda não está hospedado/publicado.
+- O domínio `www.efsolutions.com.br` ainda não está hospedado/publicado.
 
 ## 3. Google Search Console — passos de configuração (a executar após o deploy)
 
 1. Acessar https://search.google.com/search-console e adicionar a
-   propriedade `https://efsa.com.br/`.
+   propriedade `https://www.efsolutions.com.br/`.
 2. Verificar a propriedade (via meta tag, arquivo HTML ou registro DNS —
    escolher conforme o provedor de hospedagem/DNS real).
 3. Após a verificação, confirmar que a propriedade aparece como verificada
@@ -57,13 +57,13 @@ pendentes (ver também [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)):
 ## 4. Envio do sitemap
 
 1. Dentro do Search Console, ir em "Sitemaps".
-2. Enviar `https://efsa.com.br/sitemap.xml`.
+2. Enviar `https://www.efsolutions.com.br/sitemap.xml`.
 3. Confirmar status "Êxito" (sem erros de leitura).
 
 ## 5. Inspeção de URL e indexação
 
 1. Usar a ferramenta "Inspeção de URL" no Search Console para
-   `https://efsa.com.br/`.
+   `https://www.efsolutions.com.br/`.
 2. Solicitar indexação manual após o primeiro deploy.
 3. Repetir a inspeção alguns dias depois para confirmar que o Google
    rastreou e indexou a página.
@@ -92,7 +92,7 @@ pendentes (ver também [docs/DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md)):
 ## 8. Bing Webmaster Tools (canal secundário opcional)
 
 1. Acessar https://www.bing.com/webmasters.
-2. Adicionar `https://efsa.com.br/` (o Bing permite importar a verificação
+2. Adicionar `https://www.efsolutions.com.br/` (o Bing permite importar a verificação
    já feita no Google Search Console em alguns casos, o que simplifica o
    processo).
 3. Enviar o mesmo `sitemap.xml`.
@@ -166,7 +166,7 @@ apresentada como "requisito oficial de IA", porque isso não existe como tal.
 Ao publicar o site e outros perfis da EFSA (redes sociais, Google Business
 Profile etc.), manter exatamente o mesmo nome, domínio e descrição usados no
 JSON-LD (`E.F Solutions Advanced's` / `EFSA | Engenharia de Software` /
-`efsa.com.br`) em todos os canais, para reforçar a consistência de entidade
+`www.efsolutions.com.br`) em todos os canais, para reforçar a consistência de entidade
 que mecanismos de busca usam para associar as fontes à mesma empresa.
 
 ## 16. Ativos obrigatórios pendentes

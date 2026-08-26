@@ -4,7 +4,7 @@
 
 - **Marca oficial:** E.F Solutions Advanced's
 - **Apresentação pública:** EFSA | Engenharia de Software
-- **Domínio:** efsa.com.br
+- **Domínio:** www.efsolutions.com.br
 - **Idioma:** Português do Brasil (pt-BR)
 - **Estilo visual:** premium, tecnológico, sofisticado, metálico, confiante e clean
 
@@ -170,7 +170,7 @@ social-preview).
 - **SEO técnico** revisado em `index.html` (title, description, canonical, Open
   Graph, Twitter Card) e dado estruturado `Organization` em JSON-LD estático (sem
   `dangerouslySetInnerHTML`, direto no HTML). `public/robots.txt` e
-  `public/sitemap.xml` criados, referenciando apenas `https://efsa.com.br/`.
+  `public/sitemap.xml` criados, referenciando apenas `https://www.efsolutions.com.br/`.
 - **Google Analytics permanece intencionalmente ausente** — nenhuma dependência,
   script ou ID placeholder foi adicionado.
 - **Armazenamento de leads no Supabase permanece intencionalmente ausente** — o

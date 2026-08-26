@@ -326,7 +326,7 @@ completa — nenhum item foi marcado como resolvido nesta fase. Resumo:
 - Confirmação do número comercial oficial do WhatsApp em produção.
 - Logo oficial, favicon e imagem de social-preview (1200×630) ainda não
   existem.
-- Hospedagem, DNS de `efsa.com.br` e HTTPS ainda não configurados.
+- Hospedagem, DNS de `www.efsolutions.com.br` e HTTPS ainda não configurados.
 - Cabeçalhos de segurança de produção (CSP etc.) ainda não configurados nem
   testados contra styled-components e a fonte autohospedada.
 - Decisão pendente sobre Google Analytics e sobre armazenamento de leads no

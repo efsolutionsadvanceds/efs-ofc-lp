@@ -262,7 +262,7 @@ export function SiteFooter({ onOpenPrivacyPreferences }: SiteFooterProps) {
               Engenharia de software aplicada à aquisição, ao atendimento e à eficiência
               operacional.
             </FooterDescription>
-            <FooterDomain>efsa.com.br</FooterDomain>
+            <FooterDomain>www.efsolutions.com.br</FooterDomain>
           </FooterBrand>
 
           <FooterNavGroup>

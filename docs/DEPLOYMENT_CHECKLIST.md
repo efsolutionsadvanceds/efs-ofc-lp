@@ -15,7 +15,7 @@ pronto para ir ao ar.
 4. **Criar uma imagem de social-preview compatível de 1200×630** (og:image). Nenhuma
    imagem foi adicionada nesta fase por não haver um ativo aprovado.
 5. **Selecionar o provedor de hospedagem**.
-6. **Configurar o DNS de efsa.com.br**.
+6. **Configurar o DNS de www.efsolutions.com.br**.
 7. **Habilitar HTTPS**.
 8. **Configurar fallback de SPA** apenas se o host escolhido realmente exigir.
 9. **Configurar cabeçalhos de segurança de produção** na camada de hospedagem:
