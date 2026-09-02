@@ -1,318 +1,145 @@
-import { MessageCircle } from 'lucide-react'
 import styled from 'styled-components'
-import { trackEvent } from '../../analytics/analytics'
-import { contact } from '../../config/contact'
-import { goldActionStyles } from '../../styles/actions'
-import { ContentWrapper } from '../sections/sectionPrimitives'
 
-const FooterEl = styled.footer`
-  position: relative;
-  overflow: hidden;
-  background: ${({ theme }) => theme.colors.black};
+import { Container } from '@/components/ui/Container'
+import { Logo } from '@/components/ui/Logo'
+import { Reveal } from '@/components/ui/Reveal'
+import { site } from '@/config/site'
+import { footerCopy } from '@/content/copy'
+
+const Footer = styled.footer`
+  background: ${({ theme }) => theme.colors.navy};
+  border-top: 1px solid ${({ theme }) => theme.colors.borderOnDark};
+  padding-block: ${({ theme }) => theme.space[12]};
 `
 
-const HorizonLine = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    ${({ theme }) => theme.colors.darkBlue} 0%,
-    ${({ theme }) => theme.colors.gold} 50%,
-    ${({ theme }) => theme.colors.darkBlue} 100%
-  );
-  z-index: ${({ theme }) => theme.zIndex.decorative};
-`
-
-const GridLayer = styled.div`
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: linear-gradient(to bottom, transparent, black 40%, black 70%, transparent);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, black 40%, black 70%, transparent);
-  z-index: ${({ theme }) => theme.zIndex.decorative};
-`
-
-const Watermark = styled.span`
-  position: absolute;
-  right: -2vw;
-  bottom: -8%;
-  font-size: clamp(6rem, 18vw, 13rem);
-  font-weight: ${({ theme }) => theme.typography.weights.bold};
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.035);
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
-  z-index: ${({ theme }) => theme.zIndex.decorative};
-`
-
-const FooterInner = styled(ContentWrapper)`
-  position: relative;
-  z-index: ${({ theme }) => theme.zIndex.content};
-  padding: ${({ theme }) => theme.spacing['3xl']} ${({ theme }) => theme.layout.gutterDesktop};
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xl};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    padding: ${({ theme }) => theme.spacing['2xl']} ${({ theme }) => theme.layout.gutterMobile};
-  }
-`
-
-const FooterTop = styled.div`
+const Grid = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    'brand'
-    'nav'
-    'contact';
-  gap: ${({ theme }) => theme.spacing['2xl']};
+  gap: ${({ theme }) => theme.space[10]};
 
-  @media (min-width: ${({ theme }) => theme.breakpoints.md}) and (max-width: calc(${({ theme }) => theme.breakpoints.lg} - 1px)) {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      'brand brand'
-      'nav contact';
-  }
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
-    grid-template-columns: 1.2fr 0.8fr 1fr;
-    grid-template-areas: 'brand nav contact';
-    gap: ${({ theme }) => theme.spacing.xl};
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.md}px)`} {
+    grid-template-columns: 1.4fr 1fr 1fr;
   }
 `
 
-const FooterBrand = styled.div`
-  grid-area: brand;
+const BrandColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
-  max-width: 40ch;
+  gap: ${({ theme }) => theme.space[4]};
 `
 
-const FooterWordmark = styled.span`
-  font-size: ${({ theme }) => theme.typography.sizes.lg};
-  font-weight: ${({ theme }) => theme.typography.weights.bold};
-  letter-spacing: 0.04em;
-  color: ${({ theme }) => theme.colors.white};
-`
-
-const FooterTagline = styled.span`
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  color: ${({ theme }) => theme.colors.textMuted};
-`
-
-const FooterDescription = styled.p`
-  margin: ${({ theme }) => theme.spacing.sm} 0 0;
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  line-height: 1.55;
-  color: ${({ theme }) => theme.colors.textMuted};
-`
-
-const FooterDomain = styled.p`
-  margin: ${({ theme }) => theme.spacing.sm} 0 0;
-  font-family: ${({ theme }) => theme.typography.fontFamilyMono};
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  color: ${({ theme }) => theme.colors.metallicGray};
-`
-
-const FooterNavGroup = styled.div`
-  grid-area: nav;
-`
-
-const FooterNavHeading = styled.p`
-  margin: 0 0 ${({ theme }) => theme.spacing.sm};
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.metallicGray};
-`
-
-const FooterNavList = styled.nav`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: ${({ theme }) => theme.spacing.lg};
-  }
-`
-
-const FooterNavLink = styled.a`
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  color: ${({ theme }) => theme.colors.textMuted};
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.white};
-  }
-`
-
-const FooterContact = styled.div`
-  grid-area: contact;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: ${({ theme }) => theme.spacing.sm};
-`
-
-const FooterContactLabel = styled.p`
-  margin: 0;
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.metallicGray};
-`
-
-const FooterCtaLink = styled.a`
-  ${goldActionStyles}
-  width: 100%;
-  justify-content: center;
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.sm}) {
-    width: auto;
-  }
-`
-
-const LegalRow = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-  padding-top: ${({ theme }) => theme.spacing.xl};
-  border-top: 1px solid ${({ theme }) => theme.colors.borderSubtle};
-
-  @media (min-width: ${({ theme }) => theme.breakpoints.lg}) {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: ${({ theme }) => theme.spacing['2xl']};
-  }
-`
-
-const PrivacyBlock = styled.div`
-  max-width: 64ch;
-`
-
-const PrivacyHeading = styled.h2`
-  margin: 0 0 ${({ theme }) => theme.spacing.sm};
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  color: ${({ theme }) => theme.colors.white};
-`
-
-const PrivacyText = styled.p`
-  margin: 0;
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
+const Positioning = styled.p`
+  max-width: 34ch;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   line-height: 1.6;
-  color: ${({ theme }) => theme.colors.metallicGray};
+  color: ${({ theme }) => theme.colors.textOnDarkMuted};
 `
 
-const PrivacyPreferencesButton = styled.button`
-  display: inline-flex;
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  padding: 0;
-  border: 0;
-  background: none;
+const ColumnTitle = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${({ theme }) => theme.colors.textOnDarkSubtle};
+  margin-bottom: ${({ theme }) => theme.space[4]};
+`
+
+const LinkList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space[3]};
+`
+
+const FooterLink = styled.a`
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.textOnDarkMuted};
+
+  &:hover,
+  &:focus-visible {
+    color: ${({ theme }) => theme.colors.gold};
+  }
+`
+
+const SegmentText = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  color: ${({ theme }) => theme.colors.textOnDarkMuted};
+`
+
+const ContactLink = styled(FooterLink)`
+  font-weight: 700;
   color: ${({ theme }) => theme.colors.gold};
-  font-family: inherit;
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  cursor: pointer;
 `
 
-const Copyright = styled.p`
-  margin: 0;
-  flex-shrink: 0;
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  color: ${({ theme }) => theme.colors.metallicGray};
+const SecondGrid = styled(Grid)`
+  margin-top: ${({ theme }) => theme.space[10]};
 `
 
-interface SiteFooterProps {
-  onOpenPrivacyPreferences?: () => void
-}
+const BottomBar = styled.div`
+  margin-top: ${({ theme }) => theme.space[10]};
+  padding-top: ${({ theme }) => theme.space[6]};
+  border-top: 1px solid ${({ theme }) => theme.colors.borderOnDark};
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.textOnDarkSubtle};
+`
 
-export function SiteFooter({ onOpenPrivacyPreferences }: SiteFooterProps) {
-  const currentYear = new Date().getFullYear()
+export function SiteFooter() {
+  const year = new Date().getFullYear()
 
   return (
-    <FooterEl>
-      <HorizonLine aria-hidden="true" />
-      <GridLayer aria-hidden="true" />
-      <Watermark aria-hidden="true">EFSA</Watermark>
+    <Footer>
+      <Container>
+        <Grid>
+          <BrandColumn>
+            <Reveal>
+              <Logo variant="full" />
+            </Reveal>
+            <Positioning>{footerCopy.positioning}</Positioning>
+          </BrandColumn>
 
-      <FooterInner>
-        <FooterTop>
-          <FooterBrand>
-            <FooterWordmark>EFSA</FooterWordmark>
-            <FooterTagline>Engenharia de Software</FooterTagline>
-            <FooterDescription>
-              Engenharia de software aplicada à aquisição, ao atendimento e à eficiência
-              operacional.
-            </FooterDescription>
-            <FooterDomain>www.efsolutions.com.br</FooterDomain>
-          </FooterBrand>
+          <div>
+            <ColumnTitle>Navegação</ColumnTitle>
+            <LinkList>
+              {site.nav.map((item) => (
+                <li key={item.href}>
+                  <FooterLink href={item.href}>{item.label}</FooterLink>
+                </li>
+              ))}
+            </LinkList>
+          </div>
 
-          <FooterNavGroup>
-            <FooterNavHeading>Navegação</FooterNavHeading>
-            <FooterNavList aria-label="Navegação do rodapé">
-              <FooterNavLink href="#topo">Início</FooterNavLink>
-              <FooterNavLink href="#diagnostico">Diagnóstico</FooterNavLink>
-              <FooterNavLink href="#solucoes">Soluções</FooterNavLink>
-              <FooterNavLink href="#como-atuamos">Como atuamos</FooterNavLink>
-              <FooterNavLink href="#duvidas">Dúvidas</FooterNavLink>
-              <FooterNavLink href="#contato">Contato</FooterNavLink>
-            </FooterNavList>
-          </FooterNavGroup>
+          <div>
+            <ColumnTitle>Segmentos</ColumnTitle>
+            <LinkList>
+              {footerCopy.segments.map((segment) => (
+                <li key={segment}>
+                  <SegmentText>{segment}</SegmentText>
+                </li>
+              ))}
+            </LinkList>
+          </div>
+        </Grid>
 
-          <FooterContact>
-            <FooterContactLabel>Conversa direta</FooterContactLabel>
-            <FooterCtaLink
-              href={contact.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('generate_lead', { placement_id: 'footer' })}
-            >
-              <MessageCircle aria-hidden="true" />
-              FALAR COM A EFSA
-            </FooterCtaLink>
-          </FooterContact>
-        </FooterTop>
+        <SecondGrid>
+          <div>
+            <ColumnTitle>Fale com a E.F Solutions</ColumnTitle>
+            <ContactLink href="#contato-hero">Quero receber uma análise</ContactLink>
+          </div>
+          <div>
+            <ColumnTitle>Legal</ColumnTitle>
+            <LinkList>
+              <li>
+                <FooterLink href={site.legal.privacyHref}>Política de Privacidade</FooterLink>
+              </li>
+              <li>
+                <FooterLink href={site.legal.termsHref}>Termos de Uso</FooterLink>
+              </li>
+            </LinkList>
+          </div>
+        </SecondGrid>
 
-        <LegalRow>
-          <PrivacyBlock id="privacidade">
-            <PrivacyHeading>Privacidade</PrivacyHeading>
-            <PrivacyText>
-              Os dados preenchidos no formulário não são armazenados por este site. Ao continuar,
-              eles são inseridos em uma mensagem que você decide enviar pelo WhatsApp. O
-              tratamento posterior ocorre pelos canais de atendimento da EFSA e pela plataforma
-              utilizada para a conversa. Quando o Google Analytics está habilitado, ele só é
-              carregado após o seu consentimento explícito, e apenas essa escolha de
-              consentimento fica salva neste navegador — nunca dados do formulário. Este texto é
-              informativo e ainda depende de revisão jurídica específica sobre a LGPD.
-            </PrivacyText>
-            {onOpenPrivacyPreferences && (
-              <PrivacyPreferencesButton type="button" onClick={onOpenPrivacyPreferences}>
-                Preferências de privacidade
-              </PrivacyPreferencesButton>
-            )}
-          </PrivacyBlock>
-
-          <Copyright>© {currentYear} E.F Solutions Advanced's. Todos os direitos reservados.</Copyright>
-        </LegalRow>
-      </FooterInner>
-    </FooterEl>
+        <BottomBar>
+          © {year} {site.name}. Todos os direitos reservados.
+        </BottomBar>
+      </Container>
+    </Footer>
   )
 }

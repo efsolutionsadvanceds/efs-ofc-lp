@@ -1,12 +1,17 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { ThemeProvider } from 'styled-components'
-import '@fontsource-variable/inter/wght.css'
-import App from './App.tsx'
+
+import App from './App'
 import { GlobalStyle } from './styles/GlobalStyle'
 import { theme } from './styles/theme'
 
-createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root')
+if (!rootElement) {
+  throw new Error('Elemento #root não encontrado no index.html')
+}
+
+createRoot(rootElement).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <GlobalStyle />

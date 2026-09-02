@@ -1,200 +1,295 @@
-import { useRef } from 'react'
-import { ArrowRight, MessageCircle } from 'lucide-react'
-import { motion, useReducedMotion } from 'motion/react'
-import styled from 'styled-components'
-import { AmbientHeroBackground } from '../visuals/AmbientHeroBackground'
-import { BusinessEngine } from '../visuals/BusinessEngine'
-import { trackEvent } from '../../analytics/analytics'
-import { contact } from '../../config/contact'
-import { goldActionStyles } from '../../styles/actions'
-import { EASE } from '../../utils/motionPresets'
+import { ArrowRight } from 'lucide-react'
+import styled, { css, keyframes } from 'styled-components'
+
+import { ContactForm } from '@/components/form/ContactForm'
+import { Button } from '@/components/ui/Button'
+import { Container } from '@/components/ui/Container'
+import { MagneticButton } from '@/components/ui/MagneticButton'
+import { heroCopy } from '@/content/copy'
+import { textSheen } from '@/styles/motion'
+
+import { ArchitecturalGrid, CheckerFade, HeroVignette, ReadabilityGradient } from '../visuals/HeroOverlays'
+import { HeroLogoWatermark } from '../visuals/HeroLogoWatermark'
+import { HeroVideoLayer } from '../visuals/HeroVideoLayer'
+import { BlueprintScene } from '../visuals/BlueprintScene'
+
+const clipReveal = keyframes`
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+`
+
+const fadeUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`
+
+const formEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`
 
 const Section = styled.section`
   position: relative;
+  isolation: isolate;
+  padding-top: 132px;
+  padding-bottom: ${({ theme }) => theme.space[16]};
   overflow: hidden;
-  padding: ${({ theme }) => theme.spacing['3xl']} ${({ theme }) => theme.spacing.xl}
-    ${({ theme }) => theme.spacing['4xl']};
+  background: ${({ theme }) => theme.colors.navy};
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    padding: ${({ theme }) => theme.spacing['2xl']} ${({ theme }) => theme.spacing.md}
-      ${({ theme }) => theme.spacing['3xl']};
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 84px;
+    padding-bottom: ${({ theme }) => theme.space[6]};
   }
 `
 
-const Layout = styled.div`
+const Grid = styled.div`
   position: relative;
-  z-index: ${({ theme }) => theme.zIndex.content};
+  z-index: 7;
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: ${({ theme }) => theme.spacing['3xl']};
-  align-items: center;
-  max-width: ${({ theme }) => theme.layout.maxWidth};
-  margin: 0 auto;
+  gap: ${({ theme }) => theme.space[10]};
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-    grid-template-columns: 1fr;
-    gap: ${({ theme }) => theme.spacing['2xl']};
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
+    grid-template-columns: minmax(0, 7fr) minmax(340px, 5fr);
+    align-items: center;
+    gap: ${({ theme }) => theme.space[8]};
   }
 `
 
-const CopyColumn = styled.div`
+const ContentColumn = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.lg};
-  max-width: 620px;
+  gap: ${({ theme }) => theme.space[4]};
+  /* Sem isto, o item do grid não encolhe abaixo da largura "preferida" do
+     texto (min-width:auto implícito), estourando a viewport no mobile. */
+  min-width: 0;
 `
 
-const Eyebrow = styled(motion.p)`
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  font-weight: ${({ theme }) => theme.typography.weights.semibold};
-  letter-spacing: 0.12em;
+const Eyebrow = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-weight: 700;
+  letter-spacing: 0.08em;
   color: ${({ theme }) => theme.colors.gold};
+  opacity: 0;
+  animation: ${fadeUp} ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease} 80ms both;
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+  }
 `
 
-const Heading = styled(motion.h1)`
-  font-size: clamp(2rem, 1.4rem + 2.4vw, ${({ theme }) => theme.typography.sizes['4xl']});
-  font-weight: ${({ theme }) => theme.typography.weights.bold};
-  line-height: 1.12;
-  letter-spacing: -0.02em;
-  color: ${({ theme }) => theme.colors.white};
+const Heading = styled.h1`
+  font-size: ${({ theme }) => theme.fontSizes['4xl']};
+  color: ${({ theme }) => theme.colors.textOnDark};
 `
 
-const Paragraph = styled(motion.p)`
-  max-width: 52ch;
-  font-size: ${({ theme }) => theme.typography.sizes.lg};
-  line-height: 1.55;
-  color: ${({ theme }) => theme.colors.textMuted};
+const LineClip = styled.span`
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
 `
 
-const CtaRow = styled(motion.div)`
+const LineInner = styled.span<{ $delayMs: number; $isGold?: boolean }>`
+  display: block;
+  color: ${({ theme, $isGold }) => ($isGold ? theme.colors.gold : 'inherit')};
+  transform: translateY(100%);
+  animation: ${clipReveal} ${({ theme }) => theme.motion.durationSlow} ${({ theme }) => theme.motion.ease}
+    ${({ $delayMs }) => $delayMs}ms both;
+
+  ${({ $isGold, theme, $delayMs }) =>
+    $isGold
+      ? css`
+          @supports (background-clip: text) or (-webkit-background-clip: text) {
+            background-image: linear-gradient(
+              100deg,
+              ${theme.colors.gold} 42%,
+              ${theme.colors.textOnDark} 50%,
+              ${theme.colors.gold} 58%
+            );
+            background-size: 260% 100%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation:
+              ${clipReveal} ${theme.motion.durationSlow} ${theme.motion.ease} ${$delayMs}ms both,
+              ${textSheen} 11s ease-in-out infinite 1.6s;
+
+            @media (prefers-reduced-motion: reduce) {
+              animation: ${clipReveal} ${theme.motion.durationSlow} ${theme.motion.ease} both;
+              background-position: 0 0;
+            }
+          }
+        `
+      : ''}
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+  }
+`
+
+const Supporting = styled.p`
+  max-width: 56ch;
+  font-size: ${({ theme }) => theme.fontSizes.md};
+  line-height: 1.65;
+  color: ${({ theme }) => theme.colors.textOnDarkMuted};
+  opacity: 0;
+  animation: ${fadeUp} ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease} 560ms both;
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+  }
+`
+
+const OutcomeList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.space[1]};
+`
+
+const OutcomeItem = styled.li<{ $delayMs: number }>`
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.space[2]};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.textOnDark};
+  opacity: 0;
+  animation: ${fadeUp} ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease}
+    ${({ $delayMs }) => $delayMs}ms both;
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+  }
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: ${({ theme }) => theme.colors.gold};
+    flex-shrink: 0;
+  }
+`
+
+const NicheLine = styled.p`
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: ${({ theme }) => theme.fontSizes.xs};
+  color: ${({ theme }) => theme.colors.textOnDarkSubtle};
+  opacity: 0;
+  animation: ${fadeUp} ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease} 760ms both;
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+  }
+
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.md}px)`} {
+    white-space: normal;
+    overflow-x: visible;
+  }
+`
+
+const CtaRow = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.md};
-`
+  gap: ${({ theme }) => theme.space[3]};
+  opacity: 0;
+  animation: ${fadeUp} ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease} 840ms both;
 
-const PrimaryCta = styled.a`
-  ${goldActionStyles}
-`
-
-const SecondaryCta = styled.button`
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  min-height: 44px;
-  padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.spacing.lg};
-  border-radius: ${({ theme }) => theme.radii.full};
-  border: 1px solid ${({ theme }) => theme.colors.borderSubtle};
-  background: transparent;
-  color: ${({ theme }) => theme.colors.white};
-  font-family: inherit;
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.medium};
-  letter-spacing: 0.03em;
-  cursor: pointer;
-  transition:
-    border-color 0.2s ease,
-    background 0.2s ease;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.gold};
-    background: rgba(253, 207, 69, 0.06);
-  }
-
-  svg {
-    width: 16px;
-    height: 16px;
-    transition: transform 0.2s ease;
-  }
-
-  &:hover svg {
-    transform: translateX(3px);
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
   }
 `
 
-const CredibilityLine = styled(motion.p)`
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  color: ${({ theme }) => theme.colors.metallicGray};
-  letter-spacing: 0.01em;
-`
+const FormColumn = styled.div`
+  min-width: 0;
+  opacity: 0;
+  animation: ${formEnter} ${({ theme }) => theme.motion.durationSlow} ${({ theme }) => theme.motion.ease} 460ms both;
 
-const EngineColumn = styled(motion.div)`
-  display: flex;
-  justify-content: center;
-`
-
-function buildEntranceProps(delay: number, reduceMotion: boolean) {
-  if (reduceMotion) {
-    return { initial: false as const }
+  &:focus {
+    outline: none;
   }
 
-  return {
-    initial: { opacity: 0, y: 16 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6, delay, ease: EASE },
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
   }
-}
+`
 
 export function HeroSection() {
-  const engineRef = useRef<HTMLDivElement>(null)
-  const shouldReduceMotion = useReducedMotion()
-
-  function handleSecondaryCtaClick() {
-    trackEvent('cta_click', { placement_id: 'hero_secondary' })
-
-    const node = engineRef.current
-    if (!node) return
-
-    node.scrollIntoView({
-      behavior: shouldReduceMotion ? 'auto' : 'smooth',
-      block: 'center',
-    })
-    node.focus({ preventScroll: true })
-  }
-
   return (
-    <Section>
-      <AmbientHeroBackground />
-      <Layout>
-        <CopyColumn>
-          <Eyebrow {...buildEntranceProps(0, !!shouldReduceMotion)}>
-            ENGENHARIA DE SOFTWARE PARA REFORMA, ARQUITETURA E CONSTRUÇÃO
-          </Eyebrow>
-          <Heading {...buildEntranceProps(0.08, !!shouldReduceMotion)}>
-            Tecnologia trabalhando para sua empresa vender mais, atender melhor e operar com menos
-            esforço.
-          </Heading>
-          <Paragraph {...buildEntranceProps(0.16, !!shouldReduceMotion)}>
-            Landing pages, tráfego estratégico, sistemas sob medida e agentes de IA conectados a
-            uma estratégia única de crescimento.
-          </Paragraph>
-          <CtaRow {...buildEntranceProps(0.24, !!shouldReduceMotion)}>
-            <PrimaryCta
-              href={contact.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => trackEvent('generate_lead', { placement_id: 'hero_primary' })}
-            >
-              <MessageCircle aria-hidden="true" />
-              QUERO TER MAIS RESULTADOS
-            </PrimaryCta>
-            <SecondaryCta
-              type="button"
-              aria-controls="business-engine"
-              onClick={handleSecondaryCtaClick}
-            >
-              VER A ENGENHARIA EM AÇÃO
-              <ArrowRight aria-hidden="true" />
-            </SecondaryCta>
-          </CtaRow>
-          <CredibilityLine {...buildEntranceProps(0.32, !!shouldReduceMotion)}>
-            Diagnóstico estratégico • Solução sob medida • Atendimento direto
-          </CredibilityLine>
-        </CopyColumn>
-        <EngineColumn {...buildEntranceProps(0.2, !!shouldReduceMotion)}>
-          <BusinessEngine ref={engineRef} />
-        </EngineColumn>
-      </Layout>
+    <Section id="topo">
+      <HeroVideoLayer />
+      <ReadabilityGradient aria-hidden="true" />
+      <ArchitecturalGrid aria-hidden="true" />
+      <CheckerFade aria-hidden="true" />
+      <HeroVignette aria-hidden="true" />
+      <BlueprintScene />
+      <HeroLogoWatermark />
+      <Container>
+        <Grid>
+          <ContentColumn>
+            <Eyebrow>{heroCopy.eyebrow}</Eyebrow>
+
+            <Heading>
+              {heroCopy.headingLines.map((line, index) => (
+                <LineClip key={line}>
+                  <LineInner $delayMs={140 + index * 110} $isGold={index === heroCopy.headingGoldLineIndex}>
+                    {line}
+                  </LineInner>
+                </LineClip>
+              ))}
+            </Heading>
+
+            <Supporting>{heroCopy.supporting}</Supporting>
+
+            <OutcomeList>
+              {heroCopy.outcomePoints.map((point, index) => (
+                <OutcomeItem key={point} $delayMs={640 + index * 70}>
+                  {point}
+                </OutcomeItem>
+              ))}
+            </OutcomeList>
+
+            <NicheLine>{heroCopy.nicheLine}</NicheLine>
+
+            <CtaRow>
+              <MagneticButton>
+                <Button as="a" href="#contato-hero">
+                  {heroCopy.primaryCta}
+                  <ArrowRight aria-hidden="true" size={18} />
+                </Button>
+              </MagneticButton>
+              <Button as="a" href="#problemas" $variant="secondary">
+                {heroCopy.secondaryCta}
+              </Button>
+            </CtaRow>
+          </ContentColumn>
+
+          <FormColumn id="contato-hero" tabIndex={-1}>
+            <ContactForm />
+          </FormColumn>
+        </Grid>
+      </Container>
     </Section>
   )
 }

@@ -1,145 +1,175 @@
-import { useState } from 'react'
-import { MessageCircle } from 'lucide-react'
-import { useMotionValueEvent, useScroll } from 'motion/react'
+import { Menu } from 'lucide-react'
+import { useId, useState } from 'react'
 import styled from 'styled-components'
-import { trackEvent } from '../../analytics/analytics'
-import { contact } from '../../config/contact'
-import { ContentWrapper } from '../sections/sectionPrimitives'
-import { goldActionStyles } from '../../styles/actions'
 
-const SCROLL_THRESHOLD = 24
+import { Button } from '@/components/ui/Button'
+import { Container } from '@/components/ui/Container'
+import { Logo } from '@/components/ui/Logo'
+import { site } from '@/config/site'
+import { useScrolled } from '@/hooks/useScrolled'
 
-const Header = styled.header<{ $isScrolled: boolean }>`
-  position: sticky;
+import { MobileMenu } from './MobileMenu'
+
+const HeaderBar = styled.header<{ $isScrolled: boolean }>`
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: ${({ theme }) => theme.zIndex.header};
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.layout.gutterDesktop};
   border-bottom: 1px solid
-    ${({ theme, $isScrolled }) => ($isScrolled ? theme.colors.borderSubtle : 'transparent')};
-  background: ${({ $isScrolled }) => ($isScrolled ? 'rgba(5, 7, 11, 0.78)' : 'transparent')};
-  backdrop-filter: ${({ $isScrolled }) => ($isScrolled ? 'blur(10px)' : 'none')};
-  -webkit-backdrop-filter: ${({ $isScrolled }) => ($isScrolled ? 'blur(10px)' : 'none')};
+    ${({ theme, $isScrolled }) => ($isScrolled ? theme.colors.borderOnDark : 'transparent')};
+  background: ${({ theme, $isScrolled }) =>
+    $isScrolled ? theme.colors.navyAlpha(0.92) : theme.colors.navyAlpha(0.08)};
   transition:
-    background 0.3s ease,
-    border-color 0.3s ease,
-    backdrop-filter 0.3s ease;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    padding: ${({ theme }) => theme.spacing.sm} ${({ theme }) => theme.layout.gutterMobile};
-  }
+    background-color ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease},
+    border-color ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease};
 `
 
-const HeaderInner = styled(ContentWrapper)`
+const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: ${({ theme }) => theme.spacing.md};
+  gap: ${({ theme }) => theme.space[4]};
+  min-height: 72px;
 `
 
-const Wordmark = styled.div`
-  display: flex;
-  flex-direction: column;
-  line-height: 1.15;
-  min-width: 0;
-`
+const LogoLink = styled.a<{ $compact: boolean }>`
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  transform: scale(${({ $compact }) => ($compact ? 0.92 : 1)});
+  transform-origin: left center;
+  transition: transform ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease};
 
-const WordmarkTitle = styled.span`
-  font-size: ${({ theme }) => theme.typography.sizes.lg};
-  font-weight: ${({ theme }) => theme.typography.weights.bold};
-  letter-spacing: 0.04em;
-  color: ${({ theme }) => theme.colors.white};
-`
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 30%,
+      ${({ theme }) => theme.colors.goldAlpha(0.55)} 50%,
+      transparent 70%
+    );
+    transform: translateX(-140%);
+    transition: transform 650ms ${({ theme }) => theme.motion.ease};
+    pointer-events: none;
+  }
 
-const WordmarkTagline = styled.span`
-  font-size: ${({ theme }) => theme.typography.sizes.xs};
-  color: ${({ theme }) => theme.colors.textMuted};
-  letter-spacing: 0.03em;
+  &:hover::before,
+  &:focus-visible::before {
+    transform: translateX(140%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+    &::before {
+      transition: none;
+    }
+  }
 `
 
 const Nav = styled.nav`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.lg};
-  margin-right: auto;
-  margin-left: ${({ theme }) => theme.spacing['2xl']};
+  display: none;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    display: none;
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
+    display: flex;
+    align-items: center;
+    gap: ${({ theme }) => theme.space[6]};
   }
 `
 
 const NavLink = styled.a`
-  font-size: ${({ theme }) => theme.typography.sizes.sm};
-  font-weight: ${({ theme }) => theme.typography.weights.medium};
-  color: ${({ theme }) => theme.colors.textMuted};
-  text-decoration: none;
-  transition: color 0.2s ease;
+  position: relative;
+  font-size: ${({ theme }) => theme.fontSizes.sm};
+  font-weight: 600;
+  color: ${({ theme }) => theme.colors.textOnDarkMuted};
+  padding-block: ${({ theme }) => theme.space[2]};
+  transition: color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.white};
+  &:hover,
+  &:focus-visible {
+    color: ${({ theme }) => theme.colors.textOnDark};
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: ${({ theme }) => theme.colors.gold};
+    transition: width ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    width: 100%;
   }
 `
 
-const CtaLink = styled.a`
-  ${goldActionStyles}
-  flex-shrink: 0;
-  white-space: nowrap;
+const DesktopCta = styled(Button)`
+  display: none;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    padding-left: ${({ theme }) => theme.spacing.md};
-    padding-right: ${({ theme }) => theme.spacing.md};
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
+    display: inline-flex;
   }
 `
 
-const CtaFullLabel = styled.span`
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+const MenuToggle = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: ${({ theme }) => theme.radii.md};
+  color: ${({ theme }) => theme.colors.textOnDark};
+
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
     display: none;
   }
 `
 
-const CtaShortLabel = styled.span`
-  display: none;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    display: inline;
-  }
-`
-
 export function SiteHeader() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const { scrollY } = useScroll()
-
-  useMotionValueEvent(scrollY, 'change', (latest) => {
-    setIsScrolled((wasScrolled) => {
-      if (!wasScrolled && latest > SCROLL_THRESHOLD) return true
-      if (wasScrolled && latest <= SCROLL_THRESHOLD) return false
-      return wasScrolled
-    })
-  })
+  const isScrolled = useScrolled(24)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const menuId = useId()
 
   return (
-    <Header id="topo" $isScrolled={isScrolled}>
-      <HeaderInner>
-        <Wordmark>
-          <WordmarkTitle>EFSA</WordmarkTitle>
-          <WordmarkTagline>Engenharia de Software</WordmarkTagline>
-        </Wordmark>
-        <Nav aria-label="Navegação principal">
-          <NavLink href="#diagnostico">Diagnóstico</NavLink>
-          <NavLink href="#solucoes">Soluções</NavLink>
-          <NavLink href="#como-atuamos">Como atuamos</NavLink>
-        </Nav>
-        <CtaLink
-          href={contact.whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => trackEvent('generate_lead', { placement_id: 'header' })}
-        >
-          <MessageCircle aria-hidden="true" />
-          <CtaFullLabel>FALAR COM UM ESPECIALISTA</CtaFullLabel>
-          <CtaShortLabel>FALAR NO WHATSAPP</CtaShortLabel>
-        </CtaLink>
-      </HeaderInner>
-    </Header>
+    <HeaderBar $isScrolled={isScrolled}>
+      <Container>
+        <Row>
+          <LogoLink href="#topo" aria-label={`${site.name} — página inicial`} $compact={isScrolled}>
+            <Logo />
+          </LogoLink>
+
+          <Nav aria-label="Navegação principal">
+            {site.nav.map((item) => (
+              <NavLink key={item.href} href={item.href}>
+                {item.label}
+              </NavLink>
+            ))}
+          </Nav>
+
+          <DesktopCta as="a" href="#contato-hero">
+            Falar sobre meu negócio
+          </DesktopCta>
+
+          <MenuToggle
+            type="button"
+            aria-expanded={isMenuOpen}
+            aria-controls={menuId}
+            aria-label={isMenuOpen ? 'Fechar menu de navegação' : 'Abrir menu de navegação'}
+            onClick={() => setIsMenuOpen((value) => !value)}
+          >
+            <Menu aria-hidden="true" />
+          </MenuToggle>
+        </Row>
+      </Container>
+
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} menuId={menuId} />
+    </HeaderBar>
   )
 }
