@@ -1,5 +1,8 @@
+import { randomUUID } from 'node:crypto'
+
 import { contactRequestSchema } from '../src/schemas/contactFormSchema'
 import { dispatchContactNotification } from './emailProvider'
+import { sendLeadEventToMetaCapi } from './metaConversionsApi'
 import { isRateLimited } from './rateLimiter'
 
 const MIN_SUBMIT_MS = 1200
@@ -9,6 +12,7 @@ const DEV_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173']
 export interface ContactHandlerRequest {
   body: unknown
   ip: string
+  userAgent?: string
 }
 
 export interface ContactHandlerResponse {
@@ -37,7 +41,11 @@ export function resolveCorsOrigin(requestOrigin: string | undefined | null): str
  * de desenvolvimento do Vite (server/contactApiDevPlugin.ts), para que o
  * comportamento seja idêntico em `yarn dev` e em produção.
  */
-export async function handleContactRequest({ body, ip }: ContactHandlerRequest): Promise<ContactHandlerResponse> {
+export async function handleContactRequest({
+  body,
+  ip,
+  userAgent,
+}: ContactHandlerRequest): Promise<ContactHandlerResponse> {
   if (isRateLimited(ip)) {
     return {
       statusCode: 429,
@@ -65,6 +73,12 @@ export async function handleContactRequest({ body, ip }: ContactHandlerRequest):
   const result = await dispatchContactNotification(payload)
 
   if (result.ok) {
+    // Fire-and-forget: nunca deixa o rastreamento afetar a resposta ao usuário.
+    void sendLeadEventToMetaCapi(payload, {
+      eventId: payload.metaEventId ?? randomUUID(),
+      clientIp: ip,
+      userAgent,
+    })
     return { statusCode: 200, body: { ok: true } }
   }
 

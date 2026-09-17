@@ -47,6 +47,8 @@ export const CONTACT_FORM_FIELDS = ['name', 'company', 'whatsapp', 'helpType', '
 export const contactRequestSchema = contactFormSchema.extend({
   website: z.string().max(0, 'Campo inválido.').optional().or(z.literal('')),
   formRenderedAt: z.number().int().positive(),
+  /** Mesmo ID usado no evento "Lead" do Meta Pixel no navegador — permite deduplicação na Conversions API. */
+  metaEventId: z.string().max(100).optional(),
 })
 
 export type ContactRequestPayload = z.infer<typeof contactRequestSchema>

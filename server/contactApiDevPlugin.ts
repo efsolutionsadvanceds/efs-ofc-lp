@@ -66,7 +66,8 @@ export function contactApiDevPlugin(): Plugin {
             req.socket.remoteAddress ??
             'unknown'
 
-          const result = await handleContactRequest({ body, ip })
+          const userAgent = typeof req.headers['user-agent'] === 'string' ? req.headers['user-agent'] : undefined
+          const result = await handleContactRequest({ body, ip, userAgent })
           res.statusCode = result.statusCode
           res.setHeader('Content-Type', 'application/json')
           res.end(JSON.stringify(result.body))

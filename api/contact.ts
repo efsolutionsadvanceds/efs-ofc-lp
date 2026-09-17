@@ -45,6 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return
   }
 
-  const result = await handleContactRequest({ body: req.body, ip: resolveClientIp(req) })
+  const userAgent = typeof req.headers['user-agent'] === 'string' ? req.headers['user-agent'] : undefined
+  const result = await handleContactRequest({ body: req.body, ip: resolveClientIp(req), userAgent })
   res.status(result.statusCode).json(result.body)
 }

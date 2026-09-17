@@ -345,12 +345,12 @@ export const footerCopy = {
 export const legalCopy = {
   privacy: {
     heading: 'Política de Privacidade',
-    updated: 'Última atualização: agosto de 2026',
+    updated: 'Última atualização: setembro de 2026',
     paragraphs: [
       'Esta política explica, de forma direta, quais dados o formulário de contato deste site coleta e como a E.F Solutions os utiliza.',
       'Ao preencher o formulário de contato, coletamos: nome, WhatsApp, nome da empresa (quando informado), tipo de ajuda desejada e a breve descrição enviada. Esses dados são usados exclusivamente para analisar sua solicitação e entrar em contato sobre o projeto.',
-      'Não vendemos, alugamos ou compartilhamos seus dados com terceiros para fins de marketing. Os dados enviados não são armazenados em um banco de dados público deste site — eles são encaminhados diretamente ao canal de atendimento da E.F Solutions configurado para recebê-los.',
-      'Este site não utiliza cookies de rastreamento nem ferramentas de analytics de terceiros. Nenhum dado pessoal preenchido no formulário é enviado a serviços de analytics.',
+      'Não vendemos nem alugamos seus dados. Os dados do formulário não são armazenados em um banco de dados público deste site — eles são encaminhados diretamente ao canal de atendimento da E.F Solutions configurado para recebê-los.',
+      'Este site utiliza o Meta Pixel e a Conversions API (Meta/Facebook) para medir a eficácia de anúncios e identificar quando um formulário foi enviado com sucesso. Quando você envia o formulário, seu número de WhatsApp é enviado ao Meta apenas em formato criptografado (hash), nunca em texto legível. Essas informações ajudam a Meta a otimizar a exibição de anúncios da E.F Solutions e podem ser usadas pela Meta conforme sua própria política de privacidade.',
       'Você pode solicitar a exclusão dos seus dados ou esclarecer dúvidas sobre este tratamento falando diretamente pelo WhatsApp indicado no rodapé do site.',
     ],
   },

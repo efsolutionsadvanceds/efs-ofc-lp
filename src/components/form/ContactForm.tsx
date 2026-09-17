@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { site } from '@/config/site'
 import { HELP_TYPE_OPTIONS } from '@/content/formOptions'
 import { submitContactForm } from '@/lib/contactApiClient'
+import { trackLeadEvent } from '@/lib/metaPixel'
 import { contactFormSchema, type ContactFormValues } from '@/schemas/contactFormSchema'
 import { energyBorderGlow } from '@/styles/energyBorder'
 
@@ -197,16 +198,20 @@ export function ContactForm() {
     setSubmitError(null)
 
     const honeypot = (document.getElementById('website') as HTMLInputElement | null)?.value ?? ''
+    const metaEventId = crypto.randomUUID()
 
     const result = await submitContactForm({
       ...values,
       description: values.description?.trim() || undefined,
       website: honeypot,
       formRenderedAt: formRenderedAtRef.current,
+      metaEventId,
     })
 
     if (result.status === 'success') {
       setStatus('success')
+      // Só dispara após confirmação real do servidor — nunca no clique do botão.
+      trackLeadEvent(metaEventId)
     } else if (result.status === 'not-configured') {
       setStatus('not-configured')
     } else {
