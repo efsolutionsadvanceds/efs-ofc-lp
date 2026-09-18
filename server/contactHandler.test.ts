@@ -18,11 +18,11 @@ afterEach(() => {
 })
 
 describe('handleContactRequest', () => {
-  it('retorna 503 quando nenhum provedor está configurado', async () => {
+  it('retorna 200 e encaminha ao WhatsApp mesmo sem nenhum provedor de notificação configurado', async () => {
     vi.stubEnv('CONTACT_PROVIDER', 'none')
     const result = await handleContactRequest({ body: basePayload, ip: '10.0.0.1' })
-    expect(result.statusCode).toBe(503)
-    expect(result.body.ok).toBe(false)
+    expect(result.statusCode).toBe(200)
+    expect(result.body.ok).toBe(true)
   })
 
   it('rejeita quando o honeypot está preenchido', async () => {

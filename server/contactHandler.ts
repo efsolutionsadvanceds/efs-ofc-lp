@@ -70,24 +70,18 @@ export async function handleContactRequest({
     return { statusCode: 400, body: { ok: false, message: 'Envio muito rápido. Tente novamente.' } }
   }
 
-  const result = await dispatchContactNotification(payload)
+  // O WhatsApp é o canal principal de contato: o visitante deve ser
+  // encaminhado a ele sempre que passar pela validação e pelas checagens
+  // antibot acima, independentemente de haver (ou não) um provedor de
+  // notificação por e-mail/webhook configurado. Por isso a notificação e o
+  // evento da Conversions API são "fire-and-forget" — nunca bloqueiam nem
+  // condicionam esta resposta.
+  void dispatchContactNotification(payload)
+  void sendLeadEventToMetaCapi(payload, {
+    eventId: payload.metaEventId ?? randomUUID(),
+    clientIp: ip,
+    userAgent,
+  })
 
-  if (result.ok) {
-    // Fire-and-forget: nunca deixa o rastreamento afetar a resposta ao usuário.
-    void sendLeadEventToMetaCapi(payload, {
-      eventId: payload.metaEventId ?? randomUUID(),
-      clientIp: ip,
-      userAgent,
-    })
-    return { statusCode: 200, body: { ok: true } }
-  }
-
-  if (result.reason === 'not-configured') {
-    return { statusCode: 503, body: { ok: false, message: 'Canal de envio em configuração.' } }
-  }
-
-  return {
-    statusCode: 502,
-    body: { ok: false, message: 'Não foi possível enviar sua solicitação agora. Tente novamente em instantes.' },
-  }
+  return { statusCode: 200, body: { ok: true } }
 }
