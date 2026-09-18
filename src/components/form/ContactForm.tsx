@@ -7,7 +7,8 @@ import styled from 'styled-components'
 import { site } from '@/config/site'
 import { HELP_TYPE_OPTIONS } from '@/content/formOptions'
 import { submitContactForm } from '@/lib/contactApiClient'
-import { trackLeadEvent } from '@/lib/metaPixel'
+import { generateEventId, trackLeadEvent } from '@/lib/metaPixel'
+import { buildLeadWhatsAppMessage } from '@/lib/whatsappMessage'
 import { contactFormSchema, type ContactFormValues } from '@/schemas/contactFormSchema'
 import { energyBorderGlow } from '@/styles/energyBorder'
 
@@ -165,9 +166,15 @@ const ErrorBanner = styled.p`
 export function ContactForm() {
   const [status, setStatus] = useState<SubmissionStatus>('idle')
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null)
   const formRenderedAtRef = useRef(Date.now())
   const headingRef = useRef<HTMLHeadingElement>(null)
   const previousStatusRef = useRef(status)
+  const redirectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  /** Trava síncrona contra duplo envio — `isSubmitting` do react-hook-form só
+   *  atualiza no próximo render, o que não é rápido o bastante para bloquear
+   *  dois cliques praticamente simultâneos (ex.: duplo toque no mobile). */
+  const isSubmittingRef = useRef(false)
 
   const {
     register,
@@ -188,46 +195,94 @@ export function ContactForm() {
 
   useEffect(() => {
     if (previousStatusRef.current !== status) {
-      headingRef.current?.focus()
+      // preventScroll: mudar de estado nunca deve rolar a página — só move o
+      // foco para leitores de tela/navegação por teclado.
+      headingRef.current?.focus({ preventScroll: true })
     }
     previousStatusRef.current = status
   }, [status])
 
+  // Se o visitante voltar do WhatsApp (ou de qualquer navegação) via
+  // back/forward enquanto o botão ainda mostrava "enviando", o bfcache pode
+  // restaurar esse estado congelado — libera o formulário sem reenviar nada.
+  useEffect(() => {
+    function handlePageShow(event: PageTransitionEvent) {
+      if (event.persisted) {
+        isSubmittingRef.current = false
+        setStatus((current) => (current === 'submitting' ? 'idle' : current))
+      }
+    }
+    window.addEventListener('pageshow', handlePageShow)
+    return () => window.removeEventListener('pageshow', handlePageShow)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      if (redirectTimeoutRef.current) clearTimeout(redirectTimeoutRef.current)
+    }
+  }, [])
+
   async function onSubmit(values: ContactFormValues) {
+    // Checagem+trava síncronas, antes de qualquer setState — bloqueia um
+    // segundo envio disparado nos mesmos milissegundos do primeiro (ex.:
+    // duplo toque), o que o `disabled` do React sozinho não garante.
+    if (isSubmittingRef.current) return
+    isSubmittingRef.current = true
+
     setStatus('submitting')
     setSubmitError(null)
 
-    const honeypot = (document.getElementById('website') as HTMLInputElement | null)?.value ?? ''
-    const metaEventId = crypto.randomUUID()
+    try {
+      const honeypot = (document.getElementById('website') as HTMLInputElement | null)?.value ?? ''
+      const metaEventId = generateEventId()
 
-    const result = await submitContactForm({
-      ...values,
-      description: values.description?.trim() || undefined,
-      website: honeypot,
-      formRenderedAt: formRenderedAtRef.current,
-      metaEventId,
-    })
+      const result = await submitContactForm({
+        ...values,
+        description: values.description?.trim() || undefined,
+        website: honeypot,
+        formRenderedAt: formRenderedAtRef.current,
+        metaEventId,
+      })
 
-    if (result.status === 'success') {
-      setStatus('success')
-      // Só dispara após confirmação real do servidor — nunca no clique do botão.
-      trackLeadEvent(metaEventId)
-    } else if (result.status === 'not-configured') {
-      setStatus('not-configured')
-    } else {
+      if (result.status === 'success') {
+        const message = buildLeadWhatsAppMessage(values)
+        const url = site.whatsapp.buildUrl(message)
+        setWhatsappUrl(url)
+        setStatus('success')
+        // Só dispara após confirmação real do servidor — nunca no clique do botão.
+        trackLeadEvent(metaEventId)
+        // Pequeno atraso só para dar tempo do evento de rastreamento sair
+        // antes da navegação — mesma aba, sem depender de pop-up.
+        redirectTimeoutRef.current = setTimeout(() => {
+          window.location.href = url
+        }, 500)
+      } else if (result.status === 'not-configured') {
+        setWhatsappUrl(site.whatsapp.isConfigured ? site.whatsapp.buildUrl(buildLeadWhatsAppMessage(values)) : null)
+        setStatus('not-configured')
+      } else {
+        setStatus('error')
+        setSubmitError(
+          result.status === 'network-error'
+            ? 'Verifique sua conexão com a internet e tente novamente.'
+            : result.message,
+        )
+      }
+    } catch {
+      // Qualquer falha inesperada (ex.: navegador sem suporte a alguma API)
+      // sempre libera o botão — nunca deixa "ENVIANDO INFORMAÇÕES..." travado.
       setStatus('error')
-      setSubmitError(
-        result.status === 'network-error'
-          ? 'Verifique sua conexão com a internet e tente novamente.'
-          : result.message,
-      )
+      setSubmitError('Não foi possível enviar sua solicitação agora. Tente novamente.')
+    } finally {
+      isSubmittingRef.current = false
     }
   }
 
   function handleReset() {
+    isSubmittingRef.current = false
     reset()
     setStatus('idle')
     setSubmitError(null)
+    setWhatsappUrl(null)
     formRenderedAtRef.current = Date.now()
   }
 
@@ -242,9 +297,15 @@ export function ContactForm() {
             Recebemos sua solicitação
           </ResultTitle>
           <ResultText>
-            A E.F Solutions vai analisar o contexto enviado e entrar em contato pelo WhatsApp informado para
-            mostrar qual solução faz mais sentido para sua empresa.
+            Você vai ser encaminhado para o WhatsApp da E.F Solutions com sua mensagem já preenchida. Se a janela
+            não abrir sozinha, use o botão abaixo.
           </ResultText>
+          {whatsappUrl ? (
+            <Button as="a" href={whatsappUrl}>
+              <WhatsAppIcon size={18} />
+              Abrir WhatsApp
+            </Button>
+          ) : null}
           <Button type="button" $variant="secondary" onClick={handleReset}>
             Enviar outra solicitação
           </Button>
@@ -267,8 +328,8 @@ export function ContactForm() {
             Não conseguimos confirmar o envio automático agora — nenhuma informação foi perdida do seu lado, mas
             para garantir uma resposta, fale diretamente com a E.F Solutions pelo WhatsApp.
           </ResultText>
-          {site.whatsapp.isConfigured ? (
-            <Button as="a" href={site.whatsapp.url} target="_blank" rel="noopener noreferrer">
+          {whatsappUrl ? (
+            <Button as="a" href={whatsappUrl}>
               <WhatsAppIcon size={18} />
               Falar pelo WhatsApp
             </Button>

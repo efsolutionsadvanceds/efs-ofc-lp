@@ -24,3 +24,25 @@ export function trackLeadEvent(eventId: string): void {
     // Rastreamento nunca deve interromper o fluxo do usuário.
   }
 }
+
+/**
+ * Gera um ID de evento com fallback seguro — `crypto.randomUUID()` não existe
+ * em todos os navegadores/WebViews (ex.: alguns navegadores in-app mais
+ * antigos usados a partir de anúncios do Instagram/Facebook). Nunca lança
+ * exceção: se nada estiver disponível, cai para um ID baseado em timestamp +
+ * número aleatório, suficiente para deduplicação entre Pixel e CAPI.
+ */
+export function generateEventId(): string {
+  try {
+    if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+      return crypto.randomUUID()
+    }
+    if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+      const bytes = crypto.getRandomValues(new Uint8Array(16))
+      return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('')
+    }
+  } catch {
+    // Segue para o fallback abaixo.
+  }
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`
+}
