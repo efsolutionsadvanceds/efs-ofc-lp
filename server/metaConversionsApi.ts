@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto'
 
-import type { ContactRequestPayload } from '../src/schemas/contactFormSchema'
-import { normalizeBrazilianWhatsApp } from '../src/lib/phone'
+import type { ContactRequestPayload } from '../src/schemas/contactFormSchema.js'
+import { normalizeBrazilianWhatsApp } from '../src/lib/phone.js'
 
 const GRAPH_API_VERSION = 'v21.0'
 const SITE_URL = 'https://www.efsolutions.com.br/'

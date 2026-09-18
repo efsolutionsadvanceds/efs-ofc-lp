@@ -1,5 +1,5 @@
-import type { ContactRequestPayload } from '../src/schemas/contactFormSchema'
-import { HELP_TYPE_OPTIONS } from '../src/content/formOptions'
+import type { ContactRequestPayload } from '../src/schemas/contactFormSchema.js'
+import { HELP_TYPE_OPTIONS } from '../src/content/formOptions.js'
 
 export type ProviderResult = { ok: true } | { ok: false; reason: 'not-configured' | 'dispatch-failed' }
 

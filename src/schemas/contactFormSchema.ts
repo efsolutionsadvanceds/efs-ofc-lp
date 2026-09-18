@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
-import { HELP_TYPE_OPTIONS } from '../content/formOptions'
-import { isValidBrazilianWhatsApp } from '../lib/phone'
+import { HELP_TYPE_OPTIONS } from '../content/formOptions.js'
+import { isValidBrazilianWhatsApp } from '../lib/phone.js'
 
 const helpTypeValues = HELP_TYPE_OPTIONS.map((option) => option.value) as [string, ...string[]]
 

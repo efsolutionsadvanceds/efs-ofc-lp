@@ -1,9 +1,9 @@
 import { randomUUID } from 'node:crypto'
 
-import { contactRequestSchema } from '../src/schemas/contactFormSchema'
-import { dispatchContactNotification } from './emailProvider'
-import { sendLeadEventToMetaCapi } from './metaConversionsApi'
-import { isRateLimited } from './rateLimiter'
+import { contactRequestSchema } from '../src/schemas/contactFormSchema.js'
+import { dispatchContactNotification } from './emailProvider.js'
+import { sendLeadEventToMetaCapi } from './metaConversionsApi.js'
+import { isRateLimited } from './rateLimiter.js'
 
 const MIN_SUBMIT_MS = 1200
 

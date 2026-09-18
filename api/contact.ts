@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 
-import { handleContactRequest, resolveCorsOrigin } from '../server/contactHandler'
+import { handleContactRequest, resolveCorsOrigin } from '../server/contactHandler.js'
 
 const MAX_BODY_BYTES = 20_000
 
