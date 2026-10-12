@@ -35,7 +35,7 @@ const StatusDot = styled.span`
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: ${({ theme }) => theme.colors.gold};
+  background: ${({ theme }) => theme.colors.accent};
   animation: ${breathe} 6s ease-in-out infinite;
 
   @media (prefers-reduced-motion: reduce) {
@@ -48,7 +48,7 @@ const Eyebrow = styled.p<{ $tone: 'dark' | 'light' }>`
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.gold};
+  color: ${({ theme }) => theme.colors.accent};
   margin-bottom: 0;
 `
 
@@ -59,7 +59,7 @@ const EyebrowUnderline = styled.span<{ $revealed: boolean; $align: 'left' | 'cen
   margin-top: ${({ theme }) => theme.space[2]};
   margin-bottom: ${({ theme }) => theme.space[3]};
   margin-inline: ${({ $align }) => ($align === 'center' ? 'auto' : '0')};
-  background: ${({ theme }) => theme.colors.gold};
+  background: ${({ theme }) => theme.colors.accent};
   transform-origin: left;
   transform: scaleX(${({ $revealed }) => ($revealed ? 1 : 0)});
   transition: transform ${({ theme }) => theme.motion.durationSlow} ${({ theme }) => theme.motion.ease};

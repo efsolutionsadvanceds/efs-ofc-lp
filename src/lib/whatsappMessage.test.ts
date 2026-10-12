@@ -6,14 +6,14 @@ describe('buildLeadWhatsAppMessage', () => {
   it('inclui nome, empresa, tipo de ajuda e descrição quando todos preenchidos', () => {
     const message = buildLeadWhatsAppMessage({
       name: 'Ana Ferreira',
-      company: 'Ferreira Arquitetura',
+      company: 'Ferreira Comércio',
       helpType: 'site-ou-landing-page',
       description: 'Preciso de um site novo.',
     })
 
     expect(message).toContain('Ana Ferreira')
-    expect(message).toContain('Ferreira Arquitetura')
-    expect(message).toContain('Site ou landing page')
+    expect(message).toContain('Ferreira Comércio')
+    expect(message).toContain('Criação de site ou landing page')
     expect(message).toContain('Preciso de um site novo.')
   })
 
@@ -34,7 +34,7 @@ describe('buildLeadWhatsAppMessage', () => {
     const message = buildLeadWhatsAppMessage({
       name: 'José Ação',
       company: 'Construção & Reforma Ltda.',
-      helpType: 'sistema-sob-medida',
+      helpType: 'sistema-personalizado',
       description: 'Preciso organizar orçamentos, prazos e aprovações — tudo em um só lugar.',
     })
 
@@ -47,7 +47,7 @@ describe('buildLeadWhatsAppMessage', () => {
     const message = buildLeadWhatsAppMessage({
       name: 'Ana',
       company: '',
-      helpType: 'agente-de-ia',
+      helpType: 'automacao-whatsapp',
       description: 'Linha 1\nLinha 2',
     })
 

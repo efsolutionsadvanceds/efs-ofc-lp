@@ -1,10 +1,10 @@
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { Container } from '@/components/ui/Container'
 import { Logo } from '@/components/ui/Logo'
 import { Reveal } from '@/components/ui/Reveal'
 import { site } from '@/config/site'
-import { footerCopy } from '@/content/copy'
 
 const Footer = styled.footer`
   background: ${({ theme }) => theme.colors.navy};
@@ -49,24 +49,25 @@ const LinkList = styled.ul`
   gap: ${({ theme }) => theme.space[3]};
 `
 
-const FooterLink = styled.a`
+const FooterLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
 
   &:hover,
   &:focus-visible {
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.accent};
   }
 `
 
-const SegmentText = styled.p`
+const ContactLink = styled.a`
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.textOnDarkMuted};
-`
-
-const ContactLink = styled(FooterLink)`
   font-weight: 700;
-  color: ${({ theme }) => theme.colors.gold};
+  color: ${({ theme }) => theme.colors.accent};
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: underline;
+  }
 `
 
 const SecondGrid = styled(Grid)`
@@ -92,7 +93,7 @@ export function SiteFooter() {
             <Reveal>
               <Logo variant="full" />
             </Reveal>
-            <Positioning>{footerCopy.positioning}</Positioning>
+            <Positioning>{site.positioning}</Positioning>
           </BrandColumn>
 
           <div>
@@ -100,18 +101,21 @@ export function SiteFooter() {
             <LinkList>
               {site.nav.map((item) => (
                 <li key={item.href}>
-                  <FooterLink href={item.href}>{item.label}</FooterLink>
+                  <FooterLink to={item.href}>{item.label}</FooterLink>
                 </li>
               ))}
+              <li>
+                <FooterLink to="/contato">Contato</FooterLink>
+              </li>
             </LinkList>
           </div>
 
           <div>
-            <ColumnTitle>Segmentos</ColumnTitle>
+            <ColumnTitle>Soluções</ColumnTitle>
             <LinkList>
-              {footerCopy.segments.map((segment) => (
-                <li key={segment}>
-                  <SegmentText>{segment}</SegmentText>
+              {site.services.map((item) => (
+                <li key={item.href}>
+                  <FooterLink to={item.href}>{item.label}</FooterLink>
                 </li>
               ))}
             </LinkList>
@@ -121,16 +125,16 @@ export function SiteFooter() {
         <SecondGrid>
           <div>
             <ColumnTitle>Fale com a E.F Solutions</ColumnTitle>
-            <ContactLink href="#contato-hero">Quero receber uma análise</ContactLink>
+            <ContactLink href={site.whatsapp.url}>Conversar pelo WhatsApp</ContactLink>
           </div>
           <div>
             <ColumnTitle>Legal</ColumnTitle>
             <LinkList>
               <li>
-                <FooterLink href={site.legal.privacyHref}>Política de Privacidade</FooterLink>
+                <FooterLink to={site.legal.privacyHref}>Política de Privacidade</FooterLink>
               </li>
               <li>
-                <FooterLink href={site.legal.termsHref}>Termos de Uso</FooterLink>
+                <FooterLink to={site.legal.termsHref}>Termos de Uso</FooterLink>
               </li>
             </LinkList>
           </div>

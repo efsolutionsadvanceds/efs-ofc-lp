@@ -29,7 +29,7 @@ export const site = {
   legalName: 'E.F Solutions',
   domain: 'https://www.efsolutions.com.br',
   locale: 'pt-BR',
-  positioning: 'Sites e sistemas para empresas de arquitetura, reforma e construção venderem mais.',
+  positioning: 'Criação de sites, sistemas, automações e divulgação digital para o seu negócio.',
   whatsapp: {
     digits: WHATSAPP_DIGITS,
     display: WHATSAPP_DISPLAY,
@@ -40,16 +40,19 @@ export const site = {
     isConfigured: WHATSAPP_DIGITS.length > 0,
   },
   nav: [
-    { href: '#topo', label: 'Início' },
-    { href: '#reconhecimento', label: 'O que resolvemos' },
-    { href: '#solucoes', label: 'Soluções' },
-    { href: '#como-funciona', label: 'Como funciona' },
-    { href: '#objecoes', label: 'Dúvidas' },
-    { href: '#contato-hero', label: 'Contato' },
+    { href: '/', label: 'Início' },
+    { href: '/solucoes', label: 'Soluções' },
+    { href: '/sobre', label: 'Sobre' },
+  ],
+  services: [
+    { href: '/criacao-de-sites', label: 'Criação de sites' },
+    { href: '/sistemas-personalizados', label: 'Sistemas personalizados' },
+    { href: '/automacao-whatsapp', label: 'Automação de WhatsApp' },
+    { href: '/seo-e-divulgacao', label: 'SEO e divulgação digital' },
   ],
   legal: {
-    privacyHref: '#privacidade',
-    termsHref: '#termos',
+    privacyHref: '/privacidade',
+    termsHref: '/termos',
   },
 } as const
 

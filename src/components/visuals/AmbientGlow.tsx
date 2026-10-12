@@ -19,17 +19,18 @@ const Wrapper = styled.div`
 `
 
 /**
- * Glow dourado — normalmente posicionado perto do conteúdo/CTA principal da
- * seção. Deriva muito lentamente (14-28s), retomando um respiro sutil.
+ * Glow em verde-neon — normalmente posicionado perto do conteúdo/CTA
+ * principal da seção. Deriva muito lentamente (14-28s), retomando um
+ * respiro sutil.
  */
-const GoldGlow = styled.div`
+const AccentGlow = styled.div`
   position: absolute;
   top: -10%;
   right: -12%;
   width: 55%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, ${({ theme }) => theme.colors.goldAlpha(0.14)} 0%, transparent 68%);
+  background: radial-gradient(circle, ${({ theme }) => theme.colors.accentAlpha(0.14)} 0%, transparent 68%);
   animation: ${driftA} 22s ease-in-out infinite;
   will-change: transform;
 
@@ -39,10 +40,9 @@ const GoldGlow = styled.div`
 `
 
 /**
- * Contrapeso "frio" do lado oposto ao dourado — usa off-white em alfa baixo
- * (não introduz uma quarta cor: contra o navy, uma leitura fria/azulada é o
- * resultado natural de off-white em baixa opacidade, mantendo o sistema de
- * apenas 3 cores-base do site).
+ * Contrapeso em azul elétrico do lado oposto ao verde — reforça a
+ * profundidade "tecnológica" do sistema visual sem competir com o verde,
+ * que fica reservado a CTAs e destaques principais.
  */
 const CoolGlow = styled.div`
   position: absolute;
@@ -51,7 +51,7 @@ const CoolGlow = styled.div`
   width: 48%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, ${({ theme }) => theme.colors.offWhiteAlpha(0.06)} 0%, transparent 70%);
+  background: radial-gradient(circle, ${({ theme }) => theme.colors.accentBlueAlpha(0.12)} 0%, transparent 70%);
   animation: ${driftB} 26s ease-in-out infinite;
   animation-delay: 1.2s;
   will-change: transform;
@@ -62,7 +62,7 @@ const CoolGlow = styled.div`
 `
 
 interface AmbientGlowProps {
-  /** Inverte os lados do par dourado/frio — útil para alternar o ritmo entre seções vizinhas. */
+  /** Inverte os lados do par verde/azul — útil para alternar o ritmo entre seções vizinhas. */
   flip?: boolean
 }
 
@@ -76,7 +76,7 @@ interface AmbientGlowProps {
 export function AmbientGlow({ flip = false }: AmbientGlowProps) {
   return (
     <Wrapper aria-hidden="true" style={flip ? { transform: 'scaleX(-1)' } : undefined}>
-      <GoldGlow />
+      <AccentGlow />
       <CoolGlow />
     </Wrapper>
   )

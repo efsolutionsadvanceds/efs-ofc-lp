@@ -92,14 +92,14 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   :focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.gold};
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
     outline-offset: 3px;
     border-radius: 4px;
   }
 
   ::selection {
-    background: ${({ theme }) => theme.colors.gold};
-    color: ${({ theme }) => theme.colors.textOnGold};
+    background: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.textOnAccent};
   }
 
   .visually-hidden {

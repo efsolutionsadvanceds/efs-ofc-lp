@@ -1,4 +1,5 @@
 import { X } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
 import { Button } from '@/components/ui/Button'
@@ -68,7 +69,7 @@ const CloseButton = styled.button`
   color: ${({ theme }) => theme.colors.textOnDark};
 
   &:hover {
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.accent};
   }
 `
 
@@ -78,7 +79,7 @@ const Nav = styled.nav`
   gap: ${({ theme }) => theme.space[1]};
 `
 
-const NavLink = styled.a`
+const NavItem = styled(Link)`
   min-height: 44px;
   display: flex;
   align-items: center;
@@ -89,7 +90,7 @@ const NavLink = styled.a`
 
   &:hover,
   &:focus-visible {
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.accent};
   }
 `
 
@@ -113,13 +114,18 @@ export function MobileMenu({ isOpen, onClose, menuId }: MobileMenuProps) {
         </TopRow>
         <Nav>
           {site.nav.map((item) => (
-            <NavLink key={item.href} href={item.href} onClick={onClose}>
+            <NavItem key={item.href} to={item.href} onClick={onClose}>
               {item.label}
-            </NavLink>
+            </NavItem>
+          ))}
+          {site.services.map((item) => (
+            <NavItem key={item.href} to={item.href} onClick={onClose}>
+              {item.label}
+            </NavItem>
           ))}
         </Nav>
-        <Button as="a" href="#contato-hero" onClick={onClose} $fullWidth>
-          Falar sobre meu negócio
+        <Button as={Link} to="/contato" onClick={onClose} $fullWidth>
+          Solicitar orçamento
         </Button>
       </Panel>
     </Overlay>

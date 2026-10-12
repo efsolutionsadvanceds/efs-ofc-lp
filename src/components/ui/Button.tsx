@@ -4,13 +4,13 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
 
 const variantStyles = {
   primary: css`
-    background: ${({ theme }) => theme.colors.gold};
-    color: ${({ theme }) => theme.colors.textOnGold};
-    border: 1px solid ${({ theme }) => theme.colors.gold};
+    background: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.textOnAccent};
+    border: 1px solid ${({ theme }) => theme.colors.accent};
 
     &:hover:not(:disabled) {
-      background: #e0b562;
-      box-shadow: ${({ theme }) => theme.shadows.gold};
+      background: #4eeab0;
+      box-shadow: ${({ theme }) => theme.shadows.accent};
     }
   `,
   secondary: css`
@@ -19,13 +19,13 @@ const variantStyles = {
     border: 1px solid ${({ theme }) => theme.colors.borderOnDarkStrong};
 
     &:hover:not(:disabled) {
-      border-color: ${({ theme }) => theme.colors.gold};
-      color: ${({ theme }) => theme.colors.gold};
+      border-color: ${({ theme }) => theme.colors.accent};
+      color: ${({ theme }) => theme.colors.accent};
     }
   `,
   ghost: css`
     background: transparent;
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.accent};
     border: 1px solid transparent;
     padding-inline: ${({ theme }) => theme.space[2]};
 

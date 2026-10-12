@@ -22,7 +22,7 @@ const Checkbox = styled.input`
   height: 20px;
   min-width: 20px;
   margin-top: 2px;
-  accent-color: ${({ theme }) => theme.colors.gold};
+  accent-color: ${({ theme }) => theme.colors.accent};
 `
 
 const ConsentText = styled.label`
@@ -31,7 +31,7 @@ const ConsentText = styled.label`
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
 
   a {
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.accent};
     text-decoration: underline;
   }
 `

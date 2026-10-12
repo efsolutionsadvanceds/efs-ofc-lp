@@ -1,5 +1,6 @@
 import { Menu } from 'lucide-react'
 import { useId, useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { Button } from '@/components/ui/Button'
@@ -33,7 +34,7 @@ const Row = styled.div`
   min-height: 72px;
 `
 
-const LogoLink = styled.a<{ $compact: boolean }>`
+const LogoLink = styled(Link)<{ $compact: boolean }>`
   position: relative;
   display: inline-flex;
   overflow: hidden;
@@ -49,7 +50,7 @@ const LogoLink = styled.a<{ $compact: boolean }>`
     background: linear-gradient(
       100deg,
       transparent 30%,
-      ${({ theme }) => theme.colors.goldAlpha(0.55)} 50%,
+      ${({ theme }) => theme.colors.accentAlpha(0.55)} 50%,
       transparent 70%
     );
     transform: translateX(-140%);
@@ -80,7 +81,7 @@ const Nav = styled.nav`
   }
 `
 
-const NavLink = styled.a`
+const NavItem = styled(NavLink)`
   position: relative;
   font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: 600;
@@ -100,13 +101,21 @@ const NavLink = styled.a`
     bottom: 0;
     width: 0%;
     height: 2px;
-    background: ${({ theme }) => theme.colors.gold};
+    background: ${({ theme }) => theme.colors.accent};
     transition: width ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
   }
 
   &:hover::after,
   &:focus-visible::after {
     width: 100%;
+  }
+
+  &.active {
+    color: ${({ theme }) => theme.colors.textOnDark};
+
+    &::after {
+      width: 100%;
+    }
   }
 `
 
@@ -141,20 +150,20 @@ export function SiteHeader() {
     <HeaderBar $isScrolled={isScrolled}>
       <Container>
         <Row>
-          <LogoLink href="#topo" aria-label={`${site.name} — página inicial`} $compact={isScrolled}>
+          <LogoLink to="/" aria-label={`${site.name} — página inicial`} $compact={isScrolled}>
             <Logo />
           </LogoLink>
 
           <Nav aria-label="Navegação principal">
             {site.nav.map((item) => (
-              <NavLink key={item.href} href={item.href}>
+              <NavItem key={item.href} to={item.href} end={item.href === '/'}>
                 {item.label}
-              </NavLink>
+              </NavItem>
             ))}
           </Nav>
 
-          <DesktopCta as="a" href="#contato-hero">
-            Falar sobre meu negócio
+          <DesktopCta as={Link} to="/contato">
+            Solicitar orçamento
           </DesktopCta>
 
           <MenuToggle

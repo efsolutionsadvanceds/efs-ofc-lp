@@ -1,40 +1,44 @@
 /**
- * Design tokens. Apenas três cores-base são usadas em toda a interface
- * (navy, gold, off-white) — os tons de "surface" abaixo são misturas
- * pré-computadas dessas mesmas cores (navy + uma fração de off-white),
- * usadas onde uma cor sólida opaca é necessária (cartões sobre imagens,
- * por exemplo). Bordas e destaques usam variações alfa diretas.
+ * Design tokens — identidade "Premium Neon Corporate": fundo azul-marinho
+ * profundo quase preto, superfícies em grafite, e dois acentos usados com
+ * moderação (azul elétrico para profundidade/links, verde neon reservado a
+ * CTAs e destaques principais — nunca os dois ao mesmo tempo no mesmo
+ * elemento). `offWhite` é o texto primário sobre fundo escuro.
  */
 
 const colors = {
-  navy: '#081722',
-  gold: '#D5A54A',
-  offWhite: '#F3F2ED',
+  navy: '#070B14',
+  graphite: '#182338',
+  offWhite: '#F2F5FC',
+  accentBlue: '#4C8DFF',
+  accent: '#35E6A0',
 
-  // Tons sólidos derivados do navy (navy + 5% / 9% de off-white).
-  surface: '#14222C',
-  surfaceElevated: '#1D2B34',
+  // Tons sólidos derivados do navy (navy + grafite) — usados onde uma cor
+  // sólida opaca é necessária (cartões sobre imagens, por exemplo).
+  surface: '#0C1830',
+  surfaceElevated: '#182338',
 
-  // Variações alfa das três cores-base — usar estas para bordas, overlays
-  // e texto com opacidade controlada em vez de introduzir cinza.
-  navyAlpha: (alpha: number) => `rgba(8, 23, 34, ${alpha})`,
-  goldAlpha: (alpha: number) => `rgba(213, 165, 74, ${alpha})`,
-  offWhiteAlpha: (alpha: number) => `rgba(243, 242, 237, ${alpha})`,
+  // Variações alfa das cores-base — usar estas para bordas, overlays e
+  // texto com opacidade controlada em vez de introduzir cinza.
+  navyAlpha: (alpha: number) => `rgba(7, 11, 20, ${alpha})`,
+  accentAlpha: (alpha: number) => `rgba(53, 230, 160, ${alpha})`,
+  accentBlueAlpha: (alpha: number) => `rgba(76, 141, 255, ${alpha})`,
+  offWhiteAlpha: (alpha: number) => `rgba(242, 245, 252, ${alpha})`,
 
-  textOnDark: '#F3F2ED',
-  textOnDarkMuted: 'rgba(243, 242, 237, 0.72)',
-  textOnDarkSubtle: 'rgba(243, 242, 237, 0.52)',
-  textOnLight: '#081722',
-  textOnLightMuted: 'rgba(8, 23, 34, 0.68)',
-  textOnGold: '#081722',
+  textOnDark: '#F2F5FC',
+  textOnDarkMuted: 'rgba(242, 245, 252, 0.72)',
+  textOnDarkSubtle: 'rgba(242, 245, 252, 0.52)',
+  textOnLight: '#070B14',
+  textOnLightMuted: 'rgba(7, 11, 20, 0.68)',
+  textOnAccent: '#070B14',
 
-  borderOnDark: 'rgba(243, 242, 237, 0.14)',
-  borderOnDarkStrong: 'rgba(243, 242, 237, 0.24)',
-  borderGold: 'rgba(213, 165, 74, 0.45)',
-  borderOnLight: 'rgba(8, 23, 34, 0.12)',
+  borderOnDark: 'rgba(151, 176, 215, 0.18)',
+  borderOnDarkStrong: 'rgba(151, 176, 215, 0.3)',
+  borderAccent: 'rgba(53, 230, 160, 0.45)',
+  borderOnLight: 'rgba(7, 11, 20, 0.12)',
 
-  success: '#D5A54A',
-  danger: '#F3F2ED',
+  success: '#35E6A0',
+  danger: '#FF6B6B',
 } as const
 
 const breakpoints = {
@@ -88,10 +92,10 @@ const radii = {
 }
 
 const shadows = {
-  sm: '0 2px 8px rgba(8, 23, 34, 0.18)',
-  md: '0 8px 24px rgba(8, 23, 34, 0.24)',
-  lg: '0 16px 40px rgba(8, 23, 34, 0.32)',
-  gold: '0 6px 20px rgba(213, 165, 74, 0.25)',
+  sm: '0 2px 8px rgba(7, 11, 20, 0.18)',
+  md: '0 8px 24px rgba(7, 11, 20, 0.24)',
+  lg: '0 16px 40px rgba(7, 11, 20, 0.32)',
+  accent: '0 6px 20px rgba(53, 230, 160, 0.25)',
 }
 
 const layout = {

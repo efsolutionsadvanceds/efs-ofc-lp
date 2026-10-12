@@ -4,7 +4,7 @@ import { rotateSlow } from './motion'
 
 /**
  * Mixin — não um componente novo — para acrescentar um anel de energia
- * (borda com gradiente cônico dourado em rotação lenta) diretamente a um
+ * (borda com gradiente cônico em verde-neon, em rotação lenta) diretamente a um
  * styled-component já existente, sem envolver um wrapper extra. Uso:
  *
  *   const Shell = styled.div`
@@ -28,7 +28,7 @@ export const energyBorderGlow = css`
     background: conic-gradient(
       from 0deg,
       transparent 0%,
-      ${({ theme }) => theme.colors.goldAlpha(0.5)} 10%,
+      ${({ theme }) => theme.colors.accentAlpha(0.5)} 10%,
       transparent 24%,
       transparent 100%
     );

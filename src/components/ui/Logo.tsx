@@ -41,7 +41,7 @@ const Wrapper = styled.span<{ $displayHeight: number }>`
     position: absolute;
     inset: -3px -6px;
     border-radius: ${({ theme }) => theme.radii.sm};
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.goldAlpha(0.35)};
+    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.accentAlpha(0.35)};
     opacity: 0;
     animation: ${edgeGlowIn} 500ms ${({ theme }) => theme.motion.ease} 900ms both;
     pointer-events: none;

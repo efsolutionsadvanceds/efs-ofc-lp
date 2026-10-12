@@ -23,7 +23,7 @@ export const ErrorText = styled.p`
   gap: ${({ theme }) => theme.space[1]};
   font-size: ${({ theme }) => theme.fontSizes.xs};
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.gold};
+  color: ${({ theme }) => theme.colors.accent};
 
   svg {
     width: 14px;
@@ -50,12 +50,12 @@ const inputBase = css`
   }
 
   &:focus {
-    border-bottom-color: ${({ theme }) => theme.colors.gold};
+    border-bottom-color: ${({ theme }) => theme.colors.accent};
     background: ${({ theme }) => theme.colors.navyAlpha(0.7)};
   }
 
   &[aria-invalid='true'] {
-    border-bottom-color: ${({ theme }) => theme.colors.gold};
+    border-bottom-color: ${({ theme }) => theme.colors.accent};
   }
 `
 
@@ -74,7 +74,7 @@ export const StyledTextArea = styled.textarea`
 
   /* Um pouco mais expressivo que o input padrão — glow dourado restrito à textarea. */
   &:focus {
-    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.goldAlpha(0.14)};
+    box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.accentAlpha(0.14)};
   }
 `
 

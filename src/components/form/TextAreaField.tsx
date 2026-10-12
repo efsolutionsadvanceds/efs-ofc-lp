@@ -27,7 +27,7 @@ const Counter = styled.span<{ $isNearLimit: boolean }>`
   flex-shrink: 0;
   font-size: ${({ theme }) => theme.fontSizes.xs};
   color: ${({ theme, $isNearLimit }) =>
-    $isNearLimit ? theme.colors.gold : theme.colors.textOnDarkSubtle};
+    $isNearLimit ? theme.colors.accent : theme.colors.textOnDarkSubtle};
   font-variant-numeric: tabular-nums;
 `
 
@@ -54,7 +54,7 @@ const TextAreaShell = styled.div`
   }
 
   &:focus-within::before {
-    background: ${({ theme }) => theme.colors.gold};
+    background: ${({ theme }) => theme.colors.accent};
     transform: translateX(2px);
   }
 

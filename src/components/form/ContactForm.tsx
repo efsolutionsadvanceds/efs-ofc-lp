@@ -119,8 +119,8 @@ const ResultIcon = styled.span<{ $tone: 'success' | 'warning' }>`
   height: 48px;
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme, $tone }) =>
-    $tone === 'success' ? theme.colors.goldAlpha(0.16) : theme.colors.offWhiteAlpha(0.12)};
-  color: ${({ theme }) => theme.colors.gold};
+    $tone === 'success' ? theme.colors.accentAlpha(0.16) : theme.colors.offWhiteAlpha(0.12)};
+  color: ${({ theme }) => theme.colors.accent};
 
   svg {
     width: 26px;
@@ -143,9 +143,9 @@ const ErrorBanner = styled.p`
   align-items: center;
   gap: ${({ theme }) => theme.space[2]};
   padding: ${({ theme }) => theme.space[3]};
-  border: 1px solid ${({ theme }) => theme.colors.borderGold};
+  border: 1px solid ${({ theme }) => theme.colors.borderAccent};
   border-radius: ${({ theme }) => theme.radii.md};
-  background: ${({ theme }) => theme.colors.goldAlpha(0.08)};
+  background: ${({ theme }) => theme.colors.accentAlpha(0.08)};
   font-size: ${({ theme }) => theme.fontSizes.sm};
   color: ${({ theme }) => theme.colors.textOnDark};
 
@@ -153,7 +153,7 @@ const ErrorBanner = styled.p`
     width: 18px;
     height: 18px;
     flex-shrink: 0;
-    color: ${({ theme }) => theme.colors.gold};
+    color: ${({ theme }) => theme.colors.accent};
   }
 `
 
