@@ -1,32 +1,42 @@
+import { Facebook, Instagram, Linkedin, MessageCircle } from 'lucide-react'
+import { useRef } from 'react'
 import styled from 'styled-components'
 
-import { ContactForm } from '@/components/form/ContactForm'
+import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/ui/Reveal'
-import { SceneLight } from '@/components/visuals/SceneLight'
+import { TerminalWindow } from '@/components/ui/TerminalWindow'
 import { site } from '@/config/site'
 import { useSeo } from '@/hooks/useSeo'
+import { generateEventId, trackContactEvent } from '@/lib/metaPixel'
+import { SceneLight } from '@/components/visuals/SceneLight'
+
+const SOCIAL_ICONS = {
+  instagram: Instagram,
+  linkedin: Linkedin,
+  facebook: Facebook,
+  tiktok: MessageCircle,
+} as const
 
 const Section = styled.section`
   position: relative;
   overflow: hidden;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
   padding-block: ${({ theme }) => `calc(${theme.layout.headerHeight} + ${theme.space[16]}) ${theme.space[20]}`};
   background: ${({ theme }) => theme.colors.navy};
-
-  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
-    padding-block: ${({ theme }) => `calc(${theme.layout.headerHeight} + ${theme.space[20]}) ${theme.space[20]}`};
-  }
 `
 
-const Grid = styled(Container)`
+const Content = styled(Container)`
   position: relative;
   z-index: 1;
   display: grid;
-  gap: ${({ theme }) => theme.space[10]};
-  align-items: start;
+  gap: ${({ theme }) => theme.space[12]};
+  align-items: center;
 
   ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
-    grid-template-columns: 1fr 1.1fr;
+    grid-template-columns: 1.1fr 1fr;
   }
 `
 
@@ -40,6 +50,7 @@ const Eyebrow = styled.p`
 `
 
 const Heading = styled.h1`
+  font-family: ${({ theme }) => theme.displayFontStack};
   font-size: ${({ theme }) => theme.fontSizes['3xl']};
   color: ${({ theme }) => theme.colors.textOnDark};
 `
@@ -47,58 +58,128 @@ const Heading = styled.h1`
 const Supporting = styled.p`
   margin-top: ${({ theme }) => theme.space[5]};
   font-size: ${({ theme }) => theme.fontSizes.md};
-  line-height: 1.65;
+  line-height: 1.6;
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
-  max-width: 48ch;
+  max-width: 44ch;
 `
 
-const DirectContact = styled.p`
-  margin-top: ${({ theme }) => theme.space[8]};
-  font-size: ${({ theme }) => theme.fontSizes.sm};
+const CtaWrapper = styled.div`
+  margin-top: ${({ theme }) => theme.space[10]};
+`
+
+const BigButton = styled(Button)`
+  min-height: 64px;
+  padding-inline: ${({ theme }) => theme.space[10]};
+  font-size: ${({ theme }) => theme.fontSizes.md};
+`
+
+const SocialRow = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.space[3]};
+  margin-top: ${({ theme }) => theme.space[6]};
+`
+
+const SocialLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: ${({ theme }) => theme.radii.sm};
+  border: 1px solid ${({ theme }) => theme.colors.glassBorder};
+  color: ${({ theme }) => theme.colors.textOnDarkMuted};
+  transition:
+    border-color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease},
+    color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease},
+    transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
+
+  &:hover,
+  &:focus-visible {
+    border-color: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.accent};
+    transform: translateY(-2px);
+  }
+`
+
+const TermLine = styled.div`
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
 
-  a {
-    font-weight: 700;
-    color: ${({ theme }) => theme.colors.accent};
+  .k {
+    color: ${({ theme }) => theme.colors.accentBlue};
+  }
 
-    &:hover,
-    &:focus-visible {
-      text-decoration: underline;
-    }
+  & + & {
+    margin-top: ${({ theme }) => theme.space[2]};
   }
 `
 
 export default function Contato() {
   useSeo({
-    title: 'Solicite um Orçamento de Tecnologia | E.F Solutions',
-    description:
-      'Entre em contato com a E.F Solutions para solicitar um orçamento de site, sistema personalizado, automação ou solução digital para sua empresa.',
+    title: 'Fala com a E.F Solutions no WhatsApp | E.F Solutions',
+    description: 'Chama a E.F Solutions direto no WhatsApp. Sem formulário, sem burocracia.',
     path: '/contato',
   })
+
+  const eventIdRef = useRef(generateEventId())
+
+  function handleWhatsAppClick() {
+    trackContactEvent(eventIdRef.current)
+  }
 
   return (
     <Section>
       <SceneLight variant="section" />
-      <Grid>
+      <Content>
         <div>
           <Reveal>
             <Eyebrow>Contato</Eyebrow>
-            <Heading>Conte o que sua empresa precisa.</Heading>
+            <Heading>Bora conversar?</Heading>
             <Supporting>
-              Você não precisa saber qual tecnologia utilizar. Explique o que gostaria de melhorar e vamos conversar
-              sobre as possibilidades.
+              Sem formulário, sem espera. Chama agora no WhatsApp e já começa a resolver.
             </Supporting>
           </Reveal>
-          <Reveal delayMs={100}>
-            <DirectContact>
-              Prefere conversar diretamente? Chame a E.F Solutions pelo{' '}
-              <a href={site.whatsapp.url}>WhatsApp</a>.
-            </DirectContact>
+
+          <Reveal delayMs={120}>
+            <CtaWrapper>
+              <BigButton as="a" href={site.whatsapp.url} onClick={handleWhatsAppClick}>
+                Chamar no WhatsApp
+              </BigButton>
+            </CtaWrapper>
           </Reveal>
+
+          {site.social.length > 0 ? (
+            <Reveal delayMs={200}>
+              <SocialRow>
+                {site.social.map((item) => {
+                  const Icon = SOCIAL_ICONS[item.icon]
+                  return (
+                    <SocialLink key={item.href} href={item.href} aria-label={item.label} target="_blank" rel="noopener noreferrer">
+                      <Icon aria-hidden="true" size={20} />
+                    </SocialLink>
+                  )
+                })}
+              </SocialRow>
+            </Reveal>
+          ) : null}
         </div>
 
-        <ContactForm />
-      </Grid>
+        <Reveal delayMs={160}>
+          <TerminalWindow title="contato.sh">
+            <TermLine>
+              <span className="k">empresa:</span> E.F Solutions
+            </TermLine>
+            <TermLine>
+              <span className="k">whatsapp:</span> {site.whatsapp.display}
+            </TermLine>
+            <TermLine>
+              <span className="k">canal:</span> direto, sem formulário
+            </TermLine>
+            <TermLine>
+              <span className="k">status:</span> online
+            </TermLine>
+          </TerminalWindow>
+        </Reveal>
+      </Content>
     </Section>
   )
 }

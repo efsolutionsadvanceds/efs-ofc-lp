@@ -2,10 +2,18 @@ import { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
   @font-face {
-    font-family: 'Manrope Variable';
-    src: url('/fonts/manrope-variable.woff2') format('woff2-variations'),
-      url('/fonts/manrope-variable.woff2') format('woff2');
-    font-weight: 400 800;
+    font-family: 'JetBrains Mono Variable';
+    src: url('/fonts/jetbrains-mono-variable.woff2') format('woff2-variations'),
+      url('/fonts/jetbrains-mono-variable.woff2') format('woff2');
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Poppins';
+    src: url('/fonts/poppins-bold.woff2') format('woff2');
+    font-weight: 700;
     font-style: normal;
     font-display: swap;
   }
@@ -57,6 +65,7 @@ export const GlobalStyle = createGlobalStyle`
     font-weight: 700;
     line-height: 1.15;
     letter-spacing: -0.01em;
+    text-transform: uppercase;
   }
 
   p {

@@ -89,10 +89,17 @@ const Nav = styled.nav`
 const NavItem = styled(NavLink)`
   position: relative;
   font-size: ${({ theme }) => theme.fontSizes.sm};
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
   padding-block: ${({ theme }) => theme.space[2]};
   transition: color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
+
+  &::before {
+    content: '/';
+    color: ${({ theme }) => theme.colors.accent};
+    margin-right: 2px;
+  }
 
   &:hover,
   &:focus-visible {
@@ -168,7 +175,7 @@ export function SiteHeader() {
           </Nav>
 
           <DesktopCta as={Link} to="/contato">
-            Solicitar orçamento
+            Chamar no WhatsApp
           </DesktopCta>
 
           <MenuToggle

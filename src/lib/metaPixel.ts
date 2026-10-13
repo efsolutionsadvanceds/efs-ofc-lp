@@ -5,21 +5,16 @@ declare global {
 }
 
 /**
- * Dispara o evento padrão "Lead" do Meta Pixel após uma submissão confirmada
- * do formulário de contato (nunca no clique do botão — um clique pode falhar
- * na validação ou na rede, e isso poluiria a otimização de anúncios com
- * "leads" que não aconteceram de verdade).
- *
- * `eventId` é o mesmo identificador enviado ao servidor (ver ContactForm e
- * server/metaConversionsApi.ts) — permite ao Meta deduplicar quando o mesmo
- * evento chega tanto pelo Pixel do navegador quanto pela Conversions API.
- *
- * Silencioso se o Pixel não carregou (bloqueador de anúncios, script ainda
- * carregando) — o formulário nunca deve falhar por causa do rastreamento.
+ * Dispara o evento padrão "Contact" do Meta Pixel quando o visitante clica no
+ * botão principal do WhatsApp — o evento correto para "visitante iniciou
+ * contato", já que o site não coleta mais dados de um formulário (não há
+ * "Lead" sem dados de lead). Silencioso se o Pixel não carregou (bloqueador
+ * de anúncios, script ainda carregando) — o botão nunca deve falhar por
+ * causa do rastreamento.
  */
-export function trackLeadEvent(eventId: string): void {
+export function trackContactEvent(eventId: string): void {
   try {
-    window.fbq?.('track', 'Lead', {}, { eventID: eventId })
+    window.fbq?.('track', 'Contact', {}, { eventID: eventId })
   } catch {
     // Rastreamento nunca deve interromper o fluxo do usuário.
   }
@@ -30,7 +25,8 @@ export function trackLeadEvent(eventId: string): void {
  * em todos os navegadores/WebViews (ex.: alguns navegadores in-app mais
  * antigos usados a partir de anúncios do Instagram/Facebook). Nunca lança
  * exceção: se nada estiver disponível, cai para um ID baseado em timestamp +
- * número aleatório, suficiente para deduplicação entre Pixel e CAPI.
+ * número aleatório — evita contar o mesmo clique duas vezes caso o evento
+ * seja reenviado.
  */
 export function generateEventId(): string {
   try {

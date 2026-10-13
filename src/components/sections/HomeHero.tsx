@@ -1,13 +1,20 @@
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
+import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { GlassPanel } from '@/components/ui/GlassPanel'
 import { MaskedHeadline } from '@/components/ui/MaskedHeadline'
 import { Reveal } from '@/components/ui/Reveal'
+import { Typewriter } from '@/components/ui/Typewriter'
 import { SceneLight } from '@/components/visuals/SceneLight'
 import { usePointerGlow } from '@/hooks/usePointerGlow'
+
+const floatSlow = keyframes`
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(4deg); }
+`
 
 const Section = styled.section`
   position: relative;
@@ -23,6 +30,27 @@ const Section = styled.section`
   }
 `
 
+const FloatingGlyph = styled.span<{ $top: string; $left: string; $delayS: number }>`
+  position: absolute;
+  top: ${({ $top }) => $top};
+  left: ${({ $left }) => $left};
+  font-size: ${({ theme }) => theme.fontSizes.xl};
+  font-weight: 700;
+  color: ${({ theme }) => theme.colors.accentBlueAlpha(0.3)};
+  animation: ${floatSlow} 6s ease-in-out infinite;
+  animation-delay: ${({ $delayS }) => $delayS}s;
+  pointer-events: none;
+  display: none;
+
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`
+
 const Content = styled(Container)`
   position: relative;
   z-index: 1;
@@ -33,6 +61,7 @@ const Badge = styled(GlassPanel)`
   display: inline-flex;
   align-items: center;
   gap: ${({ theme }) => theme.space[2]};
+  min-width: 15ch;
   padding: ${({ theme }) => `${theme.space[2]} ${theme.space[4]}`};
   border-radius: ${({ theme }) => theme.radii.pill};
   font-size: ${({ theme }) => theme.fontSizes.xs};
@@ -45,6 +74,7 @@ const Badge = styled(GlassPanel)`
   &::before {
     content: '';
     display: inline-block;
+    flex-shrink: 0;
     width: 6px;
     height: 6px;
     border-radius: 50%;
@@ -69,95 +99,46 @@ const CtaRow = styled.div`
   margin-top: ${({ theme }) => theme.space[10]};
 `
 
-const PrimaryCta = styled(Link)`
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.space[2]};
-  min-height: 52px;
-  padding: ${({ theme }) => `${theme.space[4]} ${theme.space[8]}`};
-  border-radius: ${({ theme }) => theme.radii.pill};
-  font-weight: 700;
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  background: ${({ theme }) => theme.colors.accent};
-  color: ${({ theme }) => theme.colors.textOnAccent};
-  box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.borderAccent}, 0 12px 32px ${({ theme }) => theme.colors.glowGreen};
-  transition:
-    transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease},
-    box-shadow ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
-
-  svg {
-    width: 18px;
-    height: 18px;
-    transition: transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
-  }
-
-  &:hover,
-  &:focus-visible {
-    transform: translateY(-2px);
-    box-shadow: 0 0 0 1px ${({ theme }) => theme.colors.accent}, 0 16px 40px ${({ theme }) => theme.colors.glowGreen};
-  }
-
-  &:hover svg,
-  &:focus-visible svg {
-    transform: translateX(3px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-`
-
-const SecondaryCta = styled(Link)`
-  display: inline-flex;
-  align-items: center;
-  min-height: 52px;
-  padding: ${({ theme }) => `${theme.space[4]} ${theme.space[6]}`};
-  border-radius: ${({ theme }) => theme.radii.pill};
-  font-weight: 600;
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.textOnDark};
-  border: 1px solid ${({ theme }) => theme.colors.glassBorder};
-  background: ${({ theme }) => theme.colors.glass};
-  transition:
-    border-color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease},
-    color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
-
-  &:hover,
-  &:focus-visible {
-    border-color: ${({ theme }) => theme.colors.accentBlue};
-    color: ${({ theme }) => theme.colors.iceBlue};
-  }
-`
-
 export function HomeHero() {
   const pointerRef = usePointerGlow<HTMLElement>()
 
   return (
     <Section ref={pointerRef}>
       <SceneLight variant="hero" />
+      <FloatingGlyph $top="18%" $left="78%" $delayS={0} aria-hidden="true">
+        {'{ }'}
+      </FloatingGlyph>
+      <FloatingGlyph $top="62%" $left="85%" $delayS={1.5} aria-hidden="true">
+        {'</>'}
+      </FloatingGlyph>
+      <FloatingGlyph $top="72%" $left="8%" $delayS={3} aria-hidden="true">
+        {'$_'}
+      </FloatingGlyph>
       <Content>
         <Reveal>
-          <Badge as="div">Sites · Sistemas · Automações · SEO</Badge>
+          <Badge as="div">
+            <Typewriter words={['sites_', 'sistemas_', 'automações_', 'seo_']} />
+          </Badge>
         </Reveal>
 
         <MaskedHeadline text="Criação de sites, sistemas e automações para o seu negócio." />
 
         <Reveal delayMs={420}>
           <Supporting>
-            Precisa de um site profissional, de um sistema personalizado ou de um atendimento mais ágil? A E.F
-            Solutions desenvolve soluções tecnológicas para ajudar sua empresa a conquistar oportunidades, economizar
-            tempo e trabalhar melhor.
+            Site travado, sistema que não existe ou atendimento manual demais? A E.F Solutions resolve isso — rápido,
+            direto, sem enrolação.
           </Supporting>
         </Reveal>
 
         <Reveal delayMs={520}>
           <CtaRow>
-            <PrimaryCta to="/contato">
-              Solicitar orçamento
+            <Button as={Link} to="/contato">
+              Falar no WhatsApp
               <ArrowRight aria-hidden="true" />
-            </PrimaryCta>
-            <SecondaryCta to="/solucoes">Conhecer soluções</SecondaryCta>
+            </Button>
+            <Button as={Link} to="/solucoes" $variant="secondary">
+              Ver soluções
+            </Button>
           </CtaRow>
         </Reveal>
       </Content>

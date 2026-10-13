@@ -67,8 +67,12 @@ const breakpoints = {
   xxxl: 1920,
 } as const
 
+/** Fonte principal do site inteiro — corpo de texto, navegação, botões, formulários. */
 const fontStack =
-  "'Manrope Variable', Manrope, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
+  "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, 'Liberation Mono', monospace"
+
+/** Usada deliberadamente em poucos lugares (H1 do hero, números de destaque) para contraste com o corpo monoespaçado. */
+const displayFontStack = "'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif"
 
 const fontSizes = {
   xs: 'clamp(0.75rem, 0.71rem + 0.2vw, 0.8125rem)',
@@ -148,6 +152,7 @@ export const theme = {
   colors,
   breakpoints,
   fontStack,
+  displayFontStack,
   fontSizes,
   space,
   radii,

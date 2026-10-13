@@ -2,6 +2,7 @@ import { Bot, Globe, Search, Settings2 } from 'lucide-react'
 import styled from 'styled-components'
 
 import { Container } from '@/components/ui/Container'
+import { Marquee } from '@/components/ui/Marquee'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { FeatureCard } from '@/components/page/FeatureCard'
 import { FeatureGrid } from '@/components/page/FeatureGrid'
@@ -12,6 +13,10 @@ import { useSeo } from '@/hooks/useSeo'
 
 const ServicesSection = styled.section`
   padding-block: ${({ theme }) => theme.space[20]};
+`
+
+const MarqueeSection = styled.div`
+  padding-block: ${({ theme }) => theme.space[10]};
 `
 
 const TransitionSection = styled.section`
@@ -31,43 +36,45 @@ export default function Home() {
     <>
       <HomeHero />
 
+      <MarqueeSection>
+        <Marquee
+          items={['SITES', 'LOJAS VIRTUAIS', 'SISTEMAS SOB MEDIDA', 'AUTOMAÇÃO WHATSAPP', 'SEO', 'GOOGLE']}
+        />
+      </MarqueeSection>
+
       <ServicesSection>
         <Container>
-          <SectionHeading
-            align="center"
-            heading="Qual é o próximo passo para o seu negócio?"
-            lead="Encontre a solução que faz sentido para sua empresa."
-          />
+          <SectionHeading align="center" heading="Escolhe aí o que você precisa" lead="Sem enrolação." />
           <FeatureGrid columns={4}>
             <FeatureCard
               icon={Globe}
               title="Sites e lojas virtuais"
-              description="Seu negócio merece uma presença profissional na internet. Criamos sites, landing pages e lojas virtuais para apresentar seus serviços, produtos e facilitar o contato com seus clientes."
+              description="Presença profissional online. Site, landing page ou loja — pronto pra vender."
               to="/solucoes#sites"
-              linkLabel="Conhecer criação de sites"
+              linkLabel="Ver sites"
             />
             <FeatureCard
               icon={Settings2}
-              title="Sistemas personalizados"
-              description="Precisa de uma ferramenta própria para organizar seu negócio ou facilitar tarefas? Desenvolvemos sistemas conforme as necessidades da sua empresa."
+              title="Sistemas sob medida"
+              description="Ferramenta própria pra organizar seu negócio, do seu jeito."
               to="/solucoes#sistemas"
-              linkLabel="Conhecer sistemas"
+              linkLabel="Ver sistemas"
               delayMs={80}
             />
             <FeatureCard
               icon={Bot}
-              title="Atendimento automatizado"
-              description="Agilize parte do atendimento pelo WhatsApp com soluções inteligentes que podem responder dúvidas frequentes, organizar solicitações e ajudar sua equipe a ganhar tempo."
+              title="Automação de WhatsApp"
+              description="Atendimento automático que responde rápido, até fora do horário."
               to="/solucoes#automacao"
-              linkLabel="Conhecer automações"
+              linkLabel="Ver automação"
               delayMs={160}
             />
             <FeatureCard
               icon={Search}
-              title="Google e divulgação digital"
-              description="Ajude mais pessoas a encontrar sua empresa. Trabalhamos com melhorias para buscas orgânicas, presença digital e campanhas de divulgação."
+              title="SEO e Google"
+              description="Mais gente te encontrando na internet, sem pagar sempre por isso."
               to="/solucoes#divulgacao"
-              linkLabel="Conhecer divulgação digital"
+              linkLabel="Ver SEO"
               delayMs={240}
             />
           </FeatureGrid>
@@ -76,33 +83,22 @@ export default function Home() {
 
       <TransitionSection>
         <Container>
-          <SectionHeading heading="O que está dificultando o seu negócio agora?" />
+          <SectionHeading heading="Isso aí parece com você?" />
           <ProblemSolution
             items={[
-              {
-                problem: 'Seu negócio precisa de um site profissional?',
-                solution: 'Criamos sites e lojas virtuais que apresentam sua empresa com credibilidade.',
-              },
-              {
-                problem: 'Você ainda resolve tudo manualmente?',
-                solution: 'Desenvolvemos sistemas sob medida para organizar processos e tarefas repetitivas.',
-              },
-              {
-                problem: 'Seus clientes conseguem falar com você fora do horário?',
-                solution: 'Automatizamos o primeiro contato pelo WhatsApp sem perder o tom da sua empresa.',
-              },
-              {
-                problem: 'Seus clientes encontram sua empresa na internet?',
-                solution: 'Trabalhamos SEO e divulgação digital para melhorar sua presença no Google.',
-              },
+              { problem: 'Seu site não traz clientes.', solution: 'A gente constrói um que traz.' },
+              { problem: 'Você faz tudo na mão.', solution: 'A gente automatiza o que dá.' },
+              { problem: 'Cliente chama fora de hora.', solution: 'O WhatsApp responde por você.' },
+              { problem: 'Ninguém te acha no Google.', solution: 'A gente resolve seu SEO.' },
             ]}
           />
         </Container>
       </TransitionSection>
 
       <FinalCta
-        heading="Qual desafio você precisa resolver hoje?"
-        text="Conte o que sua empresa precisa. Vamos conversar sobre a solução mais adequada para o seu momento."
+        heading="Bora resolver isso?"
+        text="Manda uma mensagem agora. Sem formulário, sem burocracia — direto no WhatsApp."
+        ctaLabel="Chamar no WhatsApp"
       />
     </>
   )

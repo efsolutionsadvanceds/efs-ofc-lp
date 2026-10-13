@@ -54,6 +54,13 @@ export const site = {
     privacyHref: '/privacidade',
     termsHref: '/termos',
   },
+  /**
+   * Redes sociais reais da E.F Solutions — propositalmente vazio. Nenhum
+   * perfil foi confirmado ainda; preencher aqui assim que os handles reais
+   * forem informados (não inventar URLs). A página de contato só renderiza
+   * a linha de redes sociais quando este array tiver itens.
+   */
+  social: [] as readonly { label: string; href: string; icon: 'instagram' | 'linkedin' | 'tiktok' | 'facebook' }[],
 } as const
 
 export type SiteConfig = typeof site

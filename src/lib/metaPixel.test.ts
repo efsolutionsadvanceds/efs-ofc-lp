@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { generateEventId, trackLeadEvent } from './metaPixel'
+import { generateEventId, trackContactEvent } from './metaPixel'
 
 afterEach(() => {
   vi.unstubAllGlobals()
@@ -34,10 +34,10 @@ describe('generateEventId', () => {
   })
 })
 
-describe('trackLeadEvent', () => {
+describe('trackContactEvent', () => {
   it('não lança exceção quando window.fbq não está definido', () => {
     vi.stubGlobal('window', {})
-    expect(() => trackLeadEvent('test-id')).not.toThrow()
+    expect(() => trackContactEvent('test-id')).not.toThrow()
   })
 
   it('não lança exceção quando window.fbq lança erro internamente', () => {
@@ -46,15 +46,15 @@ describe('trackLeadEvent', () => {
         throw new Error('blocked by extension')
       },
     })
-    expect(() => trackLeadEvent('test-id')).not.toThrow()
+    expect(() => trackContactEvent('test-id')).not.toThrow()
   })
 
-  it('chama fbq com o evento Lead e o eventID informado', () => {
+  it('chama fbq com o evento Contact e o eventID informado', () => {
     const fbqSpy = vi.fn()
     vi.stubGlobal('window', { fbq: fbqSpy })
 
-    trackLeadEvent('shared-event-id')
+    trackContactEvent('shared-event-id')
 
-    expect(fbqSpy).toHaveBeenCalledWith('track', 'Lead', {}, { eventID: 'shared-event-id' })
+    expect(fbqSpy).toHaveBeenCalledWith('track', 'Contact', {}, { eventID: 'shared-event-id' })
   })
 })

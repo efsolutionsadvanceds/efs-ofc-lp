@@ -125,7 +125,7 @@ export function MobileMenu({ isOpen, onClose, menuId }: MobileMenuProps) {
           ))}
         </Nav>
         <Button as={Link} to="/contato" onClick={onClose} $fullWidth>
-          Solicitar orçamento
+          Chamar no WhatsApp
         </Button>
       </Panel>
     </Overlay>

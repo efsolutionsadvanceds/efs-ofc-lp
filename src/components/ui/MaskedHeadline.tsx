@@ -10,6 +10,7 @@ interface MaskedHeadlineProps {
 }
 
 const Heading = styled.h1`
+  font-family: ${({ theme }) => theme.displayFontStack};
   font-size: ${({ theme }) => theme.fontSizes['4xl']};
   color: ${({ theme }) => theme.colors.textOnDark};
 `

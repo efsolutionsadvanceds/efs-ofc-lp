@@ -1,7 +1,6 @@
 import {
   AppWindow,
   Clock,
-  Compass,
   Database,
   Globe,
   HelpCircle,
@@ -10,12 +9,10 @@ import {
   ListChecks,
   MapPin,
   Megaphone,
-  MessageCircle,
   MessagesSquare,
   Search,
   ShoppingCart,
   Sparkles,
-  Target,
   Workflow,
 } from 'lucide-react'
 import styled from 'styled-components'
@@ -23,12 +20,12 @@ import styled from 'styled-components'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
+import { TerminalWindow } from '@/components/ui/TerminalWindow'
 import { CheckList } from '@/components/page/CheckList'
 import { FeatureCard } from '@/components/page/FeatureCard'
 import { FeatureGrid } from '@/components/page/FeatureGrid'
 import { FinalCta } from '@/components/page/FinalCta'
 import { PageHero } from '@/components/page/PageHero'
-import { Steps } from '@/components/page/Steps'
 import { useSeo } from '@/hooks/useSeo'
 import { buildBreadcrumbStructuredData, buildServiceStructuredData } from '@/lib/seo'
 import { StructuredData } from '@/components/seo/StructuredData'
@@ -85,6 +82,7 @@ const QuickNavLink = styled.a`
   border-radius: ${({ theme }) => theme.radii.pill};
   font-size: ${({ theme }) => theme.fontSizes.xs};
   font-weight: 700;
+  text-transform: uppercase;
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
   border: 1px solid ${({ theme }) => theme.colors.glassBorder};
   background: ${({ theme }) => theme.colors.glass};
@@ -99,11 +97,30 @@ const QuickNavLink = styled.a`
   }
 `
 
-const Copy = styled.p`
-  max-width: 64ch;
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  line-height: 1.7;
+const Grid = styled.div`
+  display: grid;
+  gap: ${({ theme }) => theme.space[8]};
+  align-items: start;
+
+  ${({ theme }) => `@media (min-width: ${theme.breakpoints.lg}px)`} {
+    grid-template-columns: 1.3fr 1fr;
+  }
+`
+
+const TermLine = styled.div`
   color: ${({ theme }) => theme.colors.textOnDarkMuted};
+
+  .k {
+    color: ${({ theme }) => theme.colors.accentBlue};
+  }
+
+  .s {
+    color: ${({ theme }) => theme.colors.accent};
+  }
+
+  & + & {
+    margin-top: ${({ theme }) => theme.space[1]};
+  }
 `
 
 export default function Solucoes() {
@@ -118,43 +135,35 @@ export default function Solucoes() {
     <>
       <StructuredData schema={SOLUCOES_SCHEMA} />
       <PageHero
-        heading="Soluções de tecnologia para cada etapa do seu negócio."
-        supporting="Cada empresa tem uma necessidade diferente. Veja as frentes em que a E.F Solutions pode ajudar e escolha o ponto de partida que faz mais sentido para você agora."
-        primaryCta={{ label: 'Solicitar orçamento', to: '/contato' }}
+        heading="4 jeitos de fazer seu negócio andar mais rápido."
+        supporting="Escolhe o que te trava hoje. A gente resolve."
+        primaryCta={{ label: 'Falar no WhatsApp', to: '/contato' }}
       />
 
       <Container>
         <QuickNav aria-label="Ir para uma solução">
-          <QuickNavLink href="#sites">Sites e lojas virtuais</QuickNavLink>
-          <QuickNavLink href="#sistemas">Sistemas personalizados</QuickNavLink>
-          <QuickNavLink href="#automacao">Automação de WhatsApp</QuickNavLink>
-          <QuickNavLink href="#divulgacao">SEO e divulgação</QuickNavLink>
+          <QuickNavLink href="#sites">sites</QuickNavLink>
+          <QuickNavLink href="#sistemas">sistemas</QuickNavLink>
+          <QuickNavLink href="#automacao">automação</QuickNavLink>
+          <QuickNavLink href="#divulgacao">seo</QuickNavLink>
         </QuickNav>
       </Container>
 
       <Section id="sites">
         <Container>
-          <SectionHeading
-            eyebrow="Sites e lojas virtuais"
-            heading="Um site feito para o que sua empresa precisa."
-            lead="Tenha um site que apresente seus serviços, transmita confiança e facilite o contato de novos clientes com sua empresa."
-          />
+          <SectionHeading eyebrow="01 · Sites e lojas virtuais" heading="Seu negócio, online, do jeito certo." />
           <FeatureGrid columns={3}>
-            <FeatureCard
-              icon={Globe}
-              title="Site profissional"
-              description="Apresente sua empresa, seus serviços, diferenciais e formas de contato em um só lugar."
-            />
+            <FeatureCard icon={Globe} title="Site profissional" description="Seus serviços, bem apresentados." />
             <FeatureCard
               icon={LayoutTemplate}
               title="Landing page"
-              description="Uma página focada em apresentar uma oferta ou serviço e incentivar o visitante a entrar em contato."
+              description="Foco total em converter visita em contato."
               delayMs={80}
             />
             <FeatureCard
               icon={ShoppingCart}
               title="Loja virtual"
-              description="Apresente produtos e crie uma experiência de compra online adequada à operação do seu negócio."
+              description="Vitrine pronta pra vender online."
               delayMs={160}
             />
           </FeatureGrid>
@@ -162,10 +171,9 @@ export default function Solucoes() {
             <div style={{ marginTop: '3rem' }}>
               <CheckList
                 items={[
-                  'Design personalizado e adaptado a celulares e computadores.',
-                  'Botões de WhatsApp e outros canais de contato.',
-                  'Configurações básicas de SEO técnico.',
-                  'Integrações e funcionalidades definidas no projeto.',
+                  'Responsivo — celular, tablet, desktop.',
+                  'Botão de WhatsApp direto no site.',
+                  'SEO técnico básico incluso.',
                 ]}
               />
             </div>
@@ -175,166 +183,99 @@ export default function Solucoes() {
 
       <Section id="sistemas">
         <Container>
-          <SectionHeading
-            eyebrow="Sistemas personalizados"
-            heading="Um sistema desenvolvido para a realidade da sua empresa."
-            lead="Quando as ferramentas disponíveis não atendem ao que você precisa, desenvolvemos um sistema sob medida para simplificar tarefas e organizar informações."
-          />
-          <FeatureGrid columns={4}>
-            <FeatureCard
-              icon={Database}
-              title="Sistemas de gestão interna"
-              description="Ferramentas para organizar informações e acompanhar atividades do negócio."
-            />
-            <FeatureCard
-              icon={LineChart}
-              title="Painéis e relatórios"
-              description="Interfaces para visualizar dados relevantes em um único lugar."
-              delayMs={80}
-            />
-            <FeatureCard
-              icon={AppWindow}
-              title="Plataformas web"
-              description="Sistemas acessíveis pelo navegador, desenvolvidos conforme as regras do projeto."
-              delayMs={160}
-            />
-            <FeatureCard
-              icon={Workflow}
-              title="Integrações"
-              description="Conexão entre ferramentas e serviços para reduzir tarefas manuais, quando viável."
-              delayMs={240}
-            />
-          </FeatureGrid>
-          <Reveal delayMs={300}>
-            <div style={{ marginTop: '3rem', maxWidth: '36rem' }}>
-              <Steps
-                steps={[
-                  'Você explica o problema ou a necessidade.',
-                  'Definimos o escopo e as funcionalidades.',
-                  'Desenvolvemos e validamos a solução conforme o projeto acordado.',
-                ]}
+          <SectionHeading eyebrow="02 · Sistemas sob medida" heading="O sistema que falta na sua operação." />
+          <Grid>
+            <FeatureGrid columns={2}>
+              <FeatureCard icon={Database} title="Gestão interna" description="Organiza tudo num lugar só." />
+              <FeatureCard
+                icon={LineChart}
+                title="Painéis"
+                description="Dados visuais, decisão rápida."
+                delayMs={80}
               />
-            </div>
-          </Reveal>
+              <FeatureCard
+                icon={AppWindow}
+                title="Plataformas web"
+                description="Acessa de qualquer navegador."
+                delayMs={160}
+              />
+              <FeatureCard
+                icon={Workflow}
+                title="Integrações"
+                description="Suas ferramentas, conversando entre si."
+                delayMs={240}
+              />
+            </FeatureGrid>
+            <Reveal delayMs={200}>
+              <TerminalWindow title="como-funciona.sh">
+                <TermLine>
+                  <span className="k">$</span> explica_o_problema
+                </TermLine>
+                <TermLine>
+                  <span className="k">$</span> definimos_escopo
+                </TermLine>
+                <TermLine>
+                  <span className="k">$</span> desenvolvemos
+                </TermLine>
+                <TermLine>
+                  <span className="s">✓ entregue</span>
+                </TermLine>
+              </TerminalWindow>
+            </Reveal>
+          </Grid>
         </Container>
       </Section>
 
       <Section id="automacao">
         <Container>
-          <SectionHeading
-            eyebrow="Automação de WhatsApp"
-            heading="Atenda melhor, sem depender de responder tudo manualmente."
-            lead="Desenvolvemos atendimento automatizado pelo WhatsApp para agilizar respostas e organizar solicitações, de acordo com o funcionamento da sua empresa."
-          />
+          <SectionHeading eyebrow="03 · Automação de WhatsApp" heading="Atende enquanto você dorme." />
           <FeatureGrid columns={4}>
-            <FeatureCard
-              icon={HelpCircle}
-              title="Responder dúvidas frequentes"
-              description="Informações comuns sobre produtos, serviços, horários e atendimento."
-            />
+            <FeatureCard icon={HelpCircle} title="Dúvidas frequentes" description="Respostas na hora." />
             <FeatureCard
               icon={ListChecks}
-              title="Receber pedidos de orçamento"
-              description="Coletar as informações necessárias para facilitar o atendimento da equipe."
+              title="Pedidos de orçamento"
+              description="Coleta o essencial."
               delayMs={80}
             />
             <FeatureCard
               icon={MessagesSquare}
-              title="Organizar o primeiro contato"
-              description="Direcionar conversas conforme a necessidade do cliente."
+              title="Primeiro contato"
+              description="Direciona certo, sem perder tempo."
               delayMs={160}
             />
             <FeatureCard
               icon={Clock}
-              title="Atendimento fora do horário comercial"
-              description="Quando a integração e a configuração contratadas permitirem."
+              title="Fora do horário"
+              description="Sua empresa não dorme."
               delayMs={240}
             />
           </FeatureGrid>
-          <Reveal delayMs={300}>
-            <div style={{ marginTop: '2.5rem' }}>
-              <Copy>
-                A automação deve ajudar sua empresa, não dificultar a conversa com seus clientes. Por isso, a solução
-                é configurada conforme suas informações, seus serviços e as tarefas que fazem sentido automatizar.
-              </Copy>
-            </div>
-          </Reveal>
         </Container>
       </Section>
 
       <Section id="divulgacao">
         <Container>
-          <SectionHeading
-            eyebrow="SEO e divulgação digital"
-            heading="Ajude mais pessoas a encontrar sua empresa na internet."
-            lead="Trabalhamos para melhorar a presença digital do seu negócio, facilitar sua descoberta nas buscas e estruturar ações de divulgação alinhadas aos seus objetivos."
-          />
+          <SectionHeading eyebrow="04 · SEO e divulgação" heading="Pra te acharem no Google." />
           <FeatureGrid columns={4}>
-            <FeatureCard
-              icon={Search}
-              title="SEO para sites"
-              description="Ajustes técnicos e de conteúdo para os mecanismos de busca compreenderem suas páginas."
-            />
-            <FeatureCard
-              icon={MapPin}
-              title="Presença local no Google"
-              description="Fortalecimento da presença nas buscas locais e no Perfil da Empresa no Google."
-              delayMs={80}
-            />
+            <FeatureCard icon={Search} title="SEO técnico" description="Google entende seu site." />
+            <FeatureCard icon={MapPin} title="Google local" description="Perfil da empresa em dia." delayMs={80} />
             <FeatureCard
               icon={Sparkles}
-              title="Preparação para buscas por IA"
-              description="Conteúdo claro e consistente para sistemas de busca que utilizam IA."
+              title="Buscas com IA"
+              description="Conteúdo claro pra IA entender."
               delayMs={160}
             />
             <FeatureCard
               icon={Megaphone}
-              title="Campanhas de divulgação"
-              description="Planejamento de campanhas pagas conforme orçamento, público e objetivos."
+              title="Campanhas pagas"
+              description="Anúncio certo, público certo."
               delayMs={240}
             />
           </FeatureGrid>
-          <Reveal delayMs={300}>
-            <div style={{ marginTop: '2.5rem' }}>
-              <Copy>
-                Cada negócio possui concorrência, demanda e condições diferentes. As ações são definidas e
-                acompanhadas com base nos dados disponíveis, sem promessas de posições específicas ou de quantidade
-                garantida de clientes.
-              </Copy>
-            </div>
-          </Reveal>
         </Container>
       </Section>
 
-      <Section>
-        <Container>
-          <SectionHeading align="center" heading="Nossa forma de trabalhar" />
-          <FeatureGrid columns={3}>
-            <FeatureCard
-              icon={Compass}
-              title="Entender antes de desenvolver"
-              description="Buscamos compreender a necessidade real antes de definir a solução."
-            />
-            <FeatureCard
-              icon={Target}
-              title="Desenvolver com propósito"
-              description="Cada funcionalidade precisa ter uma razão para existir."
-              delayMs={80}
-            />
-            <FeatureCard
-              icon={MessageCircle}
-              title="Comunicar com clareza"
-              description="Você precisa entender o que será feito, o que está incluído e quais são as próximas etapas."
-              delayMs={160}
-            />
-          </FeatureGrid>
-        </Container>
-      </Section>
-
-      <FinalCta
-        heading="Não sabe por onde começar?"
-        text="Conte o que sua empresa precisa — vamos ajudar você a identificar a solução certa para o momento do seu negócio."
-      />
+      <FinalCta heading="Qual dessas é a sua?" text="Me chama no WhatsApp e resolve agora." />
     </>
   )
 }
