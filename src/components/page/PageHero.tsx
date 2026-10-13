@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/ui/Reveal'
-import { AmbientGlow } from '@/components/visuals/AmbientGlow'
+import { SceneLight } from '@/components/visuals/SceneLight'
 
 interface PageHeroCta {
   label: string
@@ -66,11 +66,11 @@ const CtaRow = styled.div`
   margin-top: ${({ theme }) => theme.space[8]};
 `
 
-/** Hero compartilhado por todas as páginas de rota — home e páginas de serviço. */
+/** Hero compartilhado pelas páginas de rota que não precisam do tratamento cinematográfico exclusivo da home (ver HomeHero). */
 export function PageHero({ eyebrow, heading, supporting, primaryCta, secondaryCta }: PageHeroProps) {
   return (
     <Section>
-      <AmbientGlow />
+      <SceneLight variant="section" />
       <Content>
         {eyebrow ? (
           <Reveal>

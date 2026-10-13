@@ -42,13 +42,13 @@ export const site = {
   nav: [
     { href: '/', label: 'Início' },
     { href: '/solucoes', label: 'Soluções' },
-    { href: '/sobre', label: 'Sobre' },
+    { href: '/contato', label: 'Contato' },
   ],
   services: [
-    { href: '/criacao-de-sites', label: 'Criação de sites' },
-    { href: '/sistemas-personalizados', label: 'Sistemas personalizados' },
-    { href: '/automacao-whatsapp', label: 'Automação de WhatsApp' },
-    { href: '/seo-e-divulgacao', label: 'SEO e divulgação digital' },
+    { href: '/solucoes#sites', label: 'Criação de sites' },
+    { href: '/solucoes#sistemas', label: 'Sistemas personalizados' },
+    { href: '/solucoes#automacao', label: 'Automação de WhatsApp' },
+    { href: '/solucoes#divulgacao', label: 'SEO e divulgação digital' },
   ],
   legal: {
     privacyHref: '/privacidade',

@@ -21,7 +21,12 @@
       "has": [{ "type": "host", "value": "www.efsa.com.br" }],
       "destination": "https://efsa.com.br/:path*",
       "permanent": true
-    }
+    },
+    { "source": "/criacao-de-sites", "destination": "/solucoes#sites", "permanent": true },
+    { "source": "/sistemas-personalizados", "destination": "/solucoes#sistemas", "permanent": true },
+    { "source": "/automacao-whatsapp", "destination": "/solucoes#automacao", "permanent": true },
+    { "source": "/seo-e-divulgacao", "destination": "/solucoes#divulgacao", "permanent": true },
+    { "source": "/sobre", "destination": "/solucoes", "permanent": true }
   ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }

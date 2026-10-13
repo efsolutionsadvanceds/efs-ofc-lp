@@ -7,11 +7,16 @@
  */
 
 const colors = {
+  black: '#03050A',
   navy: '#070B14',
-  graphite: '#182338',
-  offWhite: '#F2F5FC',
-  accentBlue: '#4C8DFF',
+  midnight: '#091329',
+  deepNavy: '#0B1C38',
+  graphite: '#151C2B',
+  offWhite: '#F4F7FF',
+  accentBlue: '#4388FF',
+  iceBlue: '#8BC5FF',
   accent: '#35E6A0',
+  deepGreen: '#0F8766',
 
   // Tons sólidos derivados do navy (navy + grafite) — usados onde uma cor
   // sólida opaca é necessária (cartões sobre imagens, por exemplo).
@@ -22,12 +27,23 @@ const colors = {
   // texto com opacidade controlada em vez de introduzir cinza.
   navyAlpha: (alpha: number) => `rgba(7, 11, 20, ${alpha})`,
   accentAlpha: (alpha: number) => `rgba(53, 230, 160, ${alpha})`,
-  accentBlueAlpha: (alpha: number) => `rgba(76, 141, 255, ${alpha})`,
-  offWhiteAlpha: (alpha: number) => `rgba(242, 245, 252, ${alpha})`,
+  accentBlueAlpha: (alpha: number) => `rgba(67, 136, 255, ${alpha})`,
+  offWhiteAlpha: (alpha: number) => `rgba(244, 247, 255, ${alpha})`,
 
-  textOnDark: '#F2F5FC',
-  textOnDarkMuted: 'rgba(242, 245, 252, 0.72)',
-  textOnDarkSubtle: 'rgba(242, 245, 252, 0.52)',
+  // Material de vidro ("Neon Depth System") — superfícies translúcidas com
+  // blur, usadas via GlassPanel. Mantidas como tokens porque aparecem em
+  // vários componentes (cards, painel de contato, navegação).
+  glass: 'rgba(15, 28, 49, 0.48)',
+  glassStrong: 'rgba(12, 23, 41, 0.78)',
+  glassBorder: 'rgba(151, 190, 255, 0.2)',
+
+  // Glows atmosféricos — fontes de luz grandes e difusas no background.
+  glowBlue: 'rgba(67, 136, 255, 0.34)',
+  glowGreen: 'rgba(53, 230, 160, 0.2)',
+
+  textOnDark: '#F4F7FF',
+  textOnDarkMuted: 'rgba(244, 247, 255, 0.72)',
+  textOnDarkSubtle: 'rgba(244, 247, 255, 0.52)',
   textOnLight: '#070B14',
   textOnLightMuted: 'rgba(7, 11, 20, 0.68)',
   textOnAccent: '#070B14',
@@ -120,8 +136,12 @@ const motion = {
   durationFast: '200ms',
   durationBase: '550ms',
   durationSlow: '700ms',
+  /** Entradas cinematográficas maiores (hero, transições de seção). */
+  durationCinematic: '1100ms',
   stagger: 80,
   ease: 'cubic-bezier(0.22, 1, 0.36, 1)',
+  /** Curva com mais "chegada" — usada em revelações de destaque (headline, painéis de vidro). */
+  easeReveal: 'cubic-bezier(0.16, 1, 0.3, 1)',
 }
 
 export const theme = {

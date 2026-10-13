@@ -1,10 +1,12 @@
 import type { LucideIcon } from 'lucide-react'
 import { ArrowRight } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { GlassPanel } from '@/components/ui/GlassPanel'
 import { Reveal } from '@/components/ui/Reveal'
+import { usePointerGlow } from '@/hooks/usePointerGlow'
 
 interface FeatureCardProps {
   icon?: LucideIcon
@@ -16,37 +18,41 @@ interface FeatureCardProps {
   delayMs?: number
 }
 
-const Card = styled.div`
+const CardBase = styled(GlassPanel)`
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.space[4]};
   height: 100%;
   padding: ${({ theme }) => theme.space[6]};
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.borderOnDark};
-  border-radius: ${({ theme }) => theme.radii.lg};
   transition:
     border-color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease},
     transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
-`
 
-const CardLink = styled(Link)`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.space[4]};
-  height: 100%;
-  padding: ${({ theme }) => theme.space[6]};
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.borderOnDark};
-  border-radius: ${({ theme }) => theme.radii.lg};
-  transition:
-    border-color ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease},
-    transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      240px circle at var(--pointer-x, 50%) var(--pointer-y, -40%),
+      ${({ theme }) => theme.colors.accentBlueAlpha(0.16)},
+      transparent 72%
+    );
+    opacity: 0;
+    transition: opacity ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease};
+    pointer-events: none;
+  }
 
   &:hover,
   &:focus-visible {
     border-color: ${({ theme }) => theme.colors.borderAccent};
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    opacity: 1;
   }
 `
 
@@ -59,10 +65,16 @@ const IconBadge = styled.span`
   border-radius: ${({ theme }) => theme.radii.md};
   background: ${({ theme }) => theme.colors.accentBlueAlpha(0.14)};
   color: ${({ theme }) => theme.colors.accentBlue};
+  transition: transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
 
   svg {
     width: 22px;
     height: 22px;
+  }
+
+  ${CardBase}:hover &,
+  ${CardBase}:focus-visible & {
+    transform: translateY(-2px) scale(1.06);
   }
 `
 
@@ -79,6 +91,7 @@ const Description = styled.p`
 `
 
 const LinkRow = styled.span`
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: ${({ theme }) => theme.space[2]};
@@ -89,11 +102,19 @@ const LinkRow = styled.span`
   svg {
     width: 16px;
     height: 16px;
+    transition: transform ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
+  }
+
+  ${CardBase}:hover & svg,
+  ${CardBase}:focus-visible & svg {
+    transform: translateX(3px);
   }
 `
 
 /** Card genérico usado nos quatro serviços da home (com link) e em grades de recursos dentro das páginas de serviço (sem link). */
 export function FeatureCard({ icon: Icon, title, description, to, linkLabel, delayMs = 0 }: FeatureCardProps) {
+  const pointerRef = usePointerGlow<HTMLDivElement>()
+
   const body = (
     <>
       {Icon ? (
@@ -114,7 +135,13 @@ export function FeatureCard({ icon: Icon, title, description, to, linkLabel, del
 
   return (
     <Reveal delayMs={delayMs}>
-      {to ? <CardLink to={to}>{body}</CardLink> : <Card>{body}</Card>}
+      {to ? (
+        <CardBase ref={pointerRef as Ref<HTMLAnchorElement>} as={Link} to={to}>
+          {body}
+        </CardBase>
+      ) : (
+        <CardBase ref={pointerRef}>{body}</CardBase>
+      )}
     </Reveal>
   )
 }

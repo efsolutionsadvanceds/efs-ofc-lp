@@ -104,9 +104,6 @@ export function SiteFooter() {
                   <FooterLink to={item.href}>{item.label}</FooterLink>
                 </li>
               ))}
-              <li>
-                <FooterLink to="/contato">Contato</FooterLink>
-              </li>
             </LinkList>
           </div>
 

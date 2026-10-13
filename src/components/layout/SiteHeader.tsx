@@ -18,12 +18,17 @@ const HeaderBar = styled.header<{ $isScrolled: boolean }>`
   right: 0;
   z-index: ${({ theme }) => theme.zIndex.header};
   border-bottom: 1px solid
-    ${({ theme, $isScrolled }) => ($isScrolled ? theme.colors.borderOnDark : 'transparent')};
+    ${({ theme, $isScrolled }) => ($isScrolled ? theme.colors.glassBorder : 'transparent')};
   background: ${({ theme, $isScrolled }) =>
-    $isScrolled ? theme.colors.navyAlpha(0.92) : theme.colors.navyAlpha(0.08)};
+    $isScrolled ? theme.colors.glassStrong : theme.colors.navyAlpha(0.08)};
   transition:
     background-color ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease},
     border-color ${({ theme }) => theme.motion.durationBase} ${({ theme }) => theme.motion.ease};
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    backdrop-filter: ${({ $isScrolled }) => ($isScrolled ? 'blur(16px) saturate(140%)' : 'none')};
+    -webkit-backdrop-filter: ${({ $isScrolled }) => ($isScrolled ? 'blur(16px) saturate(140%)' : 'none')};
+  }
 `
 
 const Row = styled.div`

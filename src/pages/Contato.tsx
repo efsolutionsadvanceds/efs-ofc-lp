@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { ContactForm } from '@/components/form/ContactForm'
 import { Container } from '@/components/ui/Container'
 import { Reveal } from '@/components/ui/Reveal'
-import { AmbientGlow } from '@/components/visuals/AmbientGlow'
+import { SceneLight } from '@/components/visuals/SceneLight'
 import { site } from '@/config/site'
 import { useSeo } from '@/hooks/useSeo'
 
@@ -78,7 +78,7 @@ export default function Contato() {
 
   return (
     <Section>
-      <AmbientGlow />
+      <SceneLight variant="section" />
       <Grid>
         <div>
           <Reveal>

@@ -3,8 +3,9 @@ import styled from 'styled-components'
 
 import { Button } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
+import { GlassPanel } from '@/components/ui/GlassPanel'
 import { Reveal } from '@/components/ui/Reveal'
-import { AmbientGlow } from '@/components/visuals/AmbientGlow'
+import { SceneLight } from '@/components/visuals/SceneLight'
 import { site } from '@/config/site'
 import { lightSweep } from '@/styles/motion'
 
@@ -28,20 +29,19 @@ const Content = styled(Container)`
   z-index: 1;
 `
 
-const Panel = styled.div`
+const Panel = styled(GlassPanel)`
   position: relative;
   overflow: hidden;
   padding: ${({ theme }) => theme.space[10]};
-  border-top: 3px solid ${({ theme }) => theme.colors.accent};
-  background: ${({ theme }) => theme.colors.surface};
-  border-radius: ${({ theme }) => theme.radii.lg};
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.space[5]};
   text-align: center;
   align-items: center;
+  max-width: 44rem;
+  margin-inline: auto;
 
-  &::before {
+  &::after {
     content: '';
     position: absolute;
     top: -60%;
@@ -75,10 +75,10 @@ const Text = styled.p`
 export function FinalCta({ heading, text, ctaLabel = 'Conversar pelo WhatsApp', ctaTo }: FinalCtaProps) {
   return (
     <Section>
-      <AmbientGlow flip />
+      <SceneLight variant="section" />
       <Content>
         <Reveal>
-          <Panel>
+          <Panel $accentBorder>
             <Heading>{heading}</Heading>
             <Text>{text}</Text>
             {ctaTo ? (

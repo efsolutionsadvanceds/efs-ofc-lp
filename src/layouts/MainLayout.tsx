@@ -26,9 +26,39 @@ export function MainLayout() {
   // aqui é o comportamento padrão esperado ao trocar de página. `behavior:
   // 'instant'` substitui o `scroll-behavior: smooth` global (pensado para
   // âncoras internas) — sem isso, o salto para o topo apareceria animado.
+  //
+  // Quando a rota inclui uma âncora (ex.: /solucoes#sites, usado pelos cards
+  // de serviço da home e pelos redirecionamentos das antigas rotas de
+  // serviço), rola até a seção em vez do topo. O alvo pode ainda não existir
+  // no DOM no primeiro frame (página carregada via React.lazy) — por isso a
+  // nova tentativa via requestAnimationFrame, limitada a ~1s.
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
-  }, [location.pathname])
+    const hash = location.hash.replace('#', '')
+    if (!hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      return
+    }
+
+    let attempts = 0
+    let frameId: number
+
+    function tryScrollToHash() {
+      const target = document.getElementById(hash)
+      if (target) {
+        target.scrollIntoView({ behavior: 'instant', block: 'start' })
+        return
+      }
+      attempts += 1
+      if (attempts < 60) {
+        frameId = requestAnimationFrame(tryScrollToHash)
+      }
+    }
+    tryScrollToHash()
+
+    return () => {
+      if (frameId) cancelAnimationFrame(frameId)
+    }
+  }, [location.pathname, location.hash])
 
   return (
     <>
