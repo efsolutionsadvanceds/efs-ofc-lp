@@ -60,7 +60,7 @@ const ListItem = styled.li`
 export default function Privacidade() {
   useSeo({
     title: 'Política de Privacidade | E.F Solutions',
-    description: 'Como a E.F Solutions trata as informações enviadas pelo formulário de contato e pelo site.',
+    description: 'Como a E.F Solutions trata as informações de quem visita o site.',
     path: '/privacidade',
   })
 
@@ -71,54 +71,44 @@ export default function Privacidade() {
           <Heading>Política de Privacidade</Heading>
           <Updated>Última atualização: outubro de 2026</Updated>
 
-          <SubHeading>Quais informações coletamos</SubHeading>
+          <SubHeading>Este site não tem formulário</SubHeading>
           <Paragraph>
-            Quando você preenche o formulário de contato do site, coletamos apenas os dados que você mesmo informa:
-            nome, empresa (opcional), número de WhatsApp, o tipo de solução que procura e, se quiser, uma descrição
-            do que precisa.
-          </Paragraph>
-
-          <SubHeading>Como usamos essas informações</SubHeading>
-          <Paragraph>
-            Usamos os dados enviados exclusivamente para montar uma mensagem e encaminhar você ao WhatsApp da E.F
-            Solutions, dando continuidade ao atendimento diretamente naquela conversa. Não vendemos nem
-            compartilhamos seus dados com terceiros para fins de marketing.
+            O site não coleta nome, e-mail, telefone ou qualquer outro dado digitado pelo visitante — não existe
+            formulário em nenhuma página. O único canal de contato é um botão que leva direto ao WhatsApp da E.F
+            Solutions, com um número já configurado pela empresa (não o seu). A conversa só começa se você decidir
+            enviá-la, já dentro do próprio WhatsApp.
           </Paragraph>
 
           <SubHeading>Meta Pixel e medição de anúncios</SubHeading>
           <Paragraph>
             Este site utiliza o Meta Pixel (Facebook/Instagram) para medir a efetividade de campanhas de anúncios.
-            Essa ferramenta usa cookies e tecnologias semelhantes para registrar visitas ao site e o evento de
-            envio do formulário de contato. Quando o formulário é enviado com sucesso, também enviamos ao Meta,
-            pelo lado do servidor (Conversions API), uma versão do seu número de WhatsApp transformada
-            irreversivelmente por uma função de hash (SHA-256) — nunca o número em texto puro — para ajudar a
-            medir a origem desse contato entre os anúncios veiculados. Você pode gerenciar cookies e preferências
-            de anúncios diretamente nas configurações do seu navegador e da sua conta Meta.
+            Essa ferramenta usa cookies e tecnologias semelhantes para registrar visitas às páginas. Quando você
+            clica no botão do WhatsApp, o Pixel registra esse clique como um evento de contato — sem enviar nome,
+            telefone ou qualquer dado pessoal, apenas a informação de que o botão foi clicado. Você pode gerenciar
+            cookies e preferências de anúncios diretamente nas configurações do seu navegador e da sua conta Meta.
           </Paragraph>
 
           <SubHeading>Com quem compartilhamos informações</SubHeading>
           <List>
             <ListItem>
-              Meta Platforms, Inc. — apenas o evento de conversão e o número de WhatsApp com hash descritos acima,
-              para medição de anúncios.
+              Meta Platforms, Inc. — apenas o evento de clique no botão do WhatsApp, descrito acima, para medição de
+              anúncios.
             </ListItem>
             <ListItem>
-              WhatsApp — a mensagem que você revisa antes de enviar, pelo canal de atendimento da própria E.F
-              Solutions, sujeita também às políticas de privacidade do WhatsApp/Meta para essa conversa.
+              WhatsApp — se você enviar a mensagem, ela passa a existir na conversa entre você e a E.F Solutions
+              naquele aplicativo, sujeita também às políticas de privacidade do WhatsApp/Meta.
             </ListItem>
           </List>
 
           <SubHeading>Por quanto tempo guardamos seus dados</SubHeading>
           <Paragraph>
-            O formulário em si não grava um banco de dados de leads no momento — ele existe para preparar sua
-            mensagem e te encaminhar ao WhatsApp. A partir daí, a conversa fica armazenada no WhatsApp da E.F
-            Solutions, como qualquer conversa nesse aplicativo.
+            O site em si não guarda nenhum dado seu — não há banco de dados de visitantes nem de leads. Qualquer
+            conversa iniciada fica apenas no WhatsApp, como qualquer conversa nesse aplicativo.
           </Paragraph>
 
           <SubHeading>Seus direitos</SubHeading>
           <Paragraph>
-            Você pode solicitar a qualquer momento informações sobre os dados que nos enviou, correção ou exclusão
-            de uma conversa, entrando em contato pelo{' '}
+            Para qualquer dúvida sobre dados ou sobre uma conversa já iniciada, fale diretamente pelo{' '}
             <a href={site.whatsapp.url} style={{ color: 'inherit', fontWeight: 700, textDecoration: 'underline' }}>
               WhatsApp da E.F Solutions
             </a>

@@ -62,14 +62,14 @@ export default function Termos() {
             comerciais; a reprodução comercial sem autorização prévia não é permitida.
           </Paragraph>
 
-          <SubHeading>Formulário de contato</SubHeading>
+          <SubHeading>Contato pelo WhatsApp</SubHeading>
           <Paragraph>
-            Ao preencher o formulário de contato, você declara que as informações fornecidas são verdadeiras e que
-            concorda em ser contatado pela E.F Solutions pelo WhatsApp a partir dos dados informados. Veja a{' '}
+            Este site não tem formulário — o contato acontece pelo botão que leva ao WhatsApp da E.F Solutions. Veja
+            a{' '}
             <a href="/privacidade" style={{ color: 'inherit', fontWeight: 700, textDecoration: 'underline' }}>
               Política de Privacidade
             </a>{' '}
-            para mais detalhes sobre o tratamento desses dados.
+            para mais detalhes sobre o que o site registra ao clicar nesse botão.
           </Paragraph>
 
           <SubHeading>Escopo, prazos e condições comerciais</SubHeading>
