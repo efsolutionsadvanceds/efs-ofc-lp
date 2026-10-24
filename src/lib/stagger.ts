@@ -8,3 +8,11 @@ import type { CSSProperties } from 'react'
 export function stagger(index: number): CSSProperties {
   return { '--i': index } as CSSProperties
 }
+
+/**
+ * Momento de um elemento numa cena da prévia do hero — vira `--step`, usado
+ * pelas classes `.seq`, `.seq-text` e `.seq-typing` (passos de 0,75s).
+ */
+export function sequenceStep(step: number): CSSProperties {
+  return { '--step': step } as CSSProperties
+}

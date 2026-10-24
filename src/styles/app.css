@@ -1,19 +1,20 @@
 /*
  * Estilos globais — Tailwind CSS v4 (configuração CSS-first, sem
- * tailwind.config.js). Sistema visual da landing page:
+ * tailwind.config.js). Linguagem visual de interface de desenvolvedor, em
+ * modo escuro (referência: tasteskill.dev):
  *
- * - Cor: um fundo (ground), uma tinta (ink) e um acento (o turquesa da
- *   logo), usado só nas ações. Superfícies se separam por leve mudança de
- *   tom — sem bordas finas, gradientes, brilhos ou vidro.
- * - Tipografia: uma única família (Geist, licença OFL, autohospedada) e
- *   cinco tamanhos: display, title, lead, body e small.
- * - Movimento: apenas transform e opacity, sempre com alternativa para
- *   `prefers-reduced-motion`.
+ * - Cor: fundo quase preto, tinta clara, cinza para a segunda linha dos
+ *   títulos e um acento (o turquesa da logo) nas ações e nos brilhos.
+ *   Cartões com borda de 1px (`border-white/10`) e grade técnica de fundo.
+ * - Tipografia: Geist (licença OFL, autohospedada) e mono do sistema para
+ *   etiquetas e terminal.
+ * - Movimento: micro-animações em transform/opacity, sempre com
+ *   alternativa para `prefers-reduced-motion`.
  *
  * A paleta padrão do Tailwind é desligada (`--color-*: initial`) para que
  * nenhuma cor fora do sistema entre no projeto por engano.
  */
-@import 'tailwindcss';
+@import 'tailwindcss' source('..');
 
 /* Fonte principal: subconjunto latino (inclui todos os acentos do português). */
 @font-face {
@@ -96,17 +97,28 @@
 
 @theme {
   --color-*: initial;
-  --color-ground: #0d0e11;
-  --color-surface: #16171b;
-  --color-raised: #202126;
-  --color-ink: #f2f2ef;
-  --color-muted: #9c9ca4;
+  --color-ground: #09090b;
+  --color-surface: #111114;
+  --color-raised: #18181c;
+  --color-ink: #fafafa;
+  --color-muted: #a1a1aa;
   --color-accent: #18c8c8;
   --color-accent-ink: #031414;
+  /* Bordas e véus finos (`border-white/10`, `bg-white/[0.03]`) da linguagem visual de interface de desenvolvedor. */
+  --color-white: #ffffff;
+  --color-black: #000000;
 
   --font-sans: 'Geist', 'Geist Fallback Arial', 'Geist Fallback Roboto', ui-sans-serif, system-ui, sans-serif;
+  /* Mono do sistema (zero bytes, sem troca de fonte): etiquetas, terminal e prévia. */
+  --font-mono:
+    ui-monospace, 'SF Mono', 'Cascadia Mono', 'Segoe UI Mono', Menlo, Consolas, 'Roboto Mono', 'Liberation Mono', monospace;
 
   --text-*: initial;
+  /* H1 do hero: título longo, orientado a busca — menor que o display para caber em 3-4 linhas. */
+  --text-hero: clamp(2rem, 1.15rem + 2.75vw, 3.625rem);
+  --text-hero--line-height: 1.05;
+  --text-hero--letter-spacing: -0.045em;
+  --text-hero--font-weight: 600;
   --text-display: clamp(2.125rem, 0.75rem + 5.75vw, 6rem);
   --text-display--line-height: 1.02;
   --text-display--letter-spacing: -0.042em;
@@ -122,12 +134,13 @@
   --text-body--line-height: 1.6;
   --text-small: 0.9375rem;
   --text-small--line-height: 1.5;
+  --text-micro: 0.8125rem;
+  --text-micro--line-height: 1.45;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
   --animate-rise: rise 0.9s var(--ease-out-expo) both;
   --animate-fade: fade 0.5s linear both;
-  --animate-pop: pop 0.45s var(--ease-out-expo) both;
 
   @keyframes rise {
     from {
@@ -141,17 +154,38 @@
       opacity: 0;
     }
   }
+}
 
-  @keyframes pop {
-    0% {
-      transform: scale(0.6);
-    }
-    55% {
-      transform: scale(1.12);
-    }
-    100% {
-      transform: scale(1);
-    }
+/*
+ * Keyframes usados por classes CSS próprias (abaixo) ficam fora do @theme:
+ * assim são sempre emitidos, sem depender de uma variável --animate-*.
+ */
+
+/* Barra de progresso da troca automática de abas da prévia do hero. */
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Pontinhos de "digitando…" no chat da prévia. */
+@keyframes typing {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Some depois de cumprir o papel (ex.: o indicador de digitação). */
+@keyframes vanish {
+  to {
+    opacity: 0;
   }
 }
 
@@ -172,6 +206,13 @@
     text-rendering: optimizeLegibility;
     -webkit-tap-highlight-color: transparent;
     scroll-padding-top: 1.5rem;
+  }
+
+  /* No desktop o header é fixo no topo: as âncoras param logo abaixo dele. */
+  @media (min-width: 48rem) {
+    html {
+      scroll-padding-top: 6rem;
+    }
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -236,6 +277,14 @@
   padding-block: clamp(4rem, 2.5rem + 6vw, 7.5rem);
 }
 
+/* Grade técnica de fundo (1px), usada atrás do hero e das páginas internas. */
+@utility bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
 /* Entrada do hero no carregamento — CSS puro, não depende do JavaScript. */
 @utility rise {
   animation: var(--animate-rise);
@@ -268,6 +317,103 @@
 
     [data-reveal='done'] [data-reveal-item] {
       transition: opacity 0.4s linear;
+    }
+  }
+
+  /*
+   * Cartão com brilho que segue o ponteiro (ver src/hooks/useSpotlight.ts):
+   * ::before acende um halo suave por dentro do cartão e ::after desenha só
+   * o trecho da borda de 1px mais próximo do cursor (máscara content-box).
+   * Sem ponteiro fino (celular), fica só a borda estática.
+   */
+  .spotlight {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .spotlight::before,
+  .spotlight::after {
+    content: '';
+    position: absolute;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-out-expo);
+  }
+
+  .spotlight::before {
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      28rem circle at var(--mx, 50%) var(--my, 0%),
+      rgb(24 200 200 / 0.09),
+      transparent 45%
+    );
+  }
+
+  .spotlight::after {
+    inset: -1px;
+    padding: 1px;
+    background: radial-gradient(
+      16rem circle at var(--mx, 50%) var(--my, 0%),
+      rgb(24 200 200 / 0.65),
+      transparent 60%
+    );
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .spotlight:hover::before,
+    .spotlight:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /*
+   * Prévia interativa do hero: os elementos de cada aba entram em
+   * sequência (`--step` = posição na cena, em passos de 0,75s). CSS puro: a
+   * cena recomeça sozinha quando a aba é remontada, e quem prefere menos
+   * movimento vê o estado final direto.
+   */
+  .seq {
+    animation: rise 0.55s var(--ease-out-expo) both;
+    animation-delay: calc(var(--step, 0) * 0.75s + 0.15s);
+  }
+
+  /* "Digitando…" dentro da bolha da IA: some quando o texto aparece. */
+  .seq-typing {
+    animation:
+      typing 0.9s ease-in-out infinite,
+      vanish 0.15s linear forwards;
+    animation-delay: 0s, calc(var(--step, 0) * 0.75s + 0.75s);
+  }
+
+  .seq-text {
+    animation: fade 0.3s linear both;
+    animation-delay: calc(var(--step, 0) * 0.75s + 0.75s);
+  }
+
+  /* Progresso da troca automática de abas; pausa com o ponteiro ou o foco na prévia. */
+  .tab-progress {
+    transform-origin: left;
+    animation: progress 7s linear both;
+  }
+
+  .preview:hover .tab-progress,
+  .preview:focus-within .tab-progress {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .seq,
+    .seq-text {
+      animation: none;
+    }
+
+    .seq-typing {
+      display: none;
     }
   }
 

@@ -1,7 +1,10 @@
+import { Check } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
 
+import { Badge } from '@/components/ui/Badge'
 import { buttonStyles } from '@/components/ui/buttonStyles'
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
+import { GridBackdrop } from '@/components/ui/GridBackdrop'
 import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon'
 import { pages } from '@/config/pages'
 import { getSolutions } from '@/content/solutions'
@@ -28,30 +31,40 @@ export default function Obrigado() {
   const solutions = getSolutions(services)
 
   return (
-    <section aria-labelledby="obrigado-titulo" className="frame pt-8 pb-24 md:pt-12 md:pb-32">
-      <Breadcrumbs items={pages.obrigado.breadcrumbs} />
+    <section aria-labelledby="obrigado-titulo" className="relative isolate overflow-x-clip">
+      <GridBackdrop />
 
-      <div className="mt-16 max-w-3xl md:mt-24">
-        <h1 id="obrigado-titulo" className="text-display">
-          Falta só enviar a mensagem.
-        </h1>
-        <p className="mt-8 max-w-[29em] text-lead">
-          O WhatsApp foi aberto com a sua mensagem pronta. Confira o texto e toque em enviar — respondemos com os
-          próximos passos.
-        </p>
+      <div className="frame pt-8 pb-24 md:pt-12 md:pb-32">
+        <Breadcrumbs items={pages.obrigado.breadcrumbs} />
 
-        {solutions.length > 0 ? (
-          <div className="rise mt-12 rounded-3xl bg-surface p-6 sm:p-7" style={stagger(0)}>
-            <p className="text-small text-muted">Sua seleção</p>
-            <ul className="mt-3 flex flex-col gap-2 text-body">
-              {solutions.map((solution) => (
-                <li key={solution.id}>{solution.title}</li>
-              ))}
-            </ul>
-          </div>
-        ) : null}
+        <div className="mt-16 max-w-3xl md:mt-24">
+          <Badge tone="accent">
+            <Check aria-hidden="true" className="size-3.5" />
+            WhatsApp aberto
+          </Badge>
+          <h1 id="obrigado-titulo" className="mt-6 text-display">
+            Falta só enviar <span className="text-muted">a mensagem.</span>
+          </h1>
+          <p className="mt-8 max-w-[29em] text-lead text-ink/80">
+            O WhatsApp foi aberto com a sua mensagem pronta. Confira o texto e toque em enviar — respondemos com os
+            próximos passos.
+          </p>
 
-        <div className="rise mt-12 flex flex-wrap items-center gap-x-8 gap-y-5" style={stagger(1)}>
+          {solutions.length > 0 ? (
+            <div className="rise mt-12 rounded-2xl border border-white/10 bg-surface p-6 sm:p-7" style={stagger(0)}>
+              <p className="font-mono text-micro text-muted">Sua seleção</p>
+              <ul className="mt-4 flex flex-col gap-2.5 text-body">
+                {solutions.map((solution) => (
+                  <li key={solution.id} className="flex items-center gap-2.5">
+                    <Check aria-hidden="true" className="size-4 shrink-0 text-accent" />
+                    {solution.title}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          <div className="rise mt-12 flex flex-wrap items-center gap-3" style={stagger(1)}>
           <a
             href={buildLeadUrl(services)}
             target="_blank"
@@ -59,12 +72,13 @@ export default function Obrigado() {
             onClick={() => trackEvent('whatsapp_reopen', { services_count: services.length })}
             className={buttonStyles({ size: 'lg' })}
           >
-            <WhatsAppIcon size={20} />
-            Abrir o WhatsApp novamente
-          </a>
-          <Link to="/" className={buttonStyles({ variant: 'secondary', size: 'lg' })}>
-            Voltar ao início
-          </Link>
+              <WhatsAppIcon size={20} />
+              Abrir o WhatsApp novamente
+            </a>
+            <Link to="/" className={buttonStyles({ variant: 'secondary', size: 'lg' })}>
+              Voltar ao início
+            </Link>
+          </div>
         </div>
       </div>
     </section>

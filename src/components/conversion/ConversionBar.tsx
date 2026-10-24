@@ -34,7 +34,7 @@ export function ConversionBar() {
       aria-label="Resumo do seu orçamento"
       inert={!isVisible}
       className={cx(
-        'fixed z-40 flex items-center gap-4 bg-raised text-ink',
+        'fixed z-40 flex items-center gap-4 border-t border-white/10 bg-raised text-ink md:border',
         'inset-x-0 bottom-0 px-(--gutter) pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-18px_40px_-12px_rgb(0_0_0/0.6)]',
         'md:inset-x-auto md:bottom-6 md:left-1/2 md:w-[min(42rem,calc(100%-2*var(--gutter)))] md:-translate-x-1/2 md:rounded-3xl md:py-3 md:pr-3 md:pl-6 md:shadow-[0_28px_64px_-20px_rgb(0_0_0/0.8)]',
         'transition-[translate,opacity] duration-500 ease-out-expo motion-reduce:transition-opacity',

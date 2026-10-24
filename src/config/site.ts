@@ -39,7 +39,7 @@ export const site = {
   domain: 'https://www.efsolutions.com.br',
   locale: 'pt-BR',
   description:
-    'Sites otimizados para o Google, sistemas de gestão sob medida e assistentes virtuais com IA para empresas de todo o Brasil.',
+    'Criação de sites profissionais para empresas, desenvolvimento de sistemas de gestão sob medida, atendente virtual com IA no WhatsApp e otimização SEO para o Google.',
   whatsapp: {
     digits: WHATSAPP_DIGITS,
     display: formatBrazilianWhatsApp(WHATSAPP_DIGITS),
@@ -47,7 +47,8 @@ export const site = {
   },
   /** Âncoras da landing page — usadas no header e no rodapé. */
   nav: [
-    { href: `/#${SECTION_IDS.solutions}`, label: 'Soluções' },
+    { href: `/#${SECTION_IDS.services}`, label: 'Serviços' },
+    { href: `/#${SECTION_IDS.solutions}`, label: 'Orçamento' },
     { href: `/#${SECTION_IDS.process}`, label: 'Como funciona' },
     { href: `/#${SECTION_IDS.faq}`, label: 'Dúvidas' },
   ],

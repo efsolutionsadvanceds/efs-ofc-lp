@@ -11,11 +11,20 @@ import { prerenderTargets, render } from './entry-server'
  */
 
 const H1_BY_PATH: Record<string, string> = {
-  '/': 'Mais clientes, menos trabalho manual.',
+  '/': 'Criação de Sites Profissionais, Sistemas Sob Medida e Atendimento Virtual com IA',
   '/privacidade': 'Política de Privacidade',
   '/termos': 'Termos de Uso',
   '/obrigado': 'Falta só enviar a mensagem.',
   '/404': 'Esta página não existe.',
+}
+
+/** Texto do elemento como um leitor (ou buscador) o lê: sem tags e sem comentários do React. */
+function textOf(html: string): string {
+  return html
+    .replace(/<!--.*?-->/g, '')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 describe('pré-renderização', () => {
@@ -27,9 +36,23 @@ describe('pré-renderização', () => {
     const { html, head } = await render(path)
     const h1s = html.match(/<h1\b[^>]*>(.*?)<\/h1>/g) ?? []
     expect(h1s).toHaveLength(1)
-    expect(h1s[0]).toContain(H1_BY_PATH[path])
+    expect(textOf(h1s[0] ?? '')).toBe(H1_BY_PATH[path])
     expect(head).toContain('<title>')
     expect(html.startsWith('<link')).toBe(false)
+  })
+
+  it('a home traz os quatro termos de busca principais nos títulos das seções', async () => {
+    const { html } = await render('/')
+    const headings = (html.match(/<h3\b[^>]*>(.*?)<\/h3>/g) ?? []).map(textOf)
+    expect(headings).toEqual(
+      expect.arrayContaining([
+        'Criação de sites profissionais para empresas',
+        'Desenvolvimento de sistemas de gestão sob medida',
+        'Atendente virtual e automação de atendimento no WhatsApp',
+        'Otimização SEO para ser encontrado no Google',
+      ]),
+    )
+    expect(html).toContain('Google Search Console')
   })
 
   it('a home traz o seletor de soluções, o FAQ e a barra de conversão no HTML', async () => {

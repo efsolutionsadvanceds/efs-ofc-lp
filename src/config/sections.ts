@@ -5,9 +5,9 @@
  */
 export const SECTION_IDS = {
   hero: 'inicio',
+  services: 'servicos',
   solutions: 'solucoes',
   process: 'como-funciona',
-  principles: 'diferenciais',
   faq: 'duvidas',
   closing: 'contato',
 } as const

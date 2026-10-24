@@ -1,6 +1,6 @@
 import type { PageMeta } from '@/config/pages'
 import { absoluteUrl, site } from '@/config/site'
-import { SOLUTIONS } from '@/content/solutions'
+import { SERVICES } from '@/content/services'
 
 /**
  * Dados estruturados (schema.org, JSON-LD) num único `@graph` por página —
@@ -33,13 +33,20 @@ export function buildLocalBusinessNode(): JsonLdNode {
       areaServed: 'BR',
       availableLanguage: ['Portuguese'],
     },
-    knowsAbout: ['Criação de sites', 'SEO', 'Sistemas de gestão', 'Inteligência artificial', 'Automação de processos'],
+    knowsAbout: [
+      'Criação de sites profissionais',
+      'Desenvolvimento de sistemas de gestão',
+      'Atendente virtual com inteligência artificial',
+      'Automação de atendimento no WhatsApp',
+      'SEO',
+      'Google Search Console',
+    ],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
-      name: `Soluções ${site.name}`,
-      itemListElement: SOLUTIONS.map((solution) => ({
+      name: `Serviços ${site.name}`,
+      itemListElement: SERVICES.map((service) => ({
         '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: solution.title, description: solution.description },
+        itemOffered: { '@type': 'Service', name: service.title, description: service.description },
       })),
     },
     ...(site.social.length > 0 ? { sameAs: site.social.map((profile) => profile.href) } : {}),

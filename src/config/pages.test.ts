@@ -20,6 +20,14 @@ describe('registro de páginas (SEO)', () => {
     }
   })
 
+  it('a home mira os termos de busca principais no título e na description', () => {
+    expect(pages.home.title).toMatch(/^Criação de Sites/)
+    expect(pages.home.title).toContain('Sistemas Sob Medida')
+    for (const term of ['criação de sites profissionais para empresas', 'sistemas de gestão sob medida', 'atendente virtual', 'WhatsApp', 'Google']) {
+      expect(pages.home.description.toLowerCase()).toContain(term.toLowerCase())
+    }
+  })
+
   it('páginas noindex nunca entram no sitemap', () => {
     for (const page of PRERENDERED_PAGES.filter((item) => item.noindex)) {
       expect(page.sitemap).toBeUndefined()

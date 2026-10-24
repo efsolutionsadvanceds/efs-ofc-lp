@@ -44,9 +44,9 @@ export const pages = {
   home: {
     path: '/',
     file: 'index.html',
-    title: 'Criação de Sites, Sistemas e IA no WhatsApp | E.F Solutions',
+    title: 'Criação de Sites, Sistemas Sob Medida e IA | E.F Solutions',
     description:
-      'Sites otimizados para o Google, sistemas de gestão sob medida e assistente com IA 24h no WhatsApp. Escolha as soluções e peça seu orçamento sem formulário.',
+      'Criação de sites profissionais para empresas, sistemas de gestão sob medida e atendente virtual com IA no WhatsApp. SEO para aparecer no Google.',
     faq: FAQ_ITEMS,
     sitemap: { lastmod: '2026-10-24', changefreq: 'monthly', priority: 1 },
   },

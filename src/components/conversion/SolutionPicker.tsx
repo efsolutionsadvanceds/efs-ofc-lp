@@ -27,7 +27,7 @@ export function SolutionPicker({ staggerOffset = 0 }: SolutionPickerProps) {
     <fieldset>
       <legend className="sr-only">Soluções de interesse — selecione uma ou mais</legend>
 
-      <ul className="flex flex-col gap-3">
+      <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {SOLUTIONS.map((solution, index) => {
           const titleId = `${baseId}-${solution.id}-titulo`
           const descriptionId = `${baseId}-${solution.id}-descricao`
@@ -36,10 +36,13 @@ export function SolutionPicker({ staggerOffset = 0 }: SolutionPickerProps) {
             <li key={solution.id} data-reveal-item style={stagger(index + staggerOffset)}>
               <label
                 className={cx(
-                  'group relative isolate flex items-start gap-5 rounded-3xl bg-surface p-6 sm:gap-6 sm:p-7',
-                  'transition-transform duration-200 ease-out active:scale-[0.99]',
-                  'before:absolute before:inset-0 before:-z-10 before:rounded-3xl before:bg-ink before:opacity-0 before:transition-opacity before:duration-300',
-                  'hover:before:opacity-[0.04] has-checked:before:opacity-[0.08]',
+                  'group relative isolate flex h-full items-start gap-5 rounded-2xl border border-white/10 bg-surface p-6 sm:gap-6 sm:p-7',
+                  'transition-[transform,border-color,box-shadow] duration-300 ease-out active:scale-[0.99]',
+                  'before:absolute before:inset-0 before:-z-10 before:rounded-2xl before:bg-white before:opacity-0 before:transition-opacity before:duration-300',
+                  'hover:border-white/20 hover:before:opacity-[0.03]',
+                  // Selecionado: borda turquesa com brilho suave.
+                  'has-checked:border-accent/50 has-checked:shadow-[0_0_0_1px_rgb(24_200_200/0.2),0_0_48px_-16px_rgb(24_200_200/0.55)]',
+                  'has-checked:before:bg-accent has-checked:before:opacity-[0.05]',
                   'has-focus-visible:outline-2 has-focus-visible:outline-offset-4 has-focus-visible:outline-accent',
                 )}
               >
@@ -67,7 +70,7 @@ export function SolutionPicker({ staggerOffset = 0 }: SolutionPickerProps) {
                   <span id={titleId} className="text-lead font-medium">
                     {solution.title}
                   </span>
-                  <span id={descriptionId} className="text-body">
+                  <span id={descriptionId} className="text-body text-muted">
                     {solution.description}
                   </span>
                 </span>

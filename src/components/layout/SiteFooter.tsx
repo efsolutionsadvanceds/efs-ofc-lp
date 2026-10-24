@@ -1,7 +1,9 @@
+import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
 import { WhatsAppCta } from '@/components/conversion/WhatsAppCta'
-import { textLinkStyles } from '@/components/ui/buttonStyles'
+import { navLinkStyles } from '@/components/ui/buttonStyles'
+import { Wordmark } from '@/components/ui/Wordmark'
 import { site } from '@/config/site'
 import { cx } from '@/lib/cx'
 
@@ -10,62 +12,83 @@ interface SiteFooterProps {
   reserveBarSpace: boolean
 }
 
+function FooterColumn({ title, className, children }: { title: string; className?: string; children: ReactNode }) {
+  return (
+    <div className={className}>
+      <p className="font-mono text-micro text-muted">{title}</p>
+      <ul className="mt-4 flex flex-col gap-3 text-small">{children}</ul>
+    </div>
+  )
+}
+
 /**
- * Fechamento da página, não um mapa do site: uma frase, poucos links e a
- * assinatura em tamanho display. Nome, telefone e país aparecem iguais aqui
- * e no schema LocalBusiness (consistência de NAP para SEO local).
+ * Rodapé em colunas, separado por bordas de 1px. Nome, telefone e país
+ * aparecem iguais aqui e no schema LocalBusiness (consistência de NAP para
+ * SEO local).
  */
 export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
   return (
     <footer
       className={cx(
-        'frame pt-20 md:pt-28',
-        reserveBarSpace ? 'pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:pb-14' : 'pb-14',
+        'border-t border-white/10',
+        reserveBarSpace && 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0',
       )}
     >
-      <div className="grid gap-12 md:grid-cols-12 md:gap-6">
-        <p className="max-w-[20em] text-lead md:col-span-6">
-          Engenharia de software para empresas que querem vender mais e trabalhar melhor.
-        </p>
+      <div className="frame grid grid-cols-1 gap-12 py-14 md:grid-cols-12 md:gap-6 md:py-16">
+        <div className="md:col-span-5">
+          <Link
+            to="/"
+            aria-label={`${site.name} — página inicial`}
+            className="-m-2 inline-flex rounded-xl p-2 transition-opacity duration-200 hover:opacity-80"
+          >
+            <Wordmark />
+          </Link>
+          <p className="mt-5 max-w-[24em] text-small text-muted">
+            Criação de sites profissionais, sistemas sob medida e atendimento virtual com IA para empresas de todo o
+            Brasil.
+          </p>
+        </div>
 
-        <nav aria-label="Rodapé" className="md:col-span-2 md:col-start-8">
-          <ul className="flex flex-col gap-3">
-            {site.nav.map((item) => (
-              <li key={item.href}>
-                <a href={item.href} className={textLinkStyles}>
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <FooterColumn title="Navegação" className="md:col-span-2 md:col-start-7">
+          {site.nav.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} className={navLinkStyles}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </FooterColumn>
 
-        <ul className="flex flex-col gap-3 md:col-span-3 md:col-start-10">
+        <FooterColumn title="Contato" className="md:col-span-2">
           <li>
-            <WhatsAppCta location="footer" className={textLinkStyles}>
+            <WhatsAppCta location="footer" className={navLinkStyles}>
               WhatsApp {site.whatsapp.display}
             </WhatsAppCta>
           </li>
+          <li className="text-muted">Atendimento em todo o Brasil</li>
+        </FooterColumn>
+
+        <FooterColumn title="Legal" className="md:col-span-2">
           <li>
-            <Link to={site.legal.privacyHref} className={textLinkStyles}>
+            <Link to={site.legal.privacyHref} className={navLinkStyles}>
               Política de Privacidade
             </Link>
           </li>
           <li>
-            <Link to={site.legal.termsHref} className={textLinkStyles}>
+            <Link to={site.legal.termsHref} className={navLinkStyles}>
               Termos de Uso
             </Link>
           </li>
-        </ul>
+        </FooterColumn>
       </div>
 
-      <div className="mt-20 flex flex-col gap-6 md:mt-28 md:flex-row md:items-end md:justify-between">
-        <p aria-hidden="true" className="text-display">
-          {site.name}
-        </p>
-        <p className="text-small text-muted">
-          © {__BUILD_YEAR__} {site.legalName} · {site.tagline}
-        </p>
+      <div className="border-t border-white/10">
+        <div className="frame flex flex-col gap-2 py-6 font-mono text-micro text-muted sm:flex-row sm:justify-between">
+          <p>
+            © {__BUILD_YEAR__} {site.legalName}. Todos os direitos reservados.
+          </p>
+          <p>{site.tagline}</p>
+        </div>
       </div>
     </footer>
   )

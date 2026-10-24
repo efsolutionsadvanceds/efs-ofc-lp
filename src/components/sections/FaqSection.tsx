@@ -23,10 +23,17 @@ export function FaqSection() {
       aria-labelledby="duvidas-titulo"
       className="frame section-space"
     >
-      <div className="grid gap-12 lg:grid-cols-12 lg:gap-6">
-        <h2 id="duvidas-titulo" data-reveal-item style={stagger(0)} className="max-w-[8em] text-title lg:col-span-4 lg:self-start">
-          Dúvidas frequentes
-        </h2>
+      <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-6">
+        <div className="lg:col-span-4">
+          <div className="lg:sticky lg:top-28">
+            <h2 id="duvidas-titulo" data-reveal-item style={stagger(0)} className="text-title">
+              Perguntas <span className="block text-muted">frequentes.</span>
+            </h2>
+            <p data-reveal-item style={stagger(1)} className="mt-6 max-w-[22em] text-body text-muted">
+              Preço, prazo e como funciona cada solução — respondido sem rodeios.
+            </p>
+          </div>
+        </div>
 
         <div className="flex flex-col gap-3 lg:col-span-8">
           {FAQ_ITEMS.map((item, index) => (
@@ -35,22 +42,23 @@ export function FaqSection() {
               name="duvidas"
               data-reveal-item
               style={stagger(index + 1)}
-              className="group rounded-3xl bg-surface"
+              className="group rounded-2xl border border-white/10 bg-surface transition-colors duration-300 open:border-white/20 hover:border-white/20"
             >
               <summary
                 className={cx(
-                  'relative isolate flex items-start justify-between gap-6 rounded-3xl p-6 text-lead font-medium sm:p-7',
-                  'before:absolute before:inset-0 before:-z-10 before:rounded-3xl before:bg-ink before:opacity-0 before:transition-opacity before:duration-300',
-                  'hover:before:opacity-[0.04] active:opacity-80',
+                  'flex items-start justify-between gap-6 rounded-2xl p-6 text-lead font-medium sm:p-7',
+                  'transition-opacity duration-200 active:opacity-80',
                 )}
               >
                 {item.question}
-                <Plus
+                <span
                   aria-hidden="true"
-                  className="mt-0.5 size-6 shrink-0 transition-transform duration-500 ease-out-expo group-open:rotate-45"
-                />
+                  className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full border border-white/10 transition-colors duration-300 group-open:border-accent/40 group-open:text-accent"
+                >
+                  <Plus className="size-4 transition-transform duration-500 ease-out-expo group-open:rotate-45" />
+                </span>
               </summary>
-              <div data-answer className="max-w-[41em] px-6 pb-7 text-body sm:px-7">
+              <div data-answer className="max-w-[41em] px-6 pb-7 text-body text-muted sm:px-7">
                 <p>{item.answer}</p>
               </div>
             </details>

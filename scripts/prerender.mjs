@@ -26,8 +26,12 @@ const HEAD_PLACEHOLDER = '<!--app-head-->'
 const APP_PLACEHOLDER = '<!--app-html-->'
 const STYLESHEET_LINK = /<link rel="stylesheet"[^>]*href="(\/assets\/[^"]+\.css)"[^>]*>/
 
-/** Acima disso, o CSS volta a ser um arquivo separado (o cache entre páginas passa a compensar). */
-const MAX_INLINE_CSS_BYTES = 40 * 1024
+/**
+ * Acima disso, o CSS volta a ser um arquivo separado (o cache entre páginas
+ * passa a compensar). 64 kB sem compressão ≈ 10 kB com gzip — dentro do
+ * orçamento de CSS crítico para embutir.
+ */
+const MAX_INLINE_CSS_BYTES = 64 * 1024
 
 const kb = (value) => `${(Buffer.byteLength(value) / 1024).toFixed(1)} kB`
 

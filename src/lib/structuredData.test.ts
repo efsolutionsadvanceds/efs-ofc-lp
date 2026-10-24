@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { pages } from '@/config/pages'
 import { FAQ_ITEMS } from '@/content/faq'
-import { SOLUTIONS } from '@/content/solutions'
+import { SERVICES } from '@/content/services'
 
 import { buildStructuredData } from './structuredData'
 
@@ -22,14 +22,14 @@ describe('buildStructuredData', () => {
     expect(graph.map((node) => node['@type'])).toEqual(['LocalBusiness', 'WebSite', 'WebPage', 'FAQPage'])
   })
 
-  it('LocalBusiness usa os dados reais da empresa e o catálogo de soluções', () => {
+  it('LocalBusiness usa os dados reais da empresa e o catálogo de serviços', () => {
     const business = nodeOfType(graphOf(pages.home), 'LocalBusiness')!
     expect(business.name).toBe('E.F Solutions')
     expect(business.url).toBe('https://www.efsolutions.com.br/')
     expect(business.telephone).toBe('+5511967873507')
     expect(business.address).toEqual({ '@type': 'PostalAddress', addressCountry: 'BR' })
-    const catalog = business.hasOfferCatalog as { itemListElement: unknown[] }
-    expect(catalog.itemListElement).toHaveLength(SOLUTIONS.length)
+    const catalog = business.hasOfferCatalog as { itemListElement: { itemOffered: { name: string } }[] }
+    expect(catalog.itemListElement.map((offer) => offer.itemOffered.name)).toEqual(SERVICES.map((service) => service.title))
   })
 
   it('FAQPage tem as 5 perguntas exibidas na página, com as mesmas respostas', () => {

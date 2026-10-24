@@ -1,6 +1,6 @@
 # E.F Solutions — Landing Page
 
-Landing page da E.F Solutions (sites com SEO, sistemas de gestão sob medida e assistentes virtuais com IA). Sem formulários: o visitante marca as soluções de interesse e envia uma mensagem pronta pelo WhatsApp.
+Landing page da E.F Solutions: criação de sites profissionais, sistemas de gestão sob medida, atendente virtual com IA no WhatsApp e otimização SEO. Sem formulários: o visitante marca as soluções de interesse e envia uma mensagem pronta pelo WhatsApp.
 
 ## Stack
 
@@ -8,7 +8,7 @@ Landing page da E.F Solutions (sites com SEO, sistemas de gestão sob medida e a
 - [Tailwind CSS v4](https://tailwindcss.com/) — configuração CSS-first em `src/styles/app.css` (sem `tailwind.config.js`)
 - [React Router 7](https://reactrouter.com/) — rotas `/`, `/obrigado`, `/privacidade`, `/termos` e 404
 - Pré-renderização estática (SSG) própria, sem framework extra — `src/entry-server.tsx` + `scripts/prerender.mjs`
-- Fonte única Geist (OFL), autohospedada, com fallbacks de métricas calibradas
+- Geist (OFL), autohospedada, com fallbacks de métricas calibradas; mono do sistema para etiquetas e terminal
 - [lucide-react](https://lucide.dev/) (ícones), [oxlint](https://oxc.rs/) (lint), [Vitest](https://vitest.dev/) (testes)
 - Yarn — único gerenciador de pacotes
 
@@ -36,6 +36,13 @@ Landing page da E.F Solutions (sites com SEO, sistemas de gestão sob medida e a
 
 O número fica em `src/config/site.ts` (fallback verificado) e pode ser trocado sem editar código com `VITE_WHATSAPP_NUMBER`.
 
+### Conteúdo e intenção de busca
+
+- **H1** (hero): “Criação de Sites Profissionais, Sistemas Sob Medida e Atendimento Virtual com IA”.
+- **Serviços** (`src/content/services.ts`): os quatro títulos `<h3>` são os termos que donos de empresa pesquisam — criação de sites profissionais para empresas, desenvolvimento de sistemas de gestão sob medida, atendente virtual e automação de atendimento no WhatsApp, otimização SEO para ser encontrado no Google (com Google Search Console). O mesmo arquivo alimenta o catálogo do schema `LocalBusiness`.
+- **FAQ** (`src/content/faq.ts`): cinco perguntas no formato em que as pessoas buscam (“quanto custa…”, “quanto tempo leva…”, “como funciona…”), exibidas na página e marcadas como `FAQPage`.
+- O catálogo do seletor (`src/content/solutions.ts`) é separado de propósito: mudar textos de SEO nunca altera a mensagem enviada ao WhatsApp.
+
 ### SEO
 
 - **Registro de páginas** (`src/config/pages.ts`): fonte única de título, description, robots, breadcrumbs, FAQ e entrada de sitemap de cada rota. Um teste garante títulos únicos (≤ 60 caracteres) e descriptions entre 70 e 160 caracteres.
@@ -56,9 +63,11 @@ O número fica em `src/config/site.ts` (fallback verificado) e pode ser trocado 
 
 ### Design e desempenho
 
-- Uma cor de fundo, uma de texto e um acento (o turquesa da logo), cinco tamanhos de texto e só `transform`/`opacity` nas animações, sempre com alternativa para `prefers-reduced-motion`.
-- CLS zero: fallbacks da fonte com métricas calibradas por peso (Arial e Roboto), larguras em `em` (não em `ch`, que muda com a fonte), barra fixa sem efeito no layout e dimensões explícitas nas imagens.
-- O título e o texto principal do hero são pintados já no primeiro quadro (são os candidatos a LCP); o CSS é embutido no HTML para dispensar uma requisição antes da primeira pintura.
+- Linguagem visual de interface de desenvolvedor em modo escuro (referência: tasteskill.dev): títulos em dois tons (`SectionHeader`), cartões com borda de 1px (`border-white/10`), grade técnica de fundo (`GridBackdrop`), etiquetas em fonte mono (`Badge`) e brilho turquesa nas ações.
+- **Prévia interativa do hero** (`src/components/preview/`): três cenas em abas acessíveis (padrão WAI-ARIA) — atendente com IA, terminal publicando um sistema e resultado de busca com Google Search Console. As cenas são animações CSS em sequência; a troca automática pausa com ponteiro/foco, para quando o visitante interage e é desligada com `prefers-reduced-motion`.
+- **Micro-interações**: brilho que segue o ponteiro nos cartões de serviço (`useSpotlight`, sem re-render), brilho no hover dos botões primários, compressão ao clicar e realce turquesa no item selecionado do orçamento.
+- CLS zero: fallbacks da fonte com métricas calibradas por peso (Arial e Roboto), larguras em `em` (não em `ch`, que muda com a fonte), grades com `grid-cols-1` (uma faixa `auto` cresceria com o conteúdo mais largo), painel da prévia com altura fixa, barra fixa sem efeito no layout e dimensões explícitas nas imagens.
+- O título e o texto principal do hero são pintados já no primeiro quadro (são os candidatos a LCP); o CSS é embutido no HTML para dispensar uma requisição antes da primeira pintura. O Tailwind só varre `src/` (`source('..')`), para textos de outros arquivos não virarem classes.
 
 ## Deploy
 
