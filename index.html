@@ -2,9 +2,26 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#070B14" />
-    <meta name="robots" content="index, follow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d0e11" />
+    <meta name="color-scheme" content="dark" />
+    <!-- Tags de SEO por rota: injetadas no build (scripts/prerender.mjs); no dev, criadas pelo useSeo. -->
+    <!--app-head-->
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <link
+      rel="preload"
+      href="/src/assets/fonts/geist-latin-wght.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin="anonymous"
+    />
 
     <!-- Meta Pixel Code -->
     <script>
@@ -20,45 +37,6 @@
       fbq('track', 'PageView');
     </script>
     <!-- End Meta Pixel Code -->
-
-    <link rel="canonical" href="https://www.efsolutions.com.br/" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-
-    <link
-      rel="preload"
-      href="/fonts/jetbrains-mono-variable.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin="anonymous"
-    />
-
-    <title>Sites, Sistemas e Automações para Empresas | E.F Solutions</title>
-    <meta
-      name="description"
-      content="Criação de sites, sistemas personalizados, automação de atendimento pelo WhatsApp e SEO para o seu negócio. Tecnologia desenvolvida para a necessidade real da sua empresa."
-    />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content="E.F Solutions" />
-    <meta property="og:title" content="Sites, Sistemas e Automações para Empresas | E.F Solutions" />
-    <meta
-      property="og:description"
-      content="Criação de sites, sistemas personalizados, automação de atendimento pelo WhatsApp e SEO para o seu negócio."
-    />
-    <meta property="og:url" content="https://www.efsolutions.com.br/" />
-
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="Sites, Sistemas e Automações para Empresas | E.F Solutions" />
-    <meta
-      name="twitter:description"
-      content="Criação de sites, sistemas personalizados, automação de atendimento pelo WhatsApp e SEO para o seu negócio."
-    />
   </head>
   <body>
     <!-- Meta Pixel Code (fallback sem JavaScript) -->
@@ -72,7 +50,7 @@
       />
     </noscript>
     <!-- End Meta Pixel Code -->
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <div id="root"><!--app-html--></div>
+    <script type="module" src="/src/entry-client.tsx"></script>
   </body>
 </html>

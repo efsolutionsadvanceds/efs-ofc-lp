@@ -3,6 +3,8 @@
   "installCommand": "yarn install",
   "buildCommand": "yarn build",
   "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
@@ -13,6 +15,14 @@
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(), payment=()" },
         { "key": "Strict-Transport-Security", "value": "max-age=63072000" }
       ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }]
+    },
+    {
+      "source": "/obrigado",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex" }]
     }
   ],
   "redirects": [
@@ -22,13 +32,12 @@
       "destination": "https://efsa.com.br/:path*",
       "permanent": true
     },
-    { "source": "/criacao-de-sites", "destination": "/solucoes#sites", "permanent": true },
-    { "source": "/sistemas-personalizados", "destination": "/solucoes#sistemas", "permanent": true },
-    { "source": "/automacao-whatsapp", "destination": "/solucoes#automacao", "permanent": true },
-    { "source": "/seo-e-divulgacao", "destination": "/solucoes#divulgacao", "permanent": true },
-    { "source": "/sobre", "destination": "/solucoes", "permanent": true }
-  ],
-  "rewrites": [
-    { "source": "/((?!api/).*)", "destination": "/index.html" }
+    { "source": "/solucoes", "destination": "/#solucoes", "permanent": true },
+    { "source": "/contato", "destination": "/#contato", "permanent": true },
+    { "source": "/criacao-de-sites", "destination": "/#solucoes", "permanent": true },
+    { "source": "/sistemas-personalizados", "destination": "/#solucoes", "permanent": true },
+    { "source": "/automacao-whatsapp", "destination": "/#solucoes", "permanent": true },
+    { "source": "/seo-e-divulgacao", "destination": "/#solucoes", "permanent": true },
+    { "source": "/sobre", "destination": "/", "permanent": true }
   ]
 }

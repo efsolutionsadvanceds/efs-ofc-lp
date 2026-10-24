@@ -5,21 +5,22 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs",
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc -b --noEmit"
+    "typecheck": "tsc -b --noEmit",
+    "assets": "node scripts/generate-brand-assets.cjs"
   },
   "dependencies": {
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.18.4",
-    "styled-components": "^6.1.13"
+    "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^22.10.5",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
@@ -27,6 +28,7 @@
     "oxlint": "^0.15.5",
     "png-to-ico": "^3.0.2",
     "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
     "typescript": "^5.7.2",
     "vite": "^7.0.0",
     "vitest": "^3.0.0"

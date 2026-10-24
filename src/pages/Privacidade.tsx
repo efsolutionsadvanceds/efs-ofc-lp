@@ -1,127 +1,98 @@
-import styled from 'styled-components'
-
-import { Container } from '@/components/ui/Container'
-import { Reveal } from '@/components/ui/Reveal'
+import { LegalPage, LegalSection } from '@/components/layout/LegalPage'
+import { inlineLinkStyles } from '@/components/ui/buttonStyles'
+import { pages } from '@/config/pages'
 import { site } from '@/config/site'
-import { useSeo } from '@/hooks/useSeo'
+import { buildWhatsAppUrl } from '@/lib/whatsapp'
 
-const Section = styled.section`
-  padding-block: ${({ theme }) => `calc(${theme.layout.headerHeight} + ${theme.space[12]}) ${theme.space[20]}`};
-`
-
-const Narrow = styled(Container)`
-  max-width: 48rem;
-`
-
-const Heading = styled.h1`
-  font-size: ${({ theme }) => theme.fontSizes['3xl']};
-`
-
-const Updated = styled.p`
-  margin-top: ${({ theme }) => theme.space[3]};
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  color: ${({ theme }) => theme.colors.textOnDarkSubtle};
-`
-
-const SubHeading = styled.h2`
-  margin-top: ${({ theme }) => theme.space[10]};
-  font-size: ${({ theme }) => theme.fontSizes.lg};
-`
-
-const Paragraph = styled.p`
-  margin-top: ${({ theme }) => theme.space[3]};
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  line-height: 1.7;
-  color: ${({ theme }) => theme.colors.textOnDarkMuted};
-`
-
-const List = styled.ul`
-  margin-top: ${({ theme }) => theme.space[3]};
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.space[2]};
-`
-
-const ListItem = styled.li`
-  font-size: ${({ theme }) => theme.fontSizes.base};
-  line-height: 1.7;
-  color: ${({ theme }) => theme.colors.textOnDarkMuted};
-  padding-left: ${({ theme }) => theme.space[4]};
-  position: relative;
-
-  &::before {
-    content: '—';
-    position: absolute;
-    left: 0;
-    color: ${({ theme }) => theme.colors.accent};
-  }
-`
+const PRIVACY_CONTACT_URL = buildWhatsAppUrl('Olá! Tenho uma dúvida sobre a Política de Privacidade do site da E.F Solutions.')
 
 export default function Privacidade() {
-  useSeo({
-    title: 'Política de Privacidade | E.F Solutions',
-    description: 'Como a E.F Solutions trata as informações de quem visita o site.',
-    path: '/privacidade',
-  })
-
   return (
-    <Section>
-      <Narrow>
-        <Reveal>
-          <Heading>Política de Privacidade</Heading>
-          <Updated>Última atualização: outubro de 2026</Updated>
+    <LegalPage meta={pages.privacidade} title="Política de Privacidade" updatedAt="outubro de 2026">
+      <LegalSection title="Resumo">
+        <p>
+          O site da E.F Solutions não tem formulário e não pede nome, e-mail ou telefone. Você escolhe as soluções de
+          interesse e a conversa acontece no WhatsApp — apenas se você decidir enviar a mensagem.
+        </p>
+      </LegalSection>
 
-          <SubHeading>Este site não tem formulário</SubHeading>
-          <Paragraph>
-            O site não coleta nome, e-mail, telefone ou qualquer outro dado digitado pelo visitante — não existe
-            formulário em nenhuma página. O único canal de contato é um botão que leva direto ao WhatsApp da E.F
-            Solutions, com um número já configurado pela empresa (não o seu). A conversa só começa se você decidir
-            enviá-la, já dentro do próprio WhatsApp.
-          </Paragraph>
+      <LegalSection title="Seleção de soluções e WhatsApp">
+        <p>
+          As soluções que você marca ficam somente no seu navegador, enquanto a página está aberta — elas não são
+          enviadas a nenhum servidor nosso. Ao tocar em um botão de WhatsApp, a seleção é usada para montar a mensagem
+          que aparece no aplicativo, já endereçada ao número da E.F Solutions. Nada é enviado até você confirmar o envio
+          dentro do próprio WhatsApp.
+        </p>
+      </LegalSection>
 
-          <SubHeading>Meta Pixel e medição de anúncios</SubHeading>
-          <Paragraph>
-            Este site utiliza o Meta Pixel (Facebook/Instagram) para medir a efetividade de campanhas de anúncios.
-            Essa ferramenta usa cookies e tecnologias semelhantes para registrar visitas às páginas. Quando você
-            clica no botão do WhatsApp, o Pixel registra esse clique como um evento de contato — sem enviar nome,
-            telefone ou qualquer dado pessoal, apenas a informação de que o botão foi clicado. Você pode gerenciar
-            cookies e preferências de anúncios diretamente nas configurações do seu navegador e da sua conta Meta.
-          </Paragraph>
+      <LegalSection title="Google Analytics">
+        <p>
+          Usamos o Google Analytics 4 para entender, de forma agregada, como o site é usado: páginas visitadas, origem
+          do acesso, tipo de dispositivo e cliques nos botões de WhatsApp — incluindo quais soluções estavam
+          selecionadas no momento do clique, sem nenhum dado que identifique você pessoalmente.
+        </p>
+        <p>
+          A ferramenta usa cookies e identificadores do navegador. Você pode bloqueá-los nas configurações do navegador
+          ou instalar o{' '}
+          <a
+            href="https://tools.google.com/dlpage/gaoptout"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={inlineLinkStyles}
+          >
+            complemento de desativação do Google Analytics
+          </a>
+          .
+        </p>
+      </LegalSection>
 
-          <SubHeading>Com quem compartilhamos informações</SubHeading>
-          <List>
-            <ListItem>
-              Meta Platforms, Inc. — apenas o evento de clique no botão do WhatsApp, descrito acima, para medição de
-              anúncios.
-            </ListItem>
-            <ListItem>
-              WhatsApp — se você enviar a mensagem, ela passa a existir na conversa entre você e a E.F Solutions
-              naquele aplicativo, sujeita também às políticas de privacidade do WhatsApp/Meta.
-            </ListItem>
-          </List>
+      <LegalSection title="Meta Pixel e medição de anúncios">
+        <p>
+          Este site utiliza o Meta Pixel (Facebook/Instagram) para medir a efetividade de campanhas de anúncios. Essa
+          ferramenta usa cookies e tecnologias semelhantes para registrar visitas às páginas. Quando você clica em um
+          botão de WhatsApp, o Pixel registra esse clique como um evento de contato — sem enviar nome, telefone ou
+          qualquer dado digitado por você. Você pode gerenciar cookies e preferências de anúncios nas configurações do
+          seu navegador e da sua conta Meta.
+        </p>
+      </LegalSection>
 
-          <SubHeading>Por quanto tempo guardamos seus dados</SubHeading>
-          <Paragraph>
-            O site em si não guarda nenhum dado seu — não há banco de dados de visitantes nem de leads. Qualquer
-            conversa iniciada fica apenas no WhatsApp, como qualquer conversa nesse aplicativo.
-          </Paragraph>
+      <LegalSection title="Com quem compartilhamos informações">
+        <ul className="flex list-disc flex-col gap-2 pl-5 marker:text-muted">
+          <li>Google LLC — dados de navegação e de cliques coletados pelo Google Analytics, descritos acima.</li>
+          <li>Meta Platforms, Inc. — eventos de visita e de clique nos botões de WhatsApp, para medição de anúncios.</li>
+          <li>
+            WhatsApp — se você enviar a mensagem, ela passa a existir na conversa entre você e a E.F Solutions naquele
+            aplicativo, sujeita também às políticas de privacidade do WhatsApp/Meta.
+          </li>
+        </ul>
+      </LegalSection>
 
-          <SubHeading>Seus direitos</SubHeading>
-          <Paragraph>
-            Para qualquer dúvida sobre dados ou sobre uma conversa já iniciada, fale diretamente pelo{' '}
-            <a href={site.whatsapp.url} style={{ color: 'inherit', fontWeight: 700, textDecoration: 'underline' }}>
-              WhatsApp da E.F Solutions
-            </a>
-            .
-          </Paragraph>
+      <LegalSection title="Por quanto tempo os dados são guardados">
+        <p>
+          O site em si não guarda nenhum dado seu: não há banco de dados de visitantes nem de contatos. Os dados de
+          medição ficam com o Google e a Meta pelos prazos configurados em cada ferramenta, e as conversas iniciadas
+          ficam no WhatsApp, como qualquer conversa nesse aplicativo.
+        </p>
+      </LegalSection>
 
-          <SubHeading>Alterações a esta política</SubHeading>
-          <Paragraph>
-            Esta política pode ser atualizada conforme o site evoluir. A data de "última atualização" no topo desta
-            página sempre reflete a versão mais recente.
-          </Paragraph>
-        </Reveal>
-      </Narrow>
-    </Section>
+      <LegalSection title="Seus direitos">
+        <p>
+          Você tem os direitos previstos na Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018), como confirmar
+          a existência de tratamento, acessar, corrigir e pedir a eliminação de dados. Para qualquer pedido ou dúvida,
+          fale com a gente pelo{' '}
+          <a href={PRIVACY_CONTACT_URL} target="_blank" rel="noopener noreferrer" className={inlineLinkStyles}>
+            WhatsApp {site.whatsapp.display}
+          </a>
+          .
+        </p>
+      </LegalSection>
+
+      <LegalSection title="Alterações nesta política">
+        <p>
+          Esta política pode ser atualizada conforme o site evoluir. A data de última atualização, no topo desta
+          página, sempre indica a versão mais recente.
+        </p>
+      </LegalSection>
+    </LegalPage>
   )
 }

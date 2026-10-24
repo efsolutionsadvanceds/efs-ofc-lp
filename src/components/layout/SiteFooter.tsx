@@ -1,146 +1,72 @@
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 
-import { Container } from '@/components/ui/Container'
-import { Logo } from '@/components/ui/Logo'
-import { Reveal } from '@/components/ui/Reveal'
+import { WhatsAppCta } from '@/components/conversion/WhatsAppCta'
+import { textLinkStyles } from '@/components/ui/buttonStyles'
 import { site } from '@/config/site'
+import { cx } from '@/lib/cx'
 
-const Footer = styled.footer`
-  background: ${({ theme }) => theme.colors.navy};
-  border-top: 1px solid ${({ theme }) => theme.colors.borderOnDark};
-  padding-block: ${({ theme }) => theme.space[12]};
-`
+interface SiteFooterProps {
+  /** Reserva espaço para a barra de conversão fixa (só existe na home, no celular). */
+  reserveBarSpace: boolean
+}
 
-const Grid = styled.div`
-  display: grid;
-  gap: ${({ theme }) => theme.space[10]};
-
-  ${({ theme }) => `@media (min-width: ${theme.breakpoints.md}px)`} {
-    grid-template-columns: 1.4fr 1fr 1fr;
-  }
-`
-
-const BrandColumn = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.space[4]};
-`
-
-const Positioning = styled.p`
-  max-width: 34ch;
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  line-height: 1.6;
-  color: ${({ theme }) => theme.colors.textOnDarkMuted};
-`
-
-const ColumnTitle = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.colors.textOnDarkSubtle};
-  margin-bottom: ${({ theme }) => theme.space[4]};
-`
-
-const LinkList = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.space[3]};
-`
-
-const FooterLink = styled(Link)`
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  color: ${({ theme }) => theme.colors.textOnDarkMuted};
-
-  &:hover,
-  &:focus-visible {
-    color: ${({ theme }) => theme.colors.accent};
-  }
-`
-
-const ContactLink = styled.a`
-  font-size: ${({ theme }) => theme.fontSizes.sm};
-  font-weight: 700;
-  color: ${({ theme }) => theme.colors.accent};
-
-  &:hover,
-  &:focus-visible {
-    text-decoration: underline;
-  }
-`
-
-const SecondGrid = styled(Grid)`
-  margin-top: ${({ theme }) => theme.space[10]};
-`
-
-const BottomBar = styled.div`
-  margin-top: ${({ theme }) => theme.space[10]};
-  padding-top: ${({ theme }) => theme.space[6]};
-  border-top: 1px solid ${({ theme }) => theme.colors.borderOnDark};
-  font-size: ${({ theme }) => theme.fontSizes.xs};
-  color: ${({ theme }) => theme.colors.textOnDarkSubtle};
-`
-
-export function SiteFooter() {
-  const year = new Date().getFullYear()
-
+/**
+ * Fechamento da página, não um mapa do site: uma frase, poucos links e a
+ * assinatura em tamanho display. Nome, telefone e país aparecem iguais aqui
+ * e no schema LocalBusiness (consistência de NAP para SEO local).
+ */
+export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
   return (
-    <Footer>
-      <Container>
-        <Grid>
-          <BrandColumn>
-            <Reveal>
-              <Logo variant="full" />
-            </Reveal>
-            <Positioning>{site.positioning}</Positioning>
-          </BrandColumn>
+    <footer
+      className={cx(
+        'frame pt-20 md:pt-28',
+        reserveBarSpace ? 'pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:pb-14' : 'pb-14',
+      )}
+    >
+      <div className="grid gap-12 md:grid-cols-12 md:gap-6">
+        <p className="max-w-[20em] text-lead md:col-span-6">
+          Engenharia de software para empresas que querem vender mais e trabalhar melhor.
+        </p>
 
-          <div>
-            <ColumnTitle>Navegação</ColumnTitle>
-            <LinkList>
-              {site.nav.map((item) => (
-                <li key={item.href}>
-                  <FooterLink to={item.href}>{item.label}</FooterLink>
-                </li>
-              ))}
-            </LinkList>
-          </div>
-
-          <div>
-            <ColumnTitle>Soluções</ColumnTitle>
-            <LinkList>
-              {site.services.map((item) => (
-                <li key={item.href}>
-                  <FooterLink to={item.href}>{item.label}</FooterLink>
-                </li>
-              ))}
-            </LinkList>
-          </div>
-        </Grid>
-
-        <SecondGrid>
-          <div>
-            <ColumnTitle>Fale com a E.F Solutions</ColumnTitle>
-            <ContactLink href={site.whatsapp.url}>Conversar pelo WhatsApp</ContactLink>
-          </div>
-          <div>
-            <ColumnTitle>Legal</ColumnTitle>
-            <LinkList>
-              <li>
-                <FooterLink to={site.legal.privacyHref}>Política de Privacidade</FooterLink>
+        <nav aria-label="Rodapé" className="md:col-span-2 md:col-start-8">
+          <ul className="flex flex-col gap-3">
+            {site.nav.map((item) => (
+              <li key={item.href}>
+                <a href={item.href} className={textLinkStyles}>
+                  {item.label}
+                </a>
               </li>
-              <li>
-                <FooterLink to={site.legal.termsHref}>Termos de Uso</FooterLink>
-              </li>
-            </LinkList>
-          </div>
-        </SecondGrid>
+            ))}
+          </ul>
+        </nav>
 
-        <BottomBar>
-          © {year} {site.name}. Todos os direitos reservados.
-        </BottomBar>
-      </Container>
-    </Footer>
+        <ul className="flex flex-col gap-3 md:col-span-3 md:col-start-10">
+          <li>
+            <WhatsAppCta location="footer" className={textLinkStyles}>
+              WhatsApp {site.whatsapp.display}
+            </WhatsAppCta>
+          </li>
+          <li>
+            <Link to={site.legal.privacyHref} className={textLinkStyles}>
+              Política de Privacidade
+            </Link>
+          </li>
+          <li>
+            <Link to={site.legal.termsHref} className={textLinkStyles}>
+              Termos de Uso
+            </Link>
+          </li>
+        </ul>
+      </div>
+
+      <div className="mt-20 flex flex-col gap-6 md:mt-28 md:flex-row md:items-end md:justify-between">
+        <p aria-hidden="true" className="text-display">
+          {site.name}
+        </p>
+        <p className="text-small text-muted">
+          © {__BUILD_YEAR__} {site.legalName} · {site.tagline}
+        </p>
+      </div>
+    </footer>
   )
 }

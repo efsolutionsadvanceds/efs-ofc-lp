@@ -1,32 +1,27 @@
-import { lazy, Suspense } from 'react'
+import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
-import { BootScreen } from '@/components/ui/BootScreen'
 import { MainLayout } from '@/layouts/MainLayout'
+import Home from '@/pages/Home'
+import NotFound from '@/pages/NotFound'
+import Obrigado from '@/pages/Obrigado'
 
-const Home = lazy(() => import('@/pages/Home'))
-const Solucoes = lazy(() => import('@/pages/Solucoes'))
-const Contato = lazy(() => import('@/pages/Contato'))
+// Páginas legais: só texto e fora do caminho de conversão — ficam fora do
+// bundle inicial da landing page e carregam sob demanda.
 const Privacidade = lazy(() => import('@/pages/Privacidade'))
 const Termos = lazy(() => import('@/pages/Termos'))
-const NotFound = lazy(() => import('@/pages/NotFound'))
 
+/** Rotas — cada uma tem seu meta/SEO em src/config/pages.ts. */
 export default function App() {
   return (
-    <>
-      <BootScreen />
-      <Suspense fallback={null}>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route index element={<Home />} />
-            <Route path="solucoes" element={<Solucoes />} />
-            <Route path="contato" element={<Contato />} />
-            <Route path="privacidade" element={<Privacidade />} />
-            <Route path="termos" element={<Termos />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
-      </Suspense>
-    </>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route index element={<Home />} />
+        <Route path="obrigado" element={<Obrigado />} />
+        <Route path="privacidade" element={<Privacidade />} />
+        <Route path="termos" element={<Termos />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   )
 }

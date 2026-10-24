@@ -1,22 +1,11 @@
-import styled from 'styled-components'
-
-const StyledSkipLink = styled.a`
-  position: fixed;
-  top: -100px;
-  left: ${({ theme }) => theme.space[4]};
-  z-index: ${({ theme }) => theme.zIndex.skipLink};
-  padding: ${({ theme }) => `${theme.space[3]} ${theme.space[5]}`};
-  background: ${({ theme }) => theme.colors.accent};
-  color: ${({ theme }) => theme.colors.textOnAccent};
-  font-weight: 700;
-  border-radius: ${({ theme }) => theme.radii.md};
-  transition: top ${({ theme }) => theme.motion.durationFast} ${({ theme }) => theme.motion.ease};
-
-  &:focus {
-    top: ${({ theme }) => theme.space[4]};
-  }
-`
-
+/** Atalho de teclado para pular o cabeçalho — visível só ao receber foco. */
 export function SkipLink() {
-  return <StyledSkipLink href="#conteudo-principal">Pular para o conteúdo</StyledSkipLink>
+  return (
+    <a
+      href="#conteudo"
+      className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:font-medium focus:text-accent-ink"
+    >
+      Pular para o conteúdo
+    </a>
+  )
 }
