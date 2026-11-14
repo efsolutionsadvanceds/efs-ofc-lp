@@ -1,5 +1,7 @@
 # Segurança — EFSA Landing Page
 
+> **Documento histórico.** Descreve uma fase anterior do projeto e não reflete o código atual (rotas, componentes, rastreamento e conteúdo mudaram). A referência técnica atualizada é o [README](../README.md).
+
 Este documento descreve o modelo de ameaças, o fluxo de dados real e a
 arquitetura recomendada para funcionalidades futuras. Ele **não é uma
 certificação de conformidade** — nenhuma aplicação é "100% segura",

@@ -1,5 +1,7 @@
 # SEO Técnico e Descoberta — EFSA Landing Page
 
+> **Documento histórico.** Descreve uma fase anterior do projeto e não reflete o código atual (rotas, componentes, rastreamento e conteúdo mudaram). A referência técnica atualizada é o [README](../README.md).
+
 ## 1. Status técnico atual
 
 Verificado diretamente no código (`index.html`, `public/robots.txt`,

@@ -1,5 +1,7 @@
 # Estado do Código — EFSA Landing Page
 
+> **Documento histórico.** Descreve uma fase anterior do projeto e não reflete o código atual (rotas, componentes, rastreamento e conteúdo mudaram). A referência técnica atualizada é o [README](../README.md).
+
 Documento técnico de handoff, sanitizado (sem segredos), para permitir que outro
 engenheiro ou assistente de IA entenda o projeto rapidamente. Este documento
 **não substitui a leitura do código-fonte** — é um resumo factual do estado atual.

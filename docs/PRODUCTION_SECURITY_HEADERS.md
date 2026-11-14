@@ -1,5 +1,7 @@
 # Cabeçalhos de Segurança de Produção — EFSA Landing Page
 
+> **Documento histórico.** Descreve uma fase anterior do projeto e não reflete o código atual (rotas, componentes, rastreamento e conteúdo mudaram). A referência técnica atualizada é o [README](../README.md).
+
 Este documento é **agnóstico de provedor**. Nenhum arquivo de configuração
 específico de hospedagem (`_headers` do Cloudflare, `vercel.json`,
 `netlify.toml` etc.) foi criado, porque o provedor de hospedagem ainda não

@@ -1,5 +1,7 @@
 # Checklist de Deploy — EFSA Landing Page
 
+> **Documento histórico.** Descreve uma fase anterior do projeto e não reflete o código atual (rotas, componentes, rastreamento e conteúdo mudaram). A referência técnica atualizada é o [README](../README.md).
+
 Este documento lista tarefas de produção **ainda não resolvidas** e que dependem de
 informações reais externas ao código. Nenhum item aqui foi inventado ou assumido —
 todos exigem decisão, credencial ou ativo que só o responsável pelo negócio pode

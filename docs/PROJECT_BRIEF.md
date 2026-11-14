@@ -1,5 +1,7 @@
 # Briefing do Projeto — E.F Solutions
 
+> **Documento histórico.** Descreve uma fase anterior do projeto e não reflete o código atual (rotas, componentes, rastreamento e conteúdo mudaram). A referência técnica atualizada é o [README](../README.md).
+
 ## Identidade de marca
 
 - **Marca oficial:** E.F Solutions Advanced's
@@ -72,13 +74,11 @@ Os serviços da EFSA são organizados em duas frentes de resultado de negócio.
 
 ## Prova social e credibilidade
 
-A EFSA **ainda não possui resultados de clientes verificados**. Enquanto isso for verdade:
+Atualizado em novembro de 2026: a E.F Solutions passou a ter **depoimentos reais, autorizados para divulgação** (FRD Locações, Mark Assistência e Vinícius, da Celebrando seu Casamento), publicados em `src/content/testimonials.ts` com as falas transcritas sem edição.
 
-- Não criar nem sugerir prova social de qualquer tipo.
-- Não fabricar depoimentos, logos de clientes, estudos de caso, métricas, prêmios ou alegações de sucesso.
-- Usar como elementos de credibilidade apenas: **processo de trabalho, capacidade técnica, transparência, demonstrações e entregáveis claros**.
-
-Esta seção deve ser revisada assim que a EFSA tiver resultados de clientes verificados e autorizados para divulgação.
+- Continua proibido fabricar depoimentos, logos de clientes, estudos de caso, métricas, prêmios ou alegações de sucesso.
+- Só entram depoimentos reais e autorizados, sem reescrever a fala do cliente e sem schema de avaliação (Review/AggregateRating).
+- Projeto ainda não publicado aparece sem link para o site do cliente.
 
 ## Princípios de segurança e privacidade
 
