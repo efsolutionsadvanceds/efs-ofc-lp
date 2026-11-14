@@ -1,4 +1,5 @@
 import { ConversionBar } from '@/components/conversion/ConversionBar'
+import { CitiesSection } from '@/components/sections/CitiesSection'
 import { ClosingSection } from '@/components/sections/ClosingSection'
 import { FaqSection } from '@/components/sections/FaqSection'
 import { HeroSection } from '@/components/sections/HeroSection'
@@ -10,7 +11,7 @@ import { TestimonialsSection } from '@/components/sections/TestimonialsSection'
 /**
  * Landing page, curta e direta: promessa (H1 com os termos de busca) →
  * serviços → depoimentos → orçamento por seleção → como funciona →
- * dúvidas → fechamento.
+ * dúvidas → cidades atendidas → fechamento.
  * Título, description, Open Graph e schema desta rota vêm de
  * src/config/pages.ts (`pages.home`).
  */
@@ -23,6 +24,7 @@ export default function Home() {
       <SolutionsSection />
       <ProcessSection />
       <FaqSection />
+      <CitiesSection />
       <ClosingSection />
       <ConversionBar />
     </>

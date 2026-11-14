@@ -207,6 +207,17 @@ describe('páginas por cidade', () => {
   })
 })
 
+describe('seção de cidades na home', () => {
+  it('a home liga para o hub e para as 15 cidades, antes do fechamento', async () => {
+    const { html } = await render('/')
+    const start = html.indexOf('id="cidades-atendidas"')
+    const section = html.slice(start, html.indexOf('id="contato"'))
+    expect(start).toBeGreaterThan(html.indexOf('id="duvidas"'))
+    expect(section).toContain('href="/criacao-de-sites"')
+    for (const city of CITY_INDEX) expect(section).toContain(`href="${cityPath(city.slug)}"`)
+  })
+})
+
 describe('páginas de serviço', () => {
   it('os quatro serviços têm página própria, e os cartões da home levam até elas', async () => {
     expect(SERVICE_PAGES.map((page) => page.path)).toEqual([
