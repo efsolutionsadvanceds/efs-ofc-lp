@@ -19,6 +19,9 @@ const CityPage = lazy(() => import('@/pages/CityPage'))
 // Páginas de autoridade.
 const Sobre = lazy(() => import('@/pages/Sobre'))
 const Projetos = lazy(() => import('@/pages/Projetos'))
+// Área de conteúdos: índice e artigos (o texto dos artigos só carrega nestas rotas).
+const ArticlesIndex = lazy(() => import('@/pages/ArticlesIndex'))
+const ArticlePage = lazy(() => import('@/pages/ArticlePage'))
 // Páginas de serviço: uma rota por serviço, mesmo componente (carregado sob demanda).
 const ServicePage = lazy(() => import('@/pages/ServicePage'))
 
@@ -52,6 +55,8 @@ export default function App() {
         ))}
         <Route path="sobre" element={<OnDemand><Sobre /></OnDemand>} />
         <Route path="projetos" element={<OnDemand><Projetos /></OnDemand>} />
+        <Route path="conteudos" element={<OnDemand><ArticlesIndex /></OnDemand>} />
+        <Route path="conteudos/:artigo" element={<OnDemand><ArticlePage /></OnDemand>} />
         <Route path="obrigado" element={<Obrigado />} />
         <Route path="politica-de-privacidade" element={<OnDemand><Privacidade /></OnDemand>} />
         <Route path="termos-de-uso" element={<OnDemand><Termos /></OnDemand>} />

@@ -55,6 +55,7 @@ export const site = {
   nav: [
     { href: `/#${SECTION_IDS.services}`, label: 'Serviços' },
     { href: '/projetos', label: 'Projetos' },
+    { href: '/conteudos', label: 'Conteúdos' },
     { href: '/sobre', label: 'Sobre' },
     { href: `/#${SECTION_IDS.faq}`, label: 'Dúvidas' },
   ],

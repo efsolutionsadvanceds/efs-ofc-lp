@@ -21,6 +21,7 @@ interface SiteFooterProps {
 const COMPANY_LINKS = [
   { href: '/sobre', label: 'Sobre' },
   { href: '/projetos', label: 'Projetos' },
+  { href: '/conteudos', label: 'Conteúdos' },
   { href: `/#${SECTION_IDS.process}`, label: 'Como funciona' },
   { href: `/#${SECTION_IDS.faq}`, label: 'Dúvidas' },
   { href: `/#${SECTION_IDS.solutions}`, label: 'Orçamento' },

@@ -1,3 +1,4 @@
+import { ARTICLE_INDEX, ARTICLES_PATH, articlePath } from '@/content/articleIndex'
 import { CITIES_HUB_PATH, CITY_INDEX, cityPath } from '@/content/cityIndex'
 import { FAQ_ITEMS, type FaqItem } from '@/content/faq'
 import { SERVICE_PAGE_INDEX, servicePath } from '@/content/serviceIndex'
@@ -125,6 +126,16 @@ export const pages = {
     sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.6 },
     pageType: 'CollectionPage',
   },
+  conteudos: {
+    path: ARTICLES_PATH,
+    file: 'conteudos.html',
+    title: 'Conteúdos: Sites, Sistemas, IA e SEO | E.F Solutions',
+    description:
+      'Guias práticos da E.F Solutions sobre criação de sites, sistemas de gestão, atendimento com IA no WhatsApp e SEO local, para decidir com informação.',
+    breadcrumbs: [HOME_CRUMB, { name: 'Conteúdos', path: ARTICLES_PATH }],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'weekly', priority: 0.7 },
+    pageType: 'CollectionPage',
+  },
   cookies: {
     path: '/politica-de-cookies',
     file: 'politica-de-cookies.html',
@@ -199,8 +210,36 @@ export const CITY_PAGES: readonly PageMeta[] = CITY_INDEX.map((city) => ({
   conversionBar: true,
 }))
 
+/**
+ * Um artigo por item do índice (src/content/articleIndex.ts), gerado em
+ * `dist/conteudos/<artigo>.html`, com schema `Article`. O texto vem de
+ * src/content/articles.ts, carregado só com a rota.
+ */
+export const ARTICLE_PAGES: readonly PageMeta[] = ARTICLE_INDEX.map((article) => ({
+  path: articlePath(article.slug),
+  file: `${articlePath(article.slug).slice(1)}.html`,
+  title: article.title,
+  description: article.description,
+  breadcrumbs: [HOME_CRUMB, { name: 'Conteúdos', path: ARTICLES_PATH }, { name: article.headline, path: articlePath(article.slug) }],
+  sitemap: { lastmod: article.dateModified, changefreq: 'monthly', priority: 0.6 },
+  article: {
+    slug: article.slug,
+    headline: article.headline,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified,
+    section: article.section,
+    readingMinutes: article.readingMinutes,
+  },
+  defaultSolutions: article.solutions,
+}))
+
 /** Todas as páginas geradas como HTML estático no build. */
-export const PRERENDERED_PAGES: readonly PageMeta[] = [...Object.values(pages), ...SERVICE_PAGES, ...CITY_PAGES]
+export const PRERENDERED_PAGES: readonly PageMeta[] = [
+  ...Object.values(pages),
+  ...SERVICE_PAGES,
+  ...CITY_PAGES,
+  ...ARTICLE_PAGES,
+]
 
 /** Resolve o meta da rota atual; qualquer caminho desconhecido cai na 404. */
 export function getPageMeta(pathname: string): PageMeta {

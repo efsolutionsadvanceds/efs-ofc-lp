@@ -14,6 +14,7 @@ import { WhatsAppIcon } from '@/components/ui/WhatsAppIcon'
 import { SERVICE_HERO_VECTORS } from '@/components/vectors/ServiceHeroVectors'
 import { getPageMeta } from '@/config/pages'
 import { HERO_CTA_ID, SECTION_IDS } from '@/config/sections'
+import { ARTICLE_INDEX, articlePath } from '@/content/articleIndex'
 import { CITIES_HUB_PATH } from '@/content/cityIndex'
 import { findServiceEntry, servicePath, type ServiceSlug } from '@/content/serviceIndex'
 import { SERVICE_CONTENT } from '@/content/servicePages'
@@ -38,6 +39,7 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
   const content = SERVICE_CONTENT[slug]
   const meta = getPageMeta(servicePath(slug))
   const Vector = SERVICE_HERO_VECTORS[slug]
+  const articles = ARTICLE_INDEX.filter((article) => article.service === slug)
 
   return (
     <>
@@ -138,7 +140,7 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
 
       <section aria-labelledby="veja-tambem-titulo" className={cx('frame', SECTION_END)}>
         <h2 id="veja-tambem-titulo" className="text-title">
-          Veja também <span className="block text-muted">outros serviços.</span>
+          Veja também <span className="block text-muted">outros serviços e guias.</span>
         </h2>
         <ul className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {content.related.map((relatedSlug) => {
@@ -155,6 +157,11 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
           <li>
             <RelatedLink to="/projetos" label="projetos/" title="Projetos entregues" />
           </li>
+          {articles.map((article) => (
+            <li key={article.slug}>
+              <RelatedLink to={articlePath(article.slug)} label="conteudos/" title={article.headline} />
+            </li>
+          ))}
         </ul>
       </section>
 

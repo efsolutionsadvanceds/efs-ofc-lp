@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { CITY_PAGES, PRERENDERED_PAGES, SERVICE_PAGES } from './config/pages'
+import { ARTICLE_PAGES, CITY_PAGES, PRERENDERED_PAGES, SERVICE_PAGES } from './config/pages'
+import { ARTICLE_INDEX, articlePath } from './content/articleIndex'
+import { ARTICLE_CONTENT, articlePlainText, readingMinutesOf } from './content/articles'
 import { CITY_INDEX, cityPath } from './content/cityIndex'
 import { SERVICE_PAGE_INDEX, servicePath } from './content/serviceIndex'
 import { SERVICE_CONTENT } from './content/servicePages'
@@ -27,6 +29,8 @@ const H1_BY_PATH: Record<string, string> = {
   '/termos-de-uso': 'Termos de Uso',
   '/politica-de-cookies': 'Política de Cookies',
   '/sobre': 'A E.F Solutions desenvolve sites, sistemas e atendimento com IA para empresas',
+  '/conteudos': 'Guias sobre sites, sistemas, atendimento com IA e SEO',
+  ...Object.fromEntries(ARTICLE_INDEX.map((article) => [articlePath(article.slug), article.headline])),
   '/projetos': 'Projetos entregues para empresas reais',
   '/obrigado': 'Falta só enviar a mensagem.',
   '/404': 'Esta página não existe.',
@@ -217,6 +221,52 @@ describe('seção de cidades na home', () => {
     expect(start).toBeGreaterThan(html.indexOf('id="duvidas"'))
     expect(section).toContain('href="/criacao-de-sites"')
     for (const city of CITY_INDEX) expect(section).toContain(`href="${cityPath(city.slug)}"`)
+  })
+})
+
+describe('área de conteúdos', () => {
+  it('quatro artigos publicados, todos listados no índice /conteudos', async () => {
+    expect(ARTICLE_PAGES.map((page) => page.path)).toEqual([
+      '/conteudos/quanto-custa-criar-um-site-profissional',
+      '/conteudos/como-funciona-atendente-ia-no-whatsapp',
+      '/conteudos/sistema-personalizado-ou-planilha-quando-migrar',
+      '/conteudos/como-aparecer-no-google-seo-local-empresas',
+    ])
+    const { html } = await render('/conteudos')
+    for (const page of ARTICLE_PAGES) expect(html).toContain(`href="${page.path}"`)
+  })
+
+  it.each(ARTICLE_INDEX)('$slug: schema Article, tempo de leitura certo e sumário que leva às seções', async (article) => {
+    const { html, head } = await render(articlePath(article.slug))
+    const content = ARTICLE_CONTENT[article.slug]
+    expect(article.readingMinutes).toBe(readingMinutesOf(content))
+    expect(textOf(html)).toContain(`${article.readingMinutes} min de leitura`)
+    expect(jsonLdGraph(head).find((node) => node['@type'] === 'Article')).toMatchObject({
+      headline: article.headline,
+      datePublished: article.datePublished,
+      timeRequired: `PT${article.readingMinutes}M`,
+      author: { '@id': 'https://www.efsolutions.com.br/#empresa' },
+    })
+    for (const section of content.sections) {
+      expect(html).toContain(`href="#${section.id}"`)
+      expect(html).toContain(`id="${section.id}"`)
+    }
+  })
+
+  it.each(ARTICLE_INDEX)('$slug: o WhatsApp cita o artigo e já leva a solução relacionada', async (article) => {
+    const { html } = await render(articlePath(article.slug))
+    const message = decodeURIComponent(html.match(/href="https:\/\/wa\.me\/\d+\?text=([^"]+)"/)?.[1] ?? '')
+    expect(message).toContain(`pelo artigo “${article.headline}”`)
+    for (const solution of getSolutions(article.solutions)) expect(message).toContain(solution.messageLabel)
+  })
+
+  it('o texto de cada artigo é próprio', () => {
+    const texts = ARTICLE_INDEX.map((article) => shingles(articlePlainText(ARTICLE_CONTENT[article.slug])))
+    let highest = 0
+    for (let a = 0; a < texts.length; a++) {
+      for (let b = a + 1; b < texts.length; b++) highest = Math.max(highest, jaccard(texts[a]!, texts[b]!))
+    }
+    expect(highest).toBeLessThan(0.1)
   })
 })
 

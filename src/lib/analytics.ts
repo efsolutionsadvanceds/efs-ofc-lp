@@ -10,7 +10,7 @@ declare global {
 }
 
 /** Onde o clique aconteceu — vira o parâmetro `cta_location` no GA4. */
-export type CtaLocation = 'hero' | 'sticky_bar' | 'closing' | 'footer' | 'not_found' | 'thank_you'
+export type CtaLocation = 'hero' | 'sticky_bar' | 'closing' | 'footer' | 'not_found' | 'thank_you' | 'article'
 
 type EventParams = Record<string, string | number | boolean>
 

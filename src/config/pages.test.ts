@@ -58,9 +58,11 @@ describe('sitemap.xml e robots.txt', () => {
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/sistemas-personalizados</loc>')
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/sobre</loc>')
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/projetos</loc>')
-    // Home, hub das cidades, sobre, projetos, 3 páginas legais, 4 serviços e as 15 cidades.
+    expect(xml).toContain('<loc>https://www.efsolutions.com.br/conteudos/quanto-custa-criar-um-site-profissional</loc>')
+    // Home, hub das cidades, sobre, projetos, conteúdos, 3 páginas legais,
+    // 4 serviços, 15 cidades e 4 artigos.
     const indexable = PRERENDERED_PAGES.filter((page) => page.sitemap && !page.noindex)
-    expect(indexable).toHaveLength(26)
+    expect(indexable).toHaveLength(31)
     expect(xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)).toHaveLength(indexable.length)
   })
 
