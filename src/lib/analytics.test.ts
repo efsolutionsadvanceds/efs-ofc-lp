@@ -39,6 +39,17 @@ describe('trackWhatsAppLead', () => {
     expect(fbq).toHaveBeenCalledWith('track', 'Contact', {}, { eventID: expect.any(String) })
   })
 
+  it('envia page_city só quando o clique vem de uma página de cidade', () => {
+    const gtag = vi.fn()
+    vi.stubGlobal('window', { gtag })
+
+    trackWhatsAppLead({ services: ['site'], location: 'hero', city: 'campinas' })
+    trackWhatsAppLead({ services: ['site'], location: 'hero' })
+
+    expect(gtag.mock.calls[0]?.[2]).toEqual(expect.objectContaining({ page_city: 'campinas' }))
+    expect(gtag.mock.calls[1]?.[2]).not.toHaveProperty('page_city')
+  })
+
   it('registra "nenhuma" quando o contato acontece sem seleção', () => {
     const gtag = vi.fn()
     vi.stubGlobal('window', { gtag })

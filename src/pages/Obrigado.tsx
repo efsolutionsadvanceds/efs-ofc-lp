@@ -11,7 +11,7 @@ import { getSolutions } from '@/content/solutions'
 import { useHydrated } from '@/hooks/useHydrated'
 import { trackEvent } from '@/lib/analytics'
 import { stagger } from '@/lib/stagger'
-import { readThankYouServices } from '@/lib/thankYouState'
+import { readThankYouOrigin, readThankYouServices } from '@/lib/thankYouState'
 import { buildLeadUrl } from '@/lib/whatsapp'
 
 /**
@@ -28,6 +28,7 @@ export default function Obrigado() {
   const location = useLocation()
   const hydrated = useHydrated()
   const services = hydrated ? readThankYouServices(location.state) : []
+  const origin = hydrated ? readThankYouOrigin(location.state) : {}
   const solutions = getSolutions(services)
 
   return (
@@ -66,7 +67,7 @@ export default function Obrigado() {
 
           <div className="rise mt-12 flex flex-wrap items-center gap-3" style={stagger(1)}>
           <a
-            href={buildLeadUrl(services)}
+            href={buildLeadUrl(services, origin)}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackEvent('whatsapp_reopen', { services_count: services.length })}

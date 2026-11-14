@@ -75,7 +75,36 @@ function buildWebPageNode(meta: PageMeta, hasBreadcrumb: boolean): JsonLdNode {
     inLanguage: site.locale,
     isPartOf: { '@id': WEBSITE_ID },
     about: { '@id': BUSINESS_ID },
+    ...(meta.service ? { mainEntity: { '@id': `${url}#servico` } } : {}),
     ...(hasBreadcrumb ? { breadcrumb: { '@id': `${url}#trilha` } } : {}),
+  }
+}
+
+/**
+ * Serviço da página com a área atendida (`areaServed`): a forma correta de
+ * dizer "atendemos esta cidade" sem endereço local. A empresa entra como
+ * `provider`, pelo `@id`, nunca com um endereço inventado na cidade.
+ */
+export function buildServiceNode(meta: PageMeta): JsonLdNode | null {
+  if (!meta.service) return null
+  const url = absoluteUrl(meta.path)
+  const { name, areaServed } = meta.service
+  const state = { '@type': 'State', name: 'São Paulo', containedInPlace: { '@type': 'Country', name: 'Brasil' } }
+
+  return {
+    '@type': 'Service',
+    '@id': `${url}#servico`,
+    name,
+    serviceType: 'Criação de sites',
+    description: meta.description,
+    url,
+    provider: { '@id': BUSINESS_ID },
+    areaServed: areaServed.type === 'City' ? { '@type': 'City', name: areaServed.name, containedInPlace: state } : state,
+    availableChannel: {
+      '@type': 'ServiceChannel',
+      serviceUrl: url,
+      availableLanguage: { '@type': 'Language', name: 'Português', alternateName: site.locale },
+    },
   }
 }
 
@@ -116,6 +145,9 @@ export function buildStructuredData(meta: PageMeta) {
 
   if (!meta.noindex) graph.push(buildWebPageNode(meta, breadcrumb !== null))
   if (breadcrumb) graph.push(breadcrumb)
+
+  const service = meta.noindex ? null : buildServiceNode(meta)
+  if (service) graph.push(service)
 
   const faq = buildFaqNode(meta)
   if (faq) graph.push(faq)

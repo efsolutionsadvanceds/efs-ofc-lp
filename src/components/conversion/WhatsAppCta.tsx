@@ -6,6 +6,7 @@ import { trackWhatsAppLead, type CtaLocation } from '@/lib/analytics'
 import { createThankYouState } from '@/lib/thankYouState'
 import { buildLeadUrl } from '@/lib/whatsapp'
 
+import { useLeadOrigin } from './LeadOriginContext'
 import { useSelection } from './SelectionContext'
 
 type AnchorProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'href' | 'target' | 'rel' | 'onClick'>
@@ -24,22 +25,29 @@ interface WhatsAppCtaProps extends AnchorProps {
  */
 export function WhatsAppCta({ location, children, ...anchorProps }: WhatsAppCtaProps) {
   const { selected } = useSelection()
+  const origin = useLeadOrigin()
   const navigate = useNavigate()
 
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
-    trackWhatsAppLead({ services: selected, location })
+    trackWhatsAppLead({ services: selected, location, city: origin.city?.slug })
 
     const isPlainClick = event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
     if (!isPlainClick) return
 
     // A navegação fica para a próxima tarefa: o link precisa continuar no
     // documento até o navegador concluir a abertura da nova aba.
-    const state = createThankYouState(selected)
+    const state = createThankYouState(selected, origin)
     window.setTimeout(() => navigate(pages.obrigado.path, { state }), 0)
   }
 
   return (
-    <a {...anchorProps} href={buildLeadUrl(selected)} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+    <a
+      {...anchorProps}
+      href={buildLeadUrl(selected, origin)}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={handleClick}
+    >
       {children}
     </a>
   )

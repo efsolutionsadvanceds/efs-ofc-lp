@@ -1,3 +1,4 @@
+import { CITIES_HUB_PATH, CITY_INDEX, cityPath } from '@/content/cityIndex'
 import { FAQ_ITEMS, type FaqItem } from '@/content/faq'
 
 /**
@@ -25,6 +26,12 @@ export interface SitemapEntry {
   priority: number
 }
 
+/** Área atendida no schema `Service` (sem endereço: o atendimento é online). */
+export interface AreaServed {
+  type: 'City' | 'State'
+  name: string
+}
+
 export interface PageMeta {
   path: string
   /** Arquivo gerado em `dist/` (o Vercel serve `/x` a partir de `x.html` com `cleanUrls`). */
@@ -36,9 +43,16 @@ export interface PageMeta {
   /** Perguntas exibidas na página — viram schema FAQPage. */
   faq?: readonly FaqItem[]
   sitemap?: SitemapEntry
+  /** Serviço oferecido na página e onde: vira schema `Service` com `areaServed`. */
+  service?: { name: string; areaServed: AreaServed }
+  /** Cidade da página: entra na mensagem do WhatsApp e no GA4 (`page_city`). */
+  city?: { slug: string; name: string }
+  /** A página tem a barra fixa de conversão (o rodapé reserva espaço para ela no celular). */
+  conversionBar?: boolean
 }
 
 const HOME_CRUMB: BreadcrumbItem = { name: 'Início', path: '/' }
+const CITIES_CRUMB: BreadcrumbItem = { name: 'Criação de sites', path: CITIES_HUB_PATH }
 
 export const pages = {
   home: {
@@ -49,6 +63,18 @@ export const pages = {
       'Criação de sites profissionais para empresas, sistemas de gestão sob medida e atendente virtual com IA no WhatsApp. SEO para aparecer no Google.',
     faq: FAQ_ITEMS,
     sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 1 },
+    conversionBar: true,
+  },
+  cidades: {
+    path: CITIES_HUB_PATH,
+    file: 'criacao-de-sites.html',
+    title: 'Criação de Sites no Estado de São Paulo | E.F Solutions',
+    description:
+      'Criação de sites profissionais para empresas da capital, da Grande São Paulo, do litoral e do interior paulista. Veja as cidades atendidas e peça orçamento.',
+    breadcrumbs: [HOME_CRUMB, CITIES_CRUMB],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.8 },
+    service: { name: 'Criação de sites', areaServed: { type: 'State', name: 'São Paulo' } },
+    conversionBar: true,
   },
   privacidade: {
     path: '/politica-de-privacidade',
@@ -88,8 +114,25 @@ export const pages = {
   },
 } as const satisfies Record<string, PageMeta>
 
+/**
+ * Uma página por cidade (src/content/cityIndex.ts), gerada no build em
+ * `dist/criacao-de-sites/<cidade>.html`. O conteúdo de cada uma vem de
+ * src/content/cities.ts, carregado só com a rota.
+ */
+export const CITY_PAGES: readonly PageMeta[] = CITY_INDEX.map((city) => ({
+  path: cityPath(city.slug),
+  file: `${cityPath(city.slug).slice(1)}.html`,
+  title: `Criação de Sites em ${city.name} | E.F Solutions`,
+  description: city.description,
+  breadcrumbs: [HOME_CRUMB, CITIES_CRUMB, { name: city.name, path: cityPath(city.slug) }],
+  sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.7 },
+  service: { name: `Criação de sites em ${city.name}`, areaServed: { type: 'City', name: city.name } },
+  city: { slug: city.slug, name: city.name },
+  conversionBar: true,
+}))
+
 /** Todas as páginas geradas como HTML estático no build. */
-export const PRERENDERED_PAGES: readonly PageMeta[] = Object.values(pages)
+export const PRERENDERED_PAGES: readonly PageMeta[] = [...Object.values(pages), ...CITY_PAGES]
 
 /** Resolve o meta da rota atual; qualquer caminho desconhecido cai na 404. */
 export function getPageMeta(pathname: string): PageMeta {

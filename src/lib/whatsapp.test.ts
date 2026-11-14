@@ -24,6 +24,18 @@ describe('buildLeadMessage', () => {
     )
   })
 
+  it('nas páginas de cidade, diz de qual página o contato veio', () => {
+    const city = { slug: 'santos', name: 'Santos' }
+    expect(buildLeadMessage([], { city })).toBe(
+      'Olá, E.F Solutions! Vim pela página de criação de sites em Santos e quero conversar sobre um projeto para a minha empresa.',
+    )
+    expect(buildLeadMessage(['site'], { city }).split('\n')[0]).toBe(
+      'Olá, E.F Solutions! Vim pela página de criação de sites em Santos e quero um orçamento.',
+    )
+    // Sem origem, nada muda em relação à mensagem de sempre.
+    expect(buildLeadMessage(['site'], {})).toBe(buildLeadMessage(['site']))
+  })
+
   it('não usa emoji (alguns apps de desktop corrompem emoji em links do wa.me)', () => {
     const message = buildLeadMessage(['site', 'sistema', 'assistente', 'loja', 'automacao', 'seo'])
     expect(message).not.toMatch(/\p{Extended_Pictographic}/u)

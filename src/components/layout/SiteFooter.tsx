@@ -5,10 +5,11 @@ import { WhatsAppCta } from '@/components/conversion/WhatsAppCta'
 import { navLinkStyles } from '@/components/ui/buttonStyles'
 import { Wordmark } from '@/components/ui/Wordmark'
 import { site } from '@/config/site'
+import { CITIES_HUB_PATH } from '@/content/cityIndex'
 import { cx } from '@/lib/cx'
 
 interface SiteFooterProps {
-  /** Reserva espaço para a barra de conversão fixa (só existe na home, no celular). */
+  /** Reserva espaço para a barra de conversão fixa (páginas com `conversionBar`, no celular). */
   reserveBarSpace: boolean
 }
 
@@ -57,6 +58,11 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
               </a>
             </li>
           ))}
+          <li>
+            <Link to={CITIES_HUB_PATH} className={navLinkStyles}>
+              Sites por cidade
+            </Link>
+          </li>
         </FooterColumn>
 
         <FooterColumn title="Contato" className="md:col-span-2">

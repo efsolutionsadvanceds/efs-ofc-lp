@@ -31,21 +31,26 @@ export function trackEvent(name: string, params: EventParams = {}): void {
 interface WhatsAppLeadInput {
   services: readonly SolutionId[]
   location: CtaLocation
+  /** Slug da cidade, quando o clique vem de uma página de cidade. */
+  city?: string
 }
 
 /**
  * Conversão principal do site: clique que abre o WhatsApp.
  * - GA4: evento recomendado `generate_lead` (marque-o como "evento-chave"
- *   no GA4 para usá-lo como conversão, inclusive no Google Ads);
+ *   no GA4 para usá-lo como conversão, inclusive no Google Ads). Nas
+ *   páginas de cidade, leva `page_city` (crie a dimensão personalizada no
+ *   GA4 para ver os contatos por cidade);
  * - Meta Pixel: evento padrão `Contact`, com ID único por clique para
  *   deduplicação caso a API de Conversões seja adotada no futuro.
  */
-export function trackWhatsAppLead({ services, location }: WhatsAppLeadInput): void {
+export function trackWhatsAppLead({ services, location, city }: WhatsAppLeadInput): void {
   trackEvent('generate_lead', {
     lead_source: 'whatsapp',
     cta_location: location,
     selected_services: services.length > 0 ? services.join(',') : 'nenhuma',
     services_count: services.length,
+    ...(city ? { page_city: city } : {}),
   })
   trackContactEvent(generateEventId())
 }

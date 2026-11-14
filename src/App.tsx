@@ -10,6 +10,9 @@ import Obrigado from '@/pages/Obrigado'
 // bundle inicial da landing page e carregam sob demanda.
 const Privacidade = lazy(() => import('@/pages/Privacidade'))
 const Termos = lazy(() => import('@/pages/Termos'))
+// Páginas por cidade: o texto das cidades só carrega nestas rotas.
+const CitiesHub = lazy(() => import('@/pages/CitiesHub'))
+const CityPage = lazy(() => import('@/pages/CityPage'))
 
 /** Rotas — cada uma tem seu meta/SEO em src/config/pages.ts. */
 export default function App() {
@@ -17,6 +20,8 @@ export default function App() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route index element={<Home />} />
+        <Route path="criacao-de-sites" element={<CitiesHub />} />
+        <Route path="criacao-de-sites/:cidade" element={<CityPage />} />
         <Route path="obrigado" element={<Obrigado />} />
         <Route path="politica-de-privacidade" element={<Privacidade />} />
         <Route path="termos-de-uso" element={<Termos />} />

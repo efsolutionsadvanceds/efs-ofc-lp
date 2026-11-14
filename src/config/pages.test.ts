@@ -39,6 +39,8 @@ describe('registro de páginas (SEO)', () => {
     expect(getPageMeta('/politica-de-privacidade/')).toBe(pages.privacidade)
     expect(getPageMeta('/nao-existe')).toBe(pages.naoEncontrada)
     expect(getPageMeta('/404')).toBe(pages.naoEncontrada)
+    expect(getPageMeta('/criacao-de-sites/campinas/').city).toEqual({ slug: 'campinas', name: 'Campinas' })
+    expect(getPageMeta('/criacao-de-sites/cidade-inexistente')).toBe(pages.naoEncontrada)
   })
 })
 
@@ -48,9 +50,14 @@ describe('sitemap.xml e robots.txt', () => {
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/</loc>')
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/politica-de-privacidade</loc>')
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/termos-de-uso</loc>')
+    expect(xml).toContain('<loc>https://www.efsolutions.com.br/criacao-de-sites</loc>')
+    expect(xml).toContain('<loc>https://www.efsolutions.com.br/criacao-de-sites/sao-paulo</loc>')
     expect(xml).not.toContain('/obrigado')
     expect(xml).not.toContain('/404')
-    expect(xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)).toHaveLength(3)
+    // Home, hub das cidades, 2 páginas legais e as 15 cidades.
+    const indexable = PRERENDERED_PAGES.filter((page) => page.sitemap && !page.noindex)
+    expect(indexable).toHaveLength(19)
+    expect(xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)).toHaveLength(indexable.length)
   })
 
   it('o robots.txt libera o rastreamento e aponta o sitemap', () => {

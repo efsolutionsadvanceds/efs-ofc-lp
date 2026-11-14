@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { PRERENDERED_PAGES } from './config/pages'
+import { CITY_PAGES, PRERENDERED_PAGES } from './config/pages'
+import { CITY_INDEX, cityPath } from './content/cityIndex'
 import { TESTIMONIALS } from './content/testimonials'
-import { prerenderTargets, render } from './entry-server'
+import { llmsTxt, prerenderTargets, render, sitemapXml } from './entry-server'
+import { GENERIC_LEAD_MESSAGE } from './lib/whatsapp'
 
 /**
  * Pré-renderiza cada página como o build faz. Garante que o registro de
@@ -13,10 +15,32 @@ import { prerenderTargets, render } from './entry-server'
 
 const H1_BY_PATH: Record<string, string> = {
   '/': 'Criação de Sites Profissionais, Sistemas Sob Medida e Atendimento Virtual com IA',
+  '/criacao-de-sites': 'Criação de sites para empresas de todo o estado de São Paulo',
+  ...Object.fromEntries(CITY_INDEX.map((city) => [cityPath(city.slug), `Criação de sites em ${city.name}`])),
   '/politica-de-privacidade': 'Política de Privacidade',
   '/termos-de-uso': 'Termos de Uso',
   '/obrigado': 'Falta só enviar a mensagem.',
   '/404': 'Esta página não existe.',
+}
+
+/** Grafo JSON-LD da página (único script application/ld+json do <head>). */
+function jsonLdGraph(head: string): Record<string, unknown>[] {
+  const json = head.match(/<script type="application\/ld\+json"[^>]*>(.*?)<\/script>/s)?.[1] ?? '{}'
+  return (JSON.parse(json) as { '@graph'?: Record<string, unknown>[] })['@graph'] ?? []
+}
+
+/** Conjunto de trechos de 3 palavras do texto, para medir semelhança entre páginas. */
+function shingles(text: string): Set<string> {
+  const words = text.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? []
+  const set = new Set<string>()
+  for (let i = 0; i + 3 <= words.length; i++) set.add(words.slice(i, i + 3).join(' '))
+  return set
+}
+
+function jaccard(a: Set<string>, b: Set<string>): number {
+  let shared = 0
+  for (const item of a) if (b.has(item)) shared++
+  return shared / (a.size + b.size - shared)
 }
 
 /** Texto do elemento como um leitor (ou buscador) o lê: sem tags e sem comentários do React. */
@@ -116,6 +140,66 @@ describe('vetores animados', () => {
   })
 })
 
+describe('páginas por cidade', () => {
+  it('há uma página por cidade, mais o hub, no sitemap e no llms.txt', () => {
+    expect(CITY_PAGES).toHaveLength(15)
+    const sitemap = sitemapXml()
+    const llms = llmsTxt()
+    for (const path of ['/criacao-de-sites', ...CITY_PAGES.map((page) => page.path)]) {
+      expect(sitemap).toContain(`<loc>https://www.efsolutions.com.br${path}</loc>`)
+      expect(llms).toContain(`(https://www.efsolutions.com.br${path})`)
+    }
+  })
+
+  it.each(CITY_PAGES)('$path tem schema Service com a cidade em areaServed e nenhum endereço local', async ({ path, city }) => {
+    const { head } = await render(path)
+    const graph = jsonLdGraph(head)
+    const service = graph.find((node) => node['@type'] === 'Service') as Record<string, any> | undefined
+    expect(service?.areaServed).toMatchObject({ '@type': 'City', name: city?.name, containedInPlace: { name: 'São Paulo' } })
+    expect(service?.provider).toEqual({ '@id': 'https://www.efsolutions.com.br/#empresa' })
+    // Atendimento online: o endereço da empresa continua só com o país.
+    const business = graph.find((node) => node['@type'] === 'LocalBusiness') as Record<string, any> | undefined
+    expect(business?.address).toEqual({ '@type': 'PostalAddress', addressCountry: 'BR' })
+    expect(graph.some((node) => node['@type'] === 'FAQPage')).toBe(false)
+    expect(head).toContain(`<link rel="canonical" href="https://www.efsolutions.com.br${path}" data-head />`)
+  })
+
+  it('a cidade entra na mensagem do WhatsApp; na home, a mensagem continua a mesma', async () => {
+    const campinas = await render('/criacao-de-sites/campinas')
+    const message = decodeURIComponent(campinas.html.match(/href="https:\/\/wa\.me\/\d+\?text=([^"]+)"/)?.[1] ?? '')
+    expect(message).toContain('pela página de criação de sites em Campinas')
+
+    const home = await render('/')
+    const homeMessage = decodeURIComponent(home.html.match(/href="https:\/\/wa\.me\/\d+\?text=([^"]+)"/)?.[1] ?? '')
+    expect(homeMessage).toBe(GENERIC_LEAD_MESSAGE)
+  })
+
+  it('cidade desconhecida cai na 404 (noindex)', async () => {
+    const { html, head } = await render('/criacao-de-sites/cidade-inexistente')
+    expect(textOf(html)).toContain('Esta página não existe.')
+    expect(head).toContain('noindex')
+  })
+
+  it('o texto de cada página de cidade é próprio, não um modelo com o nome trocado', async () => {
+    const texts = await Promise.all(
+      CITY_PAGES.map(async ({ path, city }) => {
+        const { html } = await render(path)
+        const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'))
+        // Sem o nome da cidade: um modelo com o nome trocado daria semelhança ~1.
+        return shingles(textOf(main).replaceAll(city?.name ?? '', 'CIDADE'))
+      }),
+    )
+    let highest = 0
+    for (let a = 0; a < texts.length; a++) {
+      for (let b = a + 1; b < texts.length; b++) highest = Math.max(highest, jaccard(texts[a]!, texts[b]!))
+    }
+    // As seções comuns (depoimentos, seletor, processo, fechamento) aproximam as páginas;
+    // o texto próprio de cada cidade mantém a semelhança longe de um modelo (que daria 1).
+    // Medido em nov/2026: máximo 0,43, média 0,39.
+    expect(highest).toBeLessThan(0.5)
+  })
+})
+
 describe('depoimentos', () => {
   it('a home traz os três depoimentos sem edição, logo depois dos serviços', async () => {
     const { html } = await render('/')
@@ -162,6 +246,39 @@ describe('regras do projeto em todas as páginas', () => {
     expect(output.match(/<(?:a|button)\b[^>]*class="[^"]*\brounded-full\b/g) ?? []).toEqual([])
     // Nenhum selo "Feito com IA".
     expect(output).not.toMatch(/feito com (ia|intelig[eê]ncia artificial)/i)
+  })
+
+  it.each(prerenderTargets)('$path: todo link interno aponta para uma página ou âncora que existe', async ({ path }) => {
+    const { html } = await render(path)
+    const home = path === '/' ? html : (await render('/')).html
+    const knownPaths = new Set(PRERENDERED_PAGES.filter((page) => page.path !== '/404').map((page) => page.path))
+    const ids = (source: string) => new Set([...source.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]))
+    const pageIds = ids(html)
+    const homeIds = ids(home)
+
+    for (const [, href] of html.matchAll(/<a\b[^>]*\shref="([^"]+)"/g)) {
+      if (!href || /^(https?:|mailto:|tel:)/.test(href)) continue
+      if (href.startsWith('#')) {
+        expect(pageIds, `âncora ${href} em ${path}`).toContain(href.slice(1))
+        continue
+      }
+      const [target = '', anchor] = href.split('#')
+      expect(knownPaths, `link ${href} em ${path}`).toContain(target)
+      if (anchor && target === '/') expect(homeIds, `âncora ${href} em ${path}`).toContain(anchor)
+    }
+  })
+
+  it.each(prerenderTargets)('$path: títulos sem pular nível (h1 > h2 > h3)', async ({ path }) => {
+    const { html } = await render(path)
+    const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'))
+    const levels = [...main.matchAll(/<h([1-6])\b/g)].map((match) => Number(match[1]))
+    expect(levels[0]).toBe(1)
+    for (let i = 1; i < levels.length; i++) expect(levels[i]! - levels[i - 1]!).toBeLessThanOrEqual(1)
+  })
+
+  it.each(prerenderTargets)('$path: imagens com texto alternativo', async ({ path }) => {
+    const { html } = await render(path)
+    for (const [image] of html.matchAll(/<img\b[^>]*>/g)) expect(image).toMatch(/\salt="/)
   })
 
   it.each(prerenderTargets)('$path: todo link em nova aba usa rel="noopener noreferrer"', async ({ path }) => {

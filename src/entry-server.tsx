@@ -5,6 +5,7 @@ import { StaticRouter } from 'react-router-dom'
 import App from './App'
 import { getPageMeta, PRERENDERED_PAGES } from './config/pages'
 import { buildHeadTags, renderHeadTags } from './lib/head'
+import { buildLlmsTxt } from './lib/llms'
 import { buildRobotsTxt, buildSitemapXml } from './lib/sitemap'
 
 /**
@@ -72,4 +73,8 @@ export function sitemapXml(): string {
 
 export function robotsTxt(): string {
   return buildRobotsTxt()
+}
+
+export function llmsTxt(): string {
+  return buildLlmsTxt()
 }

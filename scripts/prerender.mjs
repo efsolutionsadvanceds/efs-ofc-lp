@@ -11,10 +11,10 @@
  *   4. grava dist/<arquivo>.html — o Vercel serve /rota a partir de
  *      rota.html (`cleanUrls`) e usa dist/404.html com status 404 real.
  *
- * Depois gera sitemap.xml e robots.txt a partir do mesmo registro e apaga
- * a saída temporária dist-ssr/.
+ * Depois gera sitemap.xml, robots.txt e llms.txt a partir dos mesmos
+ * registros e apaga a saída temporária dist-ssr/.
  */
-import { readFile, rm, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -54,7 +54,7 @@ async function main() {
     throw new Error(`dist/index.html precisa conter ${HEAD_PLACEHOLDER} e ${APP_PLACEHOLDER}.`)
   }
 
-  const { render, prerenderTargets, sitemapXml, robotsTxt } = await import(
+  const { render, prerenderTargets, sitemapXml, robotsTxt, llmsTxt } = await import(
     pathToFileURL(path.join(SSR_DIR, 'entry-server.js')).href
   )
 
@@ -66,13 +66,17 @@ async function main() {
     // Funções de substituição: o conteúdo pode conter "$&" e afins, que
     // String#replace interpretaria como padrões especiais.
     const page = template.replace(HEAD_PLACEHOLDER, () => head).replace(APP_PLACEHOLDER, () => html)
-    await writeFile(path.join(DIST_DIR, target.file), page)
-    console.log(`  ${target.path.padEnd(14)} → dist/${target.file} (${kb(page)})`)
+    // Páginas de cidade ficam em subpastas (dist/criacao-de-sites/<cidade>.html).
+    const output = path.join(DIST_DIR, target.file)
+    await mkdir(path.dirname(output), { recursive: true })
+    await writeFile(output, page)
+    console.log(`  ${target.path.padEnd(40)} → dist/${target.file} (${kb(page)})`)
   }
 
   await writeFile(path.join(DIST_DIR, 'sitemap.xml'), sitemapXml())
   await writeFile(path.join(DIST_DIR, 'robots.txt'), robotsTxt())
-  console.log('  sitemap.xml e robots.txt gerados.')
+  await writeFile(path.join(DIST_DIR, 'llms.txt'), llmsTxt())
+  console.log('  sitemap.xml, robots.txt e llms.txt gerados.')
 
   await rm(SSR_DIR, { recursive: true, force: true })
 }

@@ -1,32 +1,42 @@
 import { Plus } from 'lucide-react'
 
 import { SECTION_IDS } from '@/config/sections'
-import { FAQ_ITEMS } from '@/content/faq'
+import { FAQ_ITEMS, type FaqItem } from '@/content/faq'
 import { cx } from '@/lib/cx'
+
+interface FaqSectionProps {
+  items?: readonly FaqItem[]
+  /** Segunda linha do título, em cinza (padrão: "frequentes."). */
+  muted?: string
+  lead?: string
+}
 
 /**
  * Acordeão com <details>/<summary> nativos: acessível, funciona sem
  * JavaScript e todo o texto já está no HTML (os buscadores leem as
- * respostas). `name` agrupa os itens: abrir um fecha o anterior. O mesmo
- * conteúdo alimenta o schema FAQPage (src/config/pages.ts).
+ * respostas). `name` agrupa os itens: abrir um fecha o anterior. Na home,
+ * o mesmo conteúdo alimenta o schema FAQPage (src/config/pages.ts); nas
+ * páginas de cidade, as perguntas são as da cidade.
  */
-export function FaqSection() {
+export function FaqSection({
+  items = FAQ_ITEMS,
+  muted = 'frequentes.',
+  lead = 'Preço, prazo e como funciona cada solução, respondido sem rodeios.',
+}: FaqSectionProps) {
   return (
     <section id={SECTION_IDS.faq} aria-labelledby="duvidas-titulo" className="frame section-space">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-6">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-28">
             <h2 id="duvidas-titulo" className="text-title">
-              Perguntas <span className="block text-muted">frequentes.</span>
+              Perguntas <span className="block text-muted">{muted}</span>
             </h2>
-            <p className="mt-6 max-w-[22em] text-body text-muted">
-              Preço, prazo e como funciona cada solução, respondido sem rodeios.
-            </p>
+            <p className="mt-6 max-w-[22em] text-body text-muted">{lead}</p>
           </div>
         </div>
 
         <div className="flex flex-col gap-3 lg:col-span-8">
-          {FAQ_ITEMS.map((item) => (
+          {items.map((item) => (
             <details
               key={item.question}
               name="duvidas"
