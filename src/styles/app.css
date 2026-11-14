@@ -196,6 +196,124 @@
   }
 }
 
+/*
+ * Vetores animados (src/components/vectors). Cada elemento animado é um
+ * acréscimo sobre o desenho-base: no quadro inicial ele está invisível e,
+ * no final, igual ao HTML estático. Ajustes por elemento via variáveis
+ * (ver `anim()` em VectorScene.tsx):
+ *   --d atraso · --t duração · --n repetições · --e curva
+ *   --from transform inicial · --o origem · --dy deslocamento · --to escala do halo
+ */
+@keyframes v-in {
+  from {
+    opacity: 0;
+    transform: var(--from, none);
+  }
+}
+
+@keyframes v-grow {
+  from {
+    transform: var(--from, scaleX(0));
+  }
+}
+
+/*
+ * Traço desenhado: o elemento usa pathLength="100". As folgas (120 aqui,
+ * 16 e -106 no pulso) escondem a ponta arredondada antes e depois do percurso.
+ */
+@keyframes v-draw {
+  from {
+    stroke-dashoffset: 120;
+  }
+}
+
+/* Pulso: um traço curto (10 de 100) que percorre a conexão de ponta a ponta. */
+@keyframes v-pulse {
+  from {
+    stroke-dashoffset: 16;
+  }
+  to {
+    stroke-dashoffset: -106;
+  }
+}
+
+/* Anel que se expande e some ao redor de um ponto. */
+@keyframes v-halo {
+  0% {
+    opacity: 0;
+    transform: none;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(var(--to, 2.4));
+  }
+}
+
+/* Clique: o mesmo scale(0.97) dos botões, um pouco mais marcado. */
+@keyframes v-press {
+  50% {
+    transform: scale(0.94);
+  }
+}
+
+/* Troca de posição: aparece no lugar antigo, espera e desliza até o novo. */
+@keyframes v-swap {
+  0% {
+    opacity: 0;
+    transform: translateY(var(--dy, 0));
+  }
+  20%,
+  55% {
+    opacity: 1;
+    transform: translateY(var(--dy, 0));
+  }
+}
+
+/* Relógio invisível da cena: avisa quando o último elemento terminou. */
+@keyframes v-clock {
+  from,
+  to {
+    opacity: 0;
+  }
+}
+
+/* Variáveis dos vetores não herdam: um grupo animado não contamina os filhos. */
+@property --d {
+  syntax: '*';
+  inherits: false;
+}
+@property --t {
+  syntax: '*';
+  inherits: false;
+}
+@property --n {
+  syntax: '*';
+  inherits: false;
+}
+@property --e {
+  syntax: '*';
+  inherits: false;
+}
+@property --o {
+  syntax: '*';
+  inherits: false;
+}
+@property --from {
+  syntax: '*';
+  inherits: false;
+}
+@property --dy {
+  syntax: '*';
+  inherits: false;
+}
+@property --to {
+  syntax: '*';
+  inherits: false;
+}
+
 @layer base {
   :root {
     /* Margem lateral única da página, igual em todas as seções. */
@@ -284,12 +402,12 @@
   padding-block: clamp(4rem, 2.5rem + 6vw, 7.5rem);
 }
 
-/* Grade técnica de fundo (1px), usada atrás do hero e das páginas internas. */
+/* Grade técnica de fundo (1px), usada atrás do hero e das páginas internas. Malha ajustável com --grid-size. */
 @utility bg-grid {
   background-image:
     linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
-  background-size: 64px 64px;
+  background-size: var(--grid-size, 64px) var(--grid-size, 64px);
 }
 
 /* Entrada do hero no carregamento — CSS puro, não depende do JavaScript. */
@@ -345,6 +463,103 @@
 
     @media (prefers-reduced-motion: reduce) {
       animation: fade 200ms ease both;
+    }
+  }
+
+  /*
+   * Vetores animados (ver src/components/vectors/VectorScene.tsx).
+   * Sem `data-run` (HTML estático, sem JS, movimento reduzido) a cena fica
+   * pronta. Com `data-run` as animações tocam; com `data-paused` ficam
+   * paradas (fora da tela, ou no quadro inicial até a cena aparecer).
+   */
+  .vector {
+    position: relative;
+  }
+
+  .v-anim {
+    transform-box: fill-box;
+    transform-origin: var(--o, center);
+  }
+
+  .v-grow {
+    --o: left;
+  }
+
+  /* O que percorre a cena (pulsos, trocas, traços longos): entrada e saída fortes. */
+  .v-pulse,
+  .v-swap,
+  .v-glide {
+    --e: var(--ease-in-out);
+  }
+
+  .v-draw {
+    stroke-dasharray: 100 140;
+  }
+
+  .v-pulse {
+    stroke-dasharray: 10 200;
+    stroke-dashoffset: 16;
+  }
+
+  .v-halo,
+  .v-clock {
+    opacity: 0;
+  }
+
+  .v-clock {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .vector[data-run] .v-anim {
+    animation-duration: var(--t, 0.5s);
+    animation-delay: var(--d, 0s);
+    animation-iteration-count: var(--n, 1);
+    animation-timing-function: var(--e, var(--ease-out));
+    animation-fill-mode: both;
+  }
+
+  .vector[data-run] .v-in {
+    animation-name: v-in;
+  }
+  .vector[data-run] .v-grow {
+    animation-name: v-grow;
+  }
+  .vector[data-run] .v-draw {
+    animation-name: v-draw;
+  }
+  .vector[data-run] .v-pulse {
+    animation-name: v-pulse;
+  }
+  .vector[data-run] .v-halo {
+    animation-name: v-halo;
+  }
+  .vector[data-run] .v-press {
+    animation-name: v-press;
+  }
+  .vector[data-run] .v-swap {
+    animation-name: v-swap;
+  }
+  .vector[data-run] .v-clock {
+    animation-name: v-clock;
+    animation-timing-function: linear;
+  }
+
+  .vector[data-paused] .v-anim {
+    animation-play-state: paused;
+  }
+
+  /* Antes de recomeçar (hover no cartão), os acréscimos somem rápido. */
+  .vector[data-reset] .v-anim {
+    opacity: 0;
+    transition: opacity 160ms var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vector .v-anim {
+      animation-name: none !important;
     }
   }
 }

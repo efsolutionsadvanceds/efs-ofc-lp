@@ -1,7 +1,12 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import type { ComponentType } from 'react'
 
 import { Badge } from '@/components/ui/Badge'
 import { SectionHeader } from '@/components/ui/SectionHeader'
+import { VectorAutomation } from '@/components/vectors/VectorAutomation'
+import { VectorSeo } from '@/components/vectors/VectorSeo'
+import { VectorSite } from '@/components/vectors/VectorSite'
+import { VectorSystem } from '@/components/vectors/VectorSystem'
 import { SECTION_IDS } from '@/config/sections'
 import { SERVICES } from '@/content/services'
 import { cx } from '@/lib/cx'
@@ -9,10 +14,19 @@ import { cx } from '@/lib/cx'
 /** Larguras alternadas no desktop (7/5, 5/7): um mosaico em vez de uma grade uniforme. */
 const SPANS = ['md:col-span-7', 'md:col-span-5', 'md:col-span-5', 'md:col-span-7']
 
+/** Ilustração animada de cada serviço (pelo `id` em src/content/services.ts). */
+const VECTORS: Record<string, ComponentType> = {
+  sites: VectorSite,
+  sistemas: VectorSystem,
+  'atendimento-ia': VectorAutomation,
+  seo: VectorSeo,
+}
+
 /**
  * Os quatro serviços, com os termos de busca principais nos <h3>. O cartão
  * inteiro leva ao orçamento (link esticado sobre o cartão) e sobe 2px no
- * hover, só com mouse.
+ * hover, só com mouse. Cada um traz uma ilustração animada que toca uma
+ * vez ao aparecer e recomeça no hover.
  */
 export function ServicesSection() {
   return (
@@ -41,6 +55,8 @@ export function ServicesSection() {
                   className="size-4 text-muted transition-[translate,color] duration-200 ease-out group-hover/card:translate-x-0.5 group-hover/card:-translate-y-0.5 group-hover/card:text-ink"
                 />
               </div>
+
+              <ServiceVector id={service.id} />
 
               <h3 className="mt-6 max-w-[20em] text-lead font-semibold">{service.title}</h3>
               <p className="mt-3 max-w-[34em] text-body text-muted">{service.description}</p>
@@ -71,4 +87,9 @@ export function ServicesSection() {
       </ul>
     </section>
   )
+}
+
+function ServiceVector({ id }: { id: string }) {
+  const Vector = VECTORS[id]
+  return Vector ? <Vector /> : null
 }

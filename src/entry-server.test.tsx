@@ -81,6 +81,41 @@ describe('pré-renderização', () => {
 })
 
 /**
+ * Vetores animados (src/components/vectors): o HTML estático precisa trazer
+ * cada cena pronta, porque é o que aparece sem JavaScript e com movimento
+ * reduzido, e as animações dependem de algumas regras do desenho.
+ */
+describe('vetores animados', () => {
+  it('a home traz as cinco cenas prontas, sem estado de animação no HTML', async () => {
+    const { html } = await render('/')
+    const scenes = html.match(/<div\b[^>]*class="vector\b[^"]*"[^>]*>/g) ?? []
+    expect(scenes).toHaveLength(5)
+    for (const scene of scenes) expect(scene).not.toMatch(/data-(run|paused|reset)/)
+    // As quatro ilustrações dos cartões ficam fora da árvore de acessibilidade; a trilha envolve conteúdo real.
+    expect(scenes.filter((scene) => scene.includes('aria-hidden="true"'))).toHaveLength(4)
+  })
+
+  it('toda cena termina em até 5 segundos (sem loop infinito)', async () => {
+    const { html } = await render('/')
+    const durations = [...html.matchAll(/class="v-anim v-clock" style="--t:([\d.]+)s"/g)].map((match) => Number(match[1]))
+    expect(durations).toHaveLength(5)
+    for (const duration of durations) expect(duration).toBeLessThanOrEqual(5)
+    // Nenhum elemento repete mais de 3 vezes.
+    for (const [, repeats] of html.matchAll(/--n:(\d+)/g)) expect(Number(repeats)).toBeLessThanOrEqual(3)
+  })
+
+  it('traços animados usam pathLength="100" e nenhum elemento animado tem transform no SVG', async () => {
+    const { html } = await render('/')
+    const strokes = html.match(/<(?:path|circle)\b[^>]*class="[^"]*\bv-(?:draw|pulse)\b[^"]*"[^>]*>/g) ?? []
+    expect(strokes.length).toBeGreaterThan(10)
+    for (const stroke of strokes) expect(stroke).toContain('pathLength="100"')
+    // O transform da animação (CSS) substituiria o atributo transform do SVG.
+    const animated = html.match(/<[a-z]+\b[^>]*class="[^"]*\bv-anim\b[^"]*"[^>]*>/g) ?? []
+    for (const element of animated) expect(element).not.toMatch(/\stransform="/)
+  })
+})
+
+/**
  * Regras inegociáveis do projeto (EF-doc-oficial), verificadas no HTML que
  * vai para produção: corpo da página e <head> (título, metas, JSON-LD).
  */
