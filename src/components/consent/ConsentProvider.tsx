@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { startTransition, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { applyConsent, readConsent, trackPixelPageView, writeConsent, type ConsentChoice, type StoredConsent } from '@/lib/tracking'
@@ -20,8 +20,15 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const saved = readConsent()
     if (saved) applyConsent(saved)
-    setConsent(saved)
-    setReady(true)
+    // Como transição: a mudança chega a rotas sob demanda que ainda podem estar
+    // hidratando (a barra de conversão lê este contexto). Uma atualização comum
+    // obrigava o React a trocar o HTML do servidor pelo esqueleto até o código
+    // chegar, e a página saltava (CLS ~0,4). Como transição, ele termina a
+    // hidratação antes de aplicar.
+    startTransition(() => {
+      setConsent(saved)
+      setReady(true)
+    })
   }, [])
 
   // PageView do Pixel nas navegações internas (o primeiro sai junto com o carregamento do Pixel).
@@ -33,15 +40,20 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     trackPixelPageView()
   }, [pathname])
 
+  // As ações também são transições, pelo mesmo motivo (um clique logo no
+  // carregamento não pode trocar a rota pelo esqueleto). Gravar a escolha e
+  // carregar ou desligar as ferramentas acontece na hora.
   const choose = useCallback((choice: ConsentChoice) => {
     const saved = writeConsent(choice)
     applyConsent(saved)
-    setConsent(saved)
-    setPreferencesOpen(false)
+    startTransition(() => {
+      setConsent(saved)
+      setPreferencesOpen(false)
+    })
   }, [])
 
-  const openPreferences = useCallback(() => setPreferencesOpen(true), [])
-  const closePreferences = useCallback(() => setPreferencesOpen(false), [])
+  const openPreferences = useCallback(() => startTransition(() => setPreferencesOpen(true)), [])
+  const closePreferences = useCallback(() => startTransition(() => setPreferencesOpen(false)), [])
 
   const value = useMemo(
     () => ({
