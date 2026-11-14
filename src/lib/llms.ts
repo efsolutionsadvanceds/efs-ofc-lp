@@ -1,19 +1,28 @@
-import { CITY_PAGES, pages } from '@/config/pages'
-import { absoluteUrl, site } from '@/config/site'
+import { ARTICLE_PAGES, CITY_PAGES, pages, SERVICE_PAGES } from '@/config/pages'
+import { absoluteUrl, confirmedSocialProfiles, site } from '@/config/site'
+import { ARTICLE_INDEX } from '@/content/articleIndex'
 import { CITY_CONTENT } from '@/content/cities'
 import { CITY_INDEX } from '@/content/cityIndex'
-import { SERVICES } from '@/content/services'
+import { SERVICE_PAGE_INDEX } from '@/content/serviceIndex'
 
 /**
  * llms.txt (formato de llmstxt.org): um resumo do site em Markdown para
  * assistentes de IA, gerado no build a partir dos mesmos registros do site
- * (serviços, páginas e cidades). Uma cidade nova entra aqui sozinha.
+ * (serviços, páginas, cidades e artigos). Uma página nova entra aqui sozinha.
  */
 export function buildLlmsTxt(): string {
-  const cityLines = CITY_INDEX.map((city, index) => {
-    const page = CITY_PAGES[index]
-    return `- [Criação de sites em ${city.name}](${absoluteUrl(page?.path ?? '/')}): ${CITY_CONTENT[city.slug].summary}`
-  })
+  const link = (name: string, path: string, note?: string) => `- [${name}](${absoluteUrl(path)})${note ? `: ${note}` : ''}`
+
+  const serviceLines = SERVICE_PAGE_INDEX.map((service, index) =>
+    link(service.name, SERVICE_PAGES[index]?.path ?? '/', service.description),
+  )
+  const cityLines = CITY_INDEX.map((city, index) =>
+    link(`Criação de sites em ${city.name}`, CITY_PAGES[index]?.path ?? '/', CITY_CONTENT[city.slug].summary),
+  )
+  const articleLines = ARTICLE_INDEX.map((article, index) =>
+    link(article.headline, ARTICLE_PAGES[index]?.path ?? '/', article.description),
+  )
+  const profiles = confirmedSocialProfiles()
 
   return [
     `# ${site.name}`,
@@ -24,12 +33,19 @@ export function buildLlmsTxt(): string {
     '',
     '## Serviços',
     '',
-    ...SERVICES.map((service) => `- ${service.title}: ${service.description}`),
+    link('Criação de sites', pages.cidades.path, pages.cidades.description),
+    ...serviceLines,
     '',
-    '## Páginas principais',
+    '## Empresa',
     '',
-    `- [Início](${absoluteUrl(pages.home.path)}): ${pages.home.description}`,
-    `- [Criação de sites por cidade](${absoluteUrl(pages.cidades.path)}): ${pages.cidades.description}`,
+    link('Início', pages.home.path, pages.home.description),
+    link('Sobre a E.F Solutions', pages.sobre.path, pages.sobre.description),
+    link('Projetos entregues', pages.projetos.path, pages.projetos.description),
+    '',
+    '## Conteúdos',
+    '',
+    link('Todos os conteúdos', pages.conteudos.path, pages.conteudos.description),
+    ...articleLines,
     '',
     '## Criação de sites por cidade',
     '',
@@ -38,11 +54,13 @@ export function buildLlmsTxt(): string {
     '## Contato',
     '',
     `- WhatsApp: ${site.whatsapp.display} (https://wa.me/${site.whatsapp.digits})`,
+    ...profiles.map((profile) => `- ${profile.label}: ${profile.href}`),
     '',
     '## Informações legais',
     '',
-    `- [Política de Privacidade](${absoluteUrl(pages.privacidade.path)})`,
-    `- [Termos de Uso](${absoluteUrl(pages.termos.path)})`,
+    link('Política de Privacidade', pages.privacidade.path),
+    link('Política de Cookies', pages.cookies.path),
+    link('Termos de Uso', pages.termos.path),
     '',
   ].join('\n')
 }

@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
+import { PRERENDERED_PAGES } from '@/config/pages'
+
 import { buildLlmsTxt } from './llms'
 
 describe('llms.txt', () => {
@@ -7,8 +9,15 @@ describe('llms.txt', () => {
 
   it('segue o formato do llmstxt.org: título, resumo e seções com links', () => {
     expect(llms.startsWith('# E.F Solutions\n\n> ')).toBe(true)
-    expect(llms).toContain('\n## Serviços\n')
-    expect(llms).toContain('\n## Criação de sites por cidade\n')
+    for (const heading of ['Serviços', 'Empresa', 'Conteúdos', 'Criação de sites por cidade', 'Contato']) {
+      expect(llms).toContain(`\n## ${heading}\n`)
+    }
+  })
+
+  it('lista todas as páginas indexáveis do site (serviços, empresa, conteúdos e cidades)', () => {
+    for (const page of PRERENDERED_PAGES.filter((item) => item.sitemap && !item.noindex)) {
+      expect(llms, page.path).toContain(`(https://www.efsolutions.com.br${page.path === '/' ? '/' : page.path})`)
+    }
   })
 
   it('todos os links são absolutos e no domínio oficial', () => {
