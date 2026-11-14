@@ -19,7 +19,7 @@ export function SiteHeader() {
       <div className="frame flex h-16 items-center justify-between gap-4 md:h-18 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <Link
           to="/"
-          aria-label={`${site.name} — página inicial`}
+          aria-label={`${site.name}, página inicial`}
           className="-m-2 justify-self-start rounded-xl p-2 transition-opacity duration-200 hover:opacity-80 active:opacity-60"
         >
           <Wordmark />

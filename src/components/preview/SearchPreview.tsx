@@ -12,7 +12,7 @@ export function SearchPreview() {
   return (
     <div className="flex h-full flex-col gap-4">
       <div
-        className="seq flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-small"
+        className="seq flex items-center gap-2.5 rounded-md border border-white/10 bg-white/[0.04] px-4 py-2.5 text-small"
         style={sequenceStep(0)}
       >
         <Search aria-hidden="true" className="size-4 shrink-0 text-muted" />
@@ -26,7 +26,7 @@ export function SearchPreview() {
           </span>
           suaempresa.com.br
         </p>
-        <p className="mt-1.5 text-body font-medium text-accent">Sua Empresa — Site profissional e rápido</p>
+        <p className="mt-1.5 text-body font-medium text-accent">Sua Empresa | Site profissional e rápido</p>
         <p className="mt-1 text-micro text-muted">Atendimento em todo o Brasil. Peça seu orçamento pelo WhatsApp.</p>
       </div>
 

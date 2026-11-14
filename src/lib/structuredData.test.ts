@@ -49,7 +49,7 @@ describe('buildStructuredData', () => {
         '@type': 'ListItem',
         position: 2,
         name: 'Política de Privacidade',
-        item: 'https://www.efsolutions.com.br/privacidade',
+        item: 'https://www.efsolutions.com.br/politica-de-privacidade',
       },
     ])
     expect(nodeOfType(graph, 'WebPage')?.breadcrumb).toEqual({ '@id': breadcrumb['@id'] })

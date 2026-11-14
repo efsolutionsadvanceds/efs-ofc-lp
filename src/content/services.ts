@@ -35,7 +35,7 @@ export const SERVICES: readonly Service[] = [
     label: 'sistemas/',
     title: 'Desenvolvimento de sistemas de gestão sob medida',
     description:
-      'Vendas, estoque, agenda e financeiro em uma plataforma web feita para o seu processo — e não o contrário.',
+      'Vendas, estoque, agenda e financeiro em uma plataforma web feita para o seu processo, e não o contrário.',
     tags: ['Estoque', 'Vendas', 'Agenda', 'Financeiro'],
     cta: 'Orçamento de sistema',
   },

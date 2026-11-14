@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
+import { useId, useRef, useState, type KeyboardEvent } from 'react'
 
 import { cx } from '@/lib/cx'
 
@@ -16,48 +16,15 @@ const TABS = [
  * Prévia interativa do hero: três cenas do que a E.F Solutions desenvolve,
  * em abas acessíveis (padrão WAI-ARIA: setas, Home/End, foco itinerante).
  *
- * Troca automática: quando a prévia aparece na tela, uma barra de progresso
- * (animação CSS) percorre a aba ativa e, ao terminar, avança para a próxima —
- * pausa com o ponteiro ou o foco sobre a prévia, para de vez quando o
- * visitante escolhe uma aba e só dá uma volta completa. Com
- * `prefers-reduced-motion`, nada troca sozinho.
- *
- * O painel tem altura fixa: trocar de cena nunca desloca o layout.
+ * As abas só mudam quando o visitante escolhe (nada troca sozinho). A cena
+ * escolhida se monta em sequência com CSS puro; com
+ * `prefers-reduced-motion`, aparece pronta. O painel tem altura fixa:
+ * trocar de cena nunca desloca o layout.
  */
 export function HeroPreview() {
   const baseId = useId()
-  const rootRef = useRef<HTMLDivElement>(null)
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
   const [active, setActive] = useState(0)
-  const [autoplay, setAutoplay] = useState(false)
-
-  useEffect(() => {
-    const node = rootRef.current
-    if (!node || typeof IntersectionObserver === 'undefined') return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) return
-        setAutoplay(true)
-        observer.disconnect()
-      },
-      { threshold: 0.5 },
-    )
-    observer.observe(node)
-    return () => observer.disconnect()
-  }, [])
-
-  function choose(index: number) {
-    setActive(index)
-    setAutoplay(false)
-  }
-
-  function advance() {
-    const next = (active + 1) % TABS.length
-    setActive(next)
-    if (next === 0) setAutoplay(false)
-  }
 
   function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     const last = TABS.length - 1
@@ -70,14 +37,14 @@ export function HeroPreview() {
     if (target === null) return
     event.preventDefault()
     tabRefs.current[target]?.focus()
-    choose(target)
+    setActive(target)
   }
 
   const current = TABS[active] ?? TABS[0]
   const panelId = `${baseId}-painel`
 
   return (
-    <div ref={rootRef} className="preview relative">
+    <div className="relative">
       {/* Cartões empilhados atrás, dando profundidade à prévia. */}
       <div aria-hidden="true" className="absolute inset-x-8 -top-3 h-16 rounded-2xl border border-white/10 bg-surface/70" />
       <div aria-hidden="true" className="absolute inset-x-16 -top-6 h-16 rounded-2xl border border-white/[0.06] bg-surface/40" />
@@ -87,7 +54,7 @@ export function HeroPreview() {
           <span aria-hidden="true" className="size-2.5 rounded-full bg-white/15" />
           <span aria-hidden="true" className="size-2.5 rounded-full bg-white/15" />
           <span aria-hidden="true" className="size-2.5 rounded-full bg-white/15" />
-          <span className="ml-2 font-mono text-micro text-muted">efsolutions — prévia</span>
+          <span className="ml-2 font-mono text-micro text-muted">efsolutions · prévia</span>
         </div>
 
         <div role="tablist" aria-label="Exemplos do que desenvolvemos" className="flex gap-1 border-b border-white/10 p-1.5">
@@ -105,22 +72,19 @@ export function HeroPreview() {
                 aria-selected={selected}
                 aria-controls={panelId}
                 tabIndex={selected ? 0 : -1}
-                onClick={() => choose(index)}
+                onClick={() => setActive(index)}
                 onKeyDown={(event) => handleKeyDown(event, index)}
                 className={cx(
-                  'relative flex-1 overflow-hidden rounded-lg px-2 py-2 text-micro font-medium whitespace-nowrap',
-                  'transition-[color,background-color] duration-200 active:scale-[0.98]',
-                  selected ? 'bg-white/[0.08] text-ink' : 'text-muted hover:bg-white/[0.04] hover:text-ink',
+                  'relative flex-1 rounded-md px-2 py-2 text-micro font-medium whitespace-nowrap',
+                  'transition-[color,background-color,scale] duration-150 ease-out active:scale-[0.97]',
+                  // Aba ativa: fundo claro e um traço turquesa de 1px na base.
+                  'after:absolute after:inset-x-3 after:bottom-0.5 after:h-px after:bg-accent after:opacity-0 after:transition-opacity',
+                  selected
+                    ? 'bg-white/[0.08] text-ink after:opacity-100'
+                    : 'text-muted hover:bg-white/[0.04] hover:text-ink',
                 )}
               >
                 {tab.label}
-                {selected && autoplay ? (
-                  <span
-                    aria-hidden="true"
-                    onAnimationEnd={advance}
-                    className="tab-progress absolute inset-x-2 bottom-0.5 h-px bg-accent"
-                  />
-                ) : null}
               </button>
             )
           })}

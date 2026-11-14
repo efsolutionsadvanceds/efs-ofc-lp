@@ -18,8 +18,8 @@ export default function App() {
       <Route element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="obrigado" element={<Obrigado />} />
-        <Route path="privacidade" element={<Privacidade />} />
-        <Route path="termos" element={<Termos />} />
+        <Route path="politica-de-privacidade" element={<Privacidade />} />
+        <Route path="termos-de-uso" element={<Termos />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

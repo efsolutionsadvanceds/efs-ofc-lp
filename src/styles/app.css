@@ -8,8 +8,11 @@
  *   Cartões com borda de 1px (`border-white/10`) e grade técnica de fundo.
  * - Tipografia: Geist (licença OFL, autohospedada) e mono do sistema para
  *   etiquetas e terminal.
- * - Movimento: micro-animações em transform/opacity, sempre com
+ * - Movimento: entrada do hero no carregamento, vetores animados em ciclos
+ *   finitos (pausados fora da tela) e respostas ao toque (hover e clique).
+ *   Nada aparece com fade ao rolar e nada segue o cursor. Sempre com
  *   alternativa para `prefers-reduced-motion`.
+ * - Formas: cantos retos (6px) em botões, etiquetas e campos; nada de pílula.
  *
  * A paleta padrão do Tailwind é desligada (`--color-*: initial`) para que
  * nenhuma cor fora do sistema entre no projeto por engano.
@@ -137,9 +140,15 @@
   --text-micro: 0.8125rem;
   --text-micro--line-height: 1.45;
 
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /*
+   * Curvas de Emil Kowalski (substituem as do Tailwind, então as utilidades
+   * `ease-out` e `ease-in-out` já usam estas): saída forte para entradas e
+   * respostas da interface; entrada e saída fortes para o que se move na tela.
+   */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
-  --animate-rise: rise 0.9s var(--ease-out-expo) both;
+  --animate-rise: rise 0.9s var(--ease-out) both;
   --animate-fade: fade 0.5s linear both;
 
   @keyframes rise {
@@ -161,16 +170,6 @@
  * assim são sempre emitidos, sem depender de uma variável --animate-*.
  */
 
-/* Barra de progresso da troca automática de abas da prévia do hero. */
-@keyframes progress {
-  from {
-    transform: scaleX(0);
-  }
-  to {
-    transform: scaleX(1);
-  }
-}
-
 /* Pontinhos de "digitando…" no chat da prévia. */
 @keyframes typing {
   0%,
@@ -179,6 +178,14 @@
   }
   50% {
     opacity: 1;
+  }
+}
+
+/* Resposta do FAQ: deslocamento curto, resposta de interface (< 300ms). */
+@keyframes answer-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
   }
 }
 
@@ -297,95 +304,21 @@
 }
 
 @layer components {
-  /* Entrada das seções ao rolar (ver src/hooks/useRevealOnScroll.ts). */
-  [data-reveal='pending'] [data-reveal-item] {
-    opacity: 0;
-    transform: translateY(1.75rem);
-  }
-
-  [data-reveal='done'] [data-reveal-item] {
-    transition:
-      opacity 0.8s var(--ease-out-expo),
-      transform 1s var(--ease-out-expo);
-    transition-delay: calc(var(--i, 0) * 80ms);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    [data-reveal='pending'] [data-reveal-item] {
-      transform: none;
-    }
-
-    [data-reveal='done'] [data-reveal-item] {
-      transition: opacity 0.4s linear;
-    }
-  }
-
-  /*
-   * Cartão com brilho que segue o ponteiro (ver src/hooks/useSpotlight.ts):
-   * ::before acende um halo suave por dentro do cartão e ::after desenha só
-   * o trecho da borda de 1px mais próximo do cursor (máscara content-box).
-   * Sem ponteiro fino (celular), fica só a borda estática.
-   */
-  .spotlight {
-    position: relative;
-    isolation: isolate;
-  }
-
-  .spotlight::before,
-  .spotlight::after {
-    content: '';
-    position: absolute;
-    border-radius: inherit;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s var(--ease-out-expo);
-  }
-
-  .spotlight::before {
-    inset: 0;
-    z-index: -1;
-    background: radial-gradient(
-      28rem circle at var(--mx, 50%) var(--my, 0%),
-      rgb(24 200 200 / 0.09),
-      transparent 45%
-    );
-  }
-
-  .spotlight::after {
-    inset: -1px;
-    padding: 1px;
-    background: radial-gradient(
-      16rem circle at var(--mx, 50%) var(--my, 0%),
-      rgb(24 200 200 / 0.65),
-      transparent 60%
-    );
-    mask:
-      linear-gradient(#000 0 0) content-box exclude,
-      linear-gradient(#000 0 0);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .spotlight:hover::before,
-    .spotlight:hover::after {
-      opacity: 1;
-    }
-  }
-
   /*
    * Prévia interativa do hero: os elementos de cada aba entram em
    * sequência (`--step` = posição na cena, em passos de 0,75s). CSS puro: a
-   * cena recomeça sozinha quando a aba é remontada, e quem prefere menos
-   * movimento vê o estado final direto.
+   * cena recomeça quando o visitante troca de aba (remontagem), e quem
+   * prefere menos movimento vê o estado final direto.
    */
   .seq {
-    animation: rise 0.55s var(--ease-out-expo) both;
+    animation: rise 0.55s var(--ease-out) both;
     animation-delay: calc(var(--step, 0) * 0.75s + 0.15s);
   }
 
   /* "Digitando…" dentro da bolha da IA: some quando o texto aparece. */
   .seq-typing {
     animation:
-      typing 0.9s ease-in-out infinite,
+      typing 0.9s ease-in-out 4,
       vanish 0.15s linear forwards;
     animation-delay: 0s, calc(var(--step, 0) * 0.75s + 0.75s);
   }
@@ -393,17 +326,6 @@
   .seq-text {
     animation: fade 0.3s linear both;
     animation-delay: calc(var(--step, 0) * 0.75s + 0.75s);
-  }
-
-  /* Progresso da troca automática de abas; pausa com o ponteiro ou o foco na prévia. */
-  .tab-progress {
-    transform-origin: left;
-    animation: progress 7s linear both;
-  }
-
-  .preview:hover .tab-progress,
-  .preview:focus-within .tab-progress {
-    animation-play-state: paused;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -419,11 +341,10 @@
 
   /* Resposta do FAQ surge ao abrir (sem animar altura). */
   details[open] > [data-answer] {
-    animation: var(--animate-rise);
-    animation-duration: 0.6s;
+    animation: answer-in 250ms var(--ease-out) both;
 
     @media (prefers-reduced-motion: reduce) {
-      animation: var(--animate-fade);
+      animation: fade 200ms ease both;
     }
   }
 }

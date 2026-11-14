@@ -48,25 +48,25 @@ export const pages = {
     description:
       'Criação de sites profissionais para empresas, sistemas de gestão sob medida e atendente virtual com IA no WhatsApp. SEO para aparecer no Google.',
     faq: FAQ_ITEMS,
-    sitemap: { lastmod: '2026-10-24', changefreq: 'monthly', priority: 1 },
+    sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 1 },
   },
   privacidade: {
-    path: '/privacidade',
-    file: 'privacidade.html',
+    path: '/politica-de-privacidade',
+    file: 'politica-de-privacidade.html',
     title: 'Política de Privacidade | E.F Solutions',
     description:
       'Saiba quais dados o site da E.F Solutions registra, como usamos o Google Analytics e o Meta Pixel e como funciona o contato pelo WhatsApp.',
-    breadcrumbs: [HOME_CRUMB, { name: 'Política de Privacidade', path: '/privacidade' }],
-    sitemap: { lastmod: '2026-10-24', changefreq: 'yearly', priority: 0.3 },
+    breadcrumbs: [HOME_CRUMB, { name: 'Política de Privacidade', path: '/politica-de-privacidade' }],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'yearly', priority: 0.3 },
   },
   termos: {
-    path: '/termos',
-    file: 'termos.html',
+    path: '/termos-de-uso',
+    file: 'termos-de-uso.html',
     title: 'Termos de Uso | E.F Solutions',
     description:
       'Condições de uso do site da E.F Solutions: natureza do conteúdo, contato pelo WhatsApp, propostas comerciais e limites de responsabilidade.',
-    breadcrumbs: [HOME_CRUMB, { name: 'Termos de Uso', path: '/termos' }],
-    sitemap: { lastmod: '2026-10-24', changefreq: 'yearly', priority: 0.3 },
+    breadcrumbs: [HOME_CRUMB, { name: 'Termos de Uso', path: '/termos-de-uso' }],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'yearly', priority: 0.3 },
   },
   obrigado: {
     path: '/obrigado',

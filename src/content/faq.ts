@@ -38,6 +38,6 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: 'Como funciona o orçamento pelo WhatsApp?',
     answer:
-      'Você marca nesta página as soluções que fazem sentido para o seu negócio — pode ser mais de uma — e toca em enviar. O WhatsApp abre com a mensagem pronta, sem formulário. A partir daí, entendemos o seu cenário e indicamos o melhor caminho. Se ainda não souber do que precisa, é só chamar sem selecionar nada.',
+      'Você marca nesta página as soluções que fazem sentido para o seu negócio (pode ser mais de uma) e toca em enviar. O WhatsApp abre com a mensagem pronta, sem formulário. A partir daí, entendemos o seu cenário e indicamos o melhor caminho. Se ainda não souber do que precisa, é só chamar sem selecionar nada.',
   },
 ]

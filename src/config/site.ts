@@ -53,8 +53,8 @@ export const site = {
     { href: `/#${SECTION_IDS.faq}`, label: 'Dúvidas' },
   ],
   legal: {
-    privacyHref: '/privacidade',
-    termsHref: '/termos',
+    privacyHref: '/politica-de-privacidade',
+    termsHref: '/termos-de-uso',
   },
   address: ADDRESS,
   /** Imagem de compartilhamento (Open Graph) — gerada por scripts/generate-brand-assets.cjs. */
@@ -63,7 +63,7 @@ export const site = {
     width: 1200,
     height: 630,
     type: 'image/jpeg',
-    alt: 'E.F Solutions — Engenharia de software',
+    alt: 'E.F Solutions, engenharia de software',
   },
   /** Logo quadrada (≥112px) para o schema LocalBusiness. */
   logoPath: '/android-chrome-512x512.png',

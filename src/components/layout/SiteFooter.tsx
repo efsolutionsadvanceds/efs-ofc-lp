@@ -38,7 +38,7 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
         <div className="md:col-span-5">
           <Link
             to="/"
-            aria-label={`${site.name} — página inicial`}
+            aria-label={`${site.name}, página inicial`}
             className="-m-2 inline-flex rounded-xl p-2 transition-opacity duration-200 hover:opacity-80"
           >
             <Wordmark />

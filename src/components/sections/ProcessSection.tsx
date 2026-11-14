@@ -1,8 +1,6 @@
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { SECTION_IDS } from '@/config/sections'
-import { useRevealOnScroll } from '@/hooks/useRevealOnScroll'
 import { cx } from '@/lib/cx'
-import { stagger } from '@/lib/stagger'
 
 const STEPS = [
   {
@@ -19,26 +17,16 @@ const STEPS = [
   },
 ]
 
-/** Como o contato funciona — três passos num painel único dividido por bordas de 1px. */
+/** Como o contato funciona: três passos num painel único dividido por bordas de 1px. */
 export function ProcessSection() {
-  const { ref, revealState } = useRevealOnScroll<HTMLElement>()
-
   return (
-    <section
-      ref={ref}
-      data-reveal={revealState}
-      id={SECTION_IDS.process}
-      aria-labelledby="como-funciona-titulo"
-      className="frame section-space"
-    >
+    <section id={SECTION_IDS.process} aria-labelledby="como-funciona-titulo" className="frame section-space">
       <SectionHeader id="como-funciona-titulo" title="Do clique à proposta" muted="sem burocracia." />
 
       <ol className="mt-12 grid grid-cols-1 overflow-hidden rounded-2xl border border-white/10 bg-surface md:mt-16 md:grid-cols-3">
         {STEPS.map((step, index) => (
           <li
             key={step.title}
-            data-reveal-item
-            style={stagger(index + 1)}
             className={cx('p-6 sm:p-8', index > 0 && 'border-t border-white/10 md:border-t-0 md:border-l')}
           >
             <span className="font-mono text-micro text-accent">{String(index + 1).padStart(2, '0')}</span>

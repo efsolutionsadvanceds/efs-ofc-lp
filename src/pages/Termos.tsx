@@ -27,7 +27,7 @@ export default function Termos() {
       <LegalSection title="Contato pelo WhatsApp">
         <p>
           Este site não tem formulário. Você seleciona as soluções de interesse e o contato acontece pelo WhatsApp da
-          E.F Solutions, com uma mensagem montada a partir da sua seleção — que só é enviada se você confirmar no
+          E.F Solutions, com uma mensagem montada a partir da sua seleção, que só é enviada se você confirmar no
           próprio aplicativo. Veja a{' '}
           <Link to={site.legal.privacyHref} className={inlineLinkStyles}>
             Política de Privacidade
@@ -40,7 +40,7 @@ export default function Termos() {
         <p>
           Escopo de projeto, cronograma, valores, forma de pagamento, prazos de entrega e garantias específicas de cada
           serviço são definidos individualmente na proposta comercial e no contrato de prestação de serviços acordado
-          diretamente com cada cliente — não neste site.
+          diretamente com cada cliente, e não neste site.
         </p>
       </LegalSection>
 

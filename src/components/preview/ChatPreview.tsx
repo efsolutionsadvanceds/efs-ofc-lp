@@ -14,11 +14,11 @@ const MESSAGES: readonly Message[] = [
   { from: 'cliente', text: 'Oi! Vocês fazem sistema de controle de estoque?', step: 0 },
   { from: 'ia', text: 'Fazemos, sim! Quantos produtos você controla hoje?', step: 0.9 },
   { from: 'cliente', text: 'Uns 300 itens, tudo em planilha.', step: 2.6 },
-  { from: 'ia', text: 'Perfeito! Já registrei seu pedido — um especialista segue com a proposta.', step: 3.5 },
+  { from: 'ia', text: 'Perfeito! Já registrei seu pedido. Um especialista segue com a proposta.', step: 3.5 },
 ]
 
 /**
- * Cena "Atendente IA": o fluxo real do serviço — responder, qualificar e
+ * Cena "Atendente IA": o fluxo real do serviço: responder, qualificar e
  * encaminhar para a equipe. A bolha da IA mostra "digitando…" antes do
  * texto; o texto já ocupa o espaço desde o início (sem deslocar nada).
  */
@@ -74,7 +74,7 @@ export function ChatPreview() {
       </ol>
 
       <p
-        className="seq mt-3 inline-flex items-center gap-2 self-start rounded-full border border-accent/30 bg-accent/10 px-3 py-1 font-mono text-micro text-accent"
+        className="seq mt-3 inline-flex items-center gap-2 self-start rounded-md border border-accent/30 bg-accent/10 px-3 py-1 font-mono text-micro text-accent"
         style={sequenceStep(5)}
       >
         <Check aria-hidden="true" className="size-3.5" />

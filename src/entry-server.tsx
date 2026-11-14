@@ -21,8 +21,15 @@ export interface RenderResult {
 }
 
 /**
- * `prerenderToNodeStream` aguarda todo o Suspense resolver — inclusive as
- * rotas carregadas com React.lazy — antes de devolver o HTML completo.
+ * `prerenderToNodeStream` aguarda todo o Suspense resolver (inclusive as
+ * rotas carregadas com React.lazy) antes de devolver o HTML completo.
+ *
+ * `progressiveChunkSize` sem limite: por padrão, o React 19.2 tira do lugar
+ * qualquer limite de Suspense grande (o conteúdo da página inteira vira um
+ * `<div hidden>` depois do rodapé, e um script o move para dentro do
+ * `<main>` depois). Num HTML estático isso só piora as coisas: em conexões
+ * lentas o visitante via a página vazia com o rodapé no topo, e o conteúdo
+ * saltava para o lugar (CLS alto). Assim, todo o conteúdo sai na ordem certa.
  */
 export async function render(url: string): Promise<RenderResult> {
   const { prelude } = await prerenderToNodeStream(
@@ -31,6 +38,7 @@ export async function render(url: string): Promise<RenderResult> {
         <App />
       </StaticRouter>
     </StrictMode>,
+    { progressiveChunkSize: Number.MAX_SAFE_INTEGER },
   )
 
   // Concatena os bytes antes de decodificar: um caractere acentuado pode

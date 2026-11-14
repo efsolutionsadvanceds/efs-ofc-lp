@@ -36,7 +36,7 @@ describe('registro de páginas (SEO)', () => {
 
   it('getPageMeta normaliza barra final e manda caminhos desconhecidos para a 404', () => {
     expect(getPageMeta('/')).toBe(pages.home)
-    expect(getPageMeta('/privacidade/')).toBe(pages.privacidade)
+    expect(getPageMeta('/politica-de-privacidade/')).toBe(pages.privacidade)
     expect(getPageMeta('/nao-existe')).toBe(pages.naoEncontrada)
     expect(getPageMeta('/404')).toBe(pages.naoEncontrada)
   })
@@ -46,8 +46,8 @@ describe('sitemap.xml e robots.txt', () => {
   it('o sitemap lista só as páginas indexáveis, com URL absoluta e lastmod', () => {
     const xml = buildSitemapXml(PRERENDERED_PAGES)
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/</loc>')
-    expect(xml).toContain('<loc>https://www.efsolutions.com.br/privacidade</loc>')
-    expect(xml).toContain('<loc>https://www.efsolutions.com.br/termos</loc>')
+    expect(xml).toContain('<loc>https://www.efsolutions.com.br/politica-de-privacidade</loc>')
+    expect(xml).toContain('<loc>https://www.efsolutions.com.br/termos-de-uso</loc>')
     expect(xml).not.toContain('/obrigado')
     expect(xml).not.toContain('/404')
     expect(xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)).toHaveLength(3)

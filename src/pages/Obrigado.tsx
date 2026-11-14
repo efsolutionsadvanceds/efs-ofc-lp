@@ -16,7 +16,7 @@ import { buildLeadUrl } from '@/lib/whatsapp'
 
 /**
  * Página de obrigado (noindex). Cada CTA de WhatsApp abre a conversa e traz
- * esta aba para cá — a URL /obrigado serve como meta de conversão no GA4 e
+ * esta aba para cá: a URL /obrigado serve como meta de conversão no GA4 e
  * no Google Ads, e a página lembra o passo que falta: tocar em "enviar"
  * dentro do WhatsApp.
  *
@@ -46,7 +46,7 @@ export default function Obrigado() {
             Falta só enviar <span className="text-muted">a mensagem.</span>
           </h1>
           <p className="mt-8 max-w-[29em] text-lead text-ink/80">
-            O WhatsApp foi aberto com a sua mensagem pronta. Confira o texto e toque em enviar — respondemos com os
+            O WhatsApp foi aberto com a sua mensagem pronta. Confira o texto e toque em enviar. Respondemos com os
             próximos passos.
           </p>
 

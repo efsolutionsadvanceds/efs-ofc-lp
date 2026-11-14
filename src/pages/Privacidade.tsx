@@ -12,13 +12,13 @@ export default function Privacidade() {
       <LegalSection title="Resumo">
         <p>
           O site da E.F Solutions não tem formulário e não pede nome, e-mail ou telefone. Você escolhe as soluções de
-          interesse e a conversa acontece no WhatsApp — apenas se você decidir enviar a mensagem.
+          interesse e a conversa acontece no WhatsApp, apenas se você decidir enviar a mensagem.
         </p>
       </LegalSection>
 
       <LegalSection title="Seleção de soluções e WhatsApp">
         <p>
-          As soluções que você marca ficam somente no seu navegador, enquanto a página está aberta — elas não são
+          As soluções que você marca ficam somente no seu navegador, enquanto a página está aberta: elas não são
           enviadas a nenhum servidor nosso. Ao tocar em um botão de WhatsApp, a seleção é usada para montar a mensagem
           que aparece no aplicativo, já endereçada ao número da E.F Solutions. Nada é enviado até você confirmar o envio
           dentro do próprio WhatsApp.
@@ -28,7 +28,7 @@ export default function Privacidade() {
       <LegalSection title="Google Analytics">
         <p>
           Usamos o Google Analytics 4 para entender, de forma agregada, como o site é usado: páginas visitadas, origem
-          do acesso, tipo de dispositivo e cliques nos botões de WhatsApp — incluindo quais soluções estavam
+          do acesso, tipo de dispositivo e cliques nos botões de WhatsApp, incluindo quais soluções estavam
           selecionadas no momento do clique, sem nenhum dado que identifique você pessoalmente.
         </p>
         <p>
@@ -50,7 +50,7 @@ export default function Privacidade() {
         <p>
           Este site utiliza o Meta Pixel (Facebook/Instagram) para medir a efetividade de campanhas de anúncios. Essa
           ferramenta usa cookies e tecnologias semelhantes para registrar visitas às páginas. Quando você clica em um
-          botão de WhatsApp, o Pixel registra esse clique como um evento de contato — sem enviar nome, telefone ou
+          botão de WhatsApp, o Pixel registra esse clique como um evento de contato, sem enviar nome, telefone ou
           qualquer dado digitado por você. Você pode gerenciar cookies e preferências de anúncios nas configurações do
           seu navegador e da sua conta Meta.
         </p>
@@ -58,10 +58,10 @@ export default function Privacidade() {
 
       <LegalSection title="Com quem compartilhamos informações">
         <ul className="flex list-disc flex-col gap-2 pl-5 marker:text-muted">
-          <li>Google LLC — dados de navegação e de cliques coletados pelo Google Analytics, descritos acima.</li>
-          <li>Meta Platforms, Inc. — eventos de visita e de clique nos botões de WhatsApp, para medição de anúncios.</li>
+          <li>Google LLC: dados de navegação e de cliques coletados pelo Google Analytics, descritos acima.</li>
+          <li>Meta Platforms, Inc.: eventos de visita e de clique nos botões de WhatsApp, para medição de anúncios.</li>
           <li>
-            WhatsApp — se você enviar a mensagem, ela passa a existir na conversa entre você e a E.F Solutions naquele
+            WhatsApp: se você enviar a mensagem, ela passa a existir na conversa entre você e a E.F Solutions naquele
             aplicativo, sujeita também às políticas de privacidade do WhatsApp/Meta.
           </li>
         </ul>
@@ -77,7 +77,7 @@ export default function Privacidade() {
 
       <LegalSection title="Seus direitos">
         <p>
-          Você tem os direitos previstos na Lei Geral de Proteção de Dados (LGPD — Lei nº 13.709/2018), como confirmar
+          Você tem os direitos previstos na Lei Geral de Proteção de Dados (LGPD, Lei nº 13.709/2018), como confirmar
           a existência de tratamento, acessar, corrigir e pedir a eliminação de dados. Para qualquer pedido ou dúvida,
           fale com a gente pelo{' '}
           <a href={PRIVACY_CONTACT_URL} target="_blank" rel="noopener noreferrer" className={inlineLinkStyles}>
