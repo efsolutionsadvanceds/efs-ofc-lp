@@ -5,10 +5,12 @@ import { HeroSection } from '@/components/sections/HeroSection'
 import { ProcessSection } from '@/components/sections/ProcessSection'
 import { ServicesSection } from '@/components/sections/ServicesSection'
 import { SolutionsSection } from '@/components/sections/SolutionsSection'
+import { TestimonialsSection } from '@/components/sections/TestimonialsSection'
 
 /**
  * Landing page, curta e direta: promessa (H1 com os termos de busca) →
- * serviços → orçamento por seleção → como funciona → dúvidas → fechamento.
+ * serviços → depoimentos → orçamento por seleção → como funciona →
+ * dúvidas → fechamento.
  * Título, description, Open Graph e schema desta rota vêm de
  * src/config/pages.ts (`pages.home`).
  */
@@ -17,6 +19,7 @@ export default function Home() {
     <>
       <HeroSection />
       <ServicesSection />
+      <TestimonialsSection />
       <SolutionsSection />
       <ProcessSection />
       <FaqSection />

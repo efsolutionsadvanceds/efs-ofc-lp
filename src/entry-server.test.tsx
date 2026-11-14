@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { PRERENDERED_PAGES } from './config/pages'
+import { TESTIMONIALS } from './content/testimonials'
 import { prerenderTargets, render } from './entry-server'
 
 /**
@@ -115,6 +116,35 @@ describe('vetores animados', () => {
   })
 })
 
+describe('depoimentos', () => {
+  it('a home traz os três depoimentos sem edição, logo depois dos serviços', async () => {
+    const { html } = await render('/')
+    const text = textOf(html)
+    for (const { quote } of TESTIMONIALS) expect(text).toContain(`“${quote}”`)
+    const position = html.indexOf('id="depoimentos"')
+    expect(position).toBeGreaterThan(html.indexOf('id="servicos"'))
+    expect(position).toBeLessThan(html.indexOf('id="solucoes"'))
+  })
+
+  it('sites entregues abrem em nova aba; projeto não publicado aparece sem link', async () => {
+    const { html } = await render('/')
+    const links = html.match(/<a\b[^>]*href="https:\/\/www\.(?:frdlocacoes|markassistencia)\.com\.br"[^>]*>/g) ?? []
+    expect(links).toHaveLength(2)
+    for (const link of links) {
+      expect(link).toContain('target="_blank"')
+      expect(link).toContain('rel="noopener noreferrer"')
+    }
+    expect(html).not.toMatch(/href="[^"]*celebrandoseucasamento/)
+    expect(textOf(html)).toContain('Vinícius, Celebrando seu Casamento')
+    expect(textOf(html)).toContain('Em desenvolvimento')
+  })
+
+  it('não publica schema de avaliação', async () => {
+    const { head } = await render('/')
+    expect(head).not.toMatch(/"@type":\s*"(?:Review|AggregateRating)"/)
+  })
+})
+
 /**
  * Regras inegociáveis do projeto (EF-doc-oficial), verificadas no HTML que
  * vai para produção: corpo da página e <head> (título, metas, JSON-LD).
@@ -132,5 +162,11 @@ describe('regras do projeto em todas as páginas', () => {
     expect(output.match(/<(?:a|button)\b[^>]*class="[^"]*\brounded-full\b/g) ?? []).toEqual([])
     // Nenhum selo "Feito com IA".
     expect(output).not.toMatch(/feito com (ia|intelig[eê]ncia artificial)/i)
+  })
+
+  it.each(prerenderTargets)('$path: todo link em nova aba usa rel="noopener noreferrer"', async ({ path }) => {
+    const { html } = await render(path)
+    const newTab = html.match(/<a\b[^>]*target="_blank"[^>]*>/g) ?? []
+    for (const link of newTab) expect(link).toContain('rel="noopener noreferrer"')
   })
 })

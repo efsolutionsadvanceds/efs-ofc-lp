@@ -6,6 +6,7 @@
 export const SECTION_IDS = {
   hero: 'inicio',
   services: 'servicos',
+  testimonials: 'depoimentos',
   solutions: 'solucoes',
   process: 'como-funciona',
   faq: 'duvidas',
