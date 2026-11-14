@@ -29,9 +29,17 @@ Site da E.F Solutions (https://www.efsolutions.com.br): criação de sites profi
 
 | Rota                         | Conteúdo                                                                 |
 | ---------------------------- | ------------------------------------------------------------------------ |
-| `/`                          | Landing page (hero, serviços, depoimentos, orçamento, processo, dúvidas) |
+| `/`                          | Landing page (hero, serviços, depoimentos, orçamento, processo, dúvidas, cidades) |
+| `/sistemas-personalizados`   | Sistemas de gestão sob medida e ERP web                                  |
+| `/automacao-whatsapp`        | Atendente virtual com IA no WhatsApp                                     |
+| `/seo-e-divulgacao`          | SEO técnico e SEO local                                                  |
+| `/landing-pages-e-lojas`     | Landing pages e lojas virtuais                                           |
 | `/criacao-de-sites`          | Hub das cidades atendidas, agrupadas por capital, interior e litoral     |
 | `/criacao-de-sites/<cidade>` | 15 páginas de cidade de SP, com texto próprio                            |
+| `/sobre`                     | Quem somos, metodologia, atendimento remoto e diferenciais técnicos      |
+| `/projetos`                  | Projetos entregues, com o que foi feito e o depoimento de cada cliente   |
+| `/conteudos`                 | Índice dos guias                                                         |
+| `/conteudos/<artigo>`        | Artigos com schema `Article`, sumário e tempo de leitura                 |
 | `/politica-de-privacidade`   | Política de Privacidade (antes `/privacidade`, redirect 301)             |
 | `/politica-de-cookies`       | Política de Cookies, com botão para reabrir as preferências              |
 | `/termos-de-uso`             | Termos de Uso (antes `/termos`, redirect 301)                            |
@@ -46,7 +54,8 @@ Toda página nasce no registro `src/config/pages.ts` (título, description, brea
 
 - `src/content/solutions.ts`: catálogo das soluções do seletor (título, descrição, rótulo curto e texto da mensagem).
 - `src/components/conversion/`: estado da seleção (`SelectionProvider`), seletor de checkboxes nativos (`SolutionPicker`), barra fixa de conversão (`ConversionBar`) e o link de conversão (`WhatsAppCta`).
-- `src/lib/whatsapp.ts`: monta a mensagem pré-formatada (com `*negrito*` do WhatsApp, sem emoji) e a URL `https://wa.me/...`. Nas páginas de cidade, a mensagem diz de qual página o contato veio (`LeadOriginContext`, definido pelo layout a partir do registro); na home, a mensagem é a de sempre.
+- `src/lib/whatsapp.ts`: monta a mensagem pré-formatada (com `*negrito*` do WhatsApp, sem emoji) e a URL `https://wa.me/...`. Nas páginas de cidade, serviço e artigo, a mensagem diz de qual página o contato veio (`LeadOriginContext`, definido pelo layout a partir do registro); na home, a mensagem é a de sempre.
+- **Pré-seleção**: páginas de serviço, cidades e artigos já chegam com a solução relacionada marcada no seletor (`defaultSolutions` no registro), inclusive no HTML estático. Ao primeiro toque, a seleção passa a ser do visitante.
 - O clique abre o WhatsApp direto do gesto do usuário (`<a target="_blank">`), registra a conversão e leva a aba atual para `/obrigado`, que lembra o passo que falta e permite reabrir a conversa com a mesma mensagem.
 
 O número fica em `src/config/site.ts` (fallback verificado) e pode ser trocado sem editar código com `VITE_WHATSAPP_NUMBER`.
@@ -54,7 +63,10 @@ O número fica em `src/config/site.ts` (fallback verificado) e pode ser trocado 
 ### Conteúdo e intenção de busca
 
 - **H1** (hero): “Criação de Sites Profissionais, Sistemas Sob Medida e Atendimento Virtual com IA”.
-- **Serviços** (`src/content/services.ts`): os quatro `<h3>` são os termos que donos de empresa pesquisam. O mesmo arquivo alimenta o catálogo do schema `LocalBusiness`.
+- **Serviços na home** (`src/content/services.ts`): os quatro `<h3>` são os termos que donos de empresa pesquisam, e cada cartão leva à página do serviço.
+- **Páginas de serviço** (`src/content/serviceIndex.ts` + `src/content/servicePages.ts`): índice leve no bundle e o texto (o que está incluído, para quem é, etapas, perguntas frequentes) carregado só com a rota. Cada página tem um vetor exclusivo no topo (`src/components/vectors/ServiceHeroVectors.tsx`).
+- **Projetos** (`src/content/projects.ts`): descrição do que está publicado nos sites dos clientes, sem números inventados.
+- **Artigos** (`src/content/articleIndex.ts` + `src/content/articles.ts`): texto com marcação mínima (`[texto](/caminho)` e `**destaque**`); o tempo de leitura do índice é conferido por teste.
 - **Depoimentos** (`src/content/testimonials.ts`): três clientes reais, autorizados, com as falas transcritas sem edição. Sites entregues como link externo (`rel="noopener noreferrer"`); projeto ainda não publicado aparece sem link, com a etiqueta “Em desenvolvimento”. Sem schema de avaliação.
 - **FAQ** (`src/content/faq.ts`): cinco perguntas no formato em que as pessoas buscam, exibidas na página e marcadas como `FAQPage`.
 - **Cidades** (`src/content/cityIndex.ts` + `src/content/cities.ts`): o índice leve (nome, região, description) entra no bundle para o `<head>`, o sitemap e os links; o texto de cada cidade (abertura, economia local, setores, perguntas, cidades próximas) é um chunk separado, carregado só nessas rotas. Só fatos verificáveis, atendimento sempre descrito como online, nenhum endereço inventado.
@@ -62,8 +74,9 @@ O número fica em `src/config/site.ts` (fallback verificado) e pode ser trocado 
 ### SEO
 
 - **HTML estático por rota**: no build, cada página é renderizada no servidor e gravada em `dist/<rota>.html` com o conteúdo real e as tags certas no `<head>`. No navegador, o React hidrata esse HTML; nas navegações internas, `useSeo` atualiza o `<head>` a partir do mesmo registro.
-- **Dados estruturados** (`src/lib/structuredData.ts`): um `@graph` JSON-LD por página com `LocalBusiness`, `WebSite`, `WebPage`, `BreadcrumbList`, `FAQPage` (home) e `Service` com `areaServed` (hub e cidades: a cidade atendida, contida no estado de SP, com a empresa como `provider`).
-- **sitemap.xml, robots.txt e llms.txt** são gerados no build a partir dos mesmos registros (20 URLs no sitemap). Uma página ou cidade nova entra sozinha.
+- **Dados estruturados** (`src/lib/structuredData.ts`): um `@graph` JSON-LD por página com a empresa como `ProfessionalService`, `WebSite`, `WebPage` (ou `AboutPage` e `CollectionPage`), `BreadcrumbList`, `FAQPage` (home), `Service` com `areaServed` (serviços: Brasil; hub: estado de SP; cidades: a cidade) e `Article` nos artigos.
+- **Perfis sociais**: configurados em `src/config/site.ts` (`social`). Um perfil só entra no rodapé, no `sameAs` do schema e no `llms.txt` depois de `confirmed: true`. Hoje o Instagram está configurado aguardando confirmação e o LinkedIn falta a URL.
+- **sitemap.xml, robots.txt e llms.txt** são gerados no build a partir dos mesmos registros (31 URLs no sitemap). Uma página, cidade ou artigo novo entra sozinho, e um teste garante que todo o sitemap também está no llms.txt.
 - **Open Graph / Twitter**: `og:*` completos com imagem 1200×630 (`public/og-image.jpg`).
 - **404 real**: `dist/404.html` é servido pelo Vercel com status HTTP 404. `/obrigado` e a 404 são `noindex` e ficam fora do sitemap.
 - **Search Console**: defina `VITE_GOOGLE_SITE_VERIFICATION` (valor do atributo `content` da tag HTML) para incluir a meta de verificação em todas as páginas.
@@ -84,7 +97,7 @@ Nada de rastreamento carrega antes da escolha do visitante (`src/lib/tracking.ts
 
 - Linguagem visual de interface de desenvolvedor em modo escuro: títulos em dois tons (`SectionHeader`), cartões com borda de 1px, grade técnica de fundo (`GridBackdrop`), etiquetas em fonte mono (`Badge`) e acento turquesa. Cantos de 6px em botões e etiquetas (nada de pílula).
 - **Prévia do hero** (`src/components/preview/`): três cenas em abas acessíveis (padrão WAI-ARIA). As abas só mudam quando o visitante escolhe.
-- **Vetores animados** (`src/components/vectors/`): ilustrações em SVG + CSS puro nos cartões de serviço, na trilha do processo e na 404. O HTML estático traz a cena pronta; fora da tela ela é preparada, toca uma única vez ao aparecer (até 4,6s), pausa se sair da tela e recomeça no hover. Com `prefers-reduced-motion`, fica parada.
+- **Vetores animados** (`src/components/vectors/`): ilustrações em SVG + CSS puro nos cartões de serviço, no topo das páginas de serviço, na trilha do processo e na 404. As cenas do meio da página são preparadas fora da tela e tocam uma única vez ao aparecer; as do topo tocam desde a primeira pintura (`autoplay`). Todas terminam em até 5s, pausam fora da tela e recomeçam no hover. Com `prefers-reduced-motion`, ficam paradas.
 - **Micro-interações** com as curvas de Emil Kowalski (`--ease-out`, `--ease-in-out`): `scale(0.97)` ao clicar, cartões que sobem 2px no hover (só com mouse), respostas do FAQ com entrada curta. Nada aparece com fade ao rolar e nada segue o cursor.
 - **Esqueleto** só nas rotas carregadas sob demanda, numa navegação interna lenta; nunca no carregamento direto.
 - **CLS zero**: fallbacks da fonte com métricas calibradas, larguras em `em`, painéis com altura fixa, barras e avisos fixos sem efeito no layout, imagens com dimensões explícitas. O título e o texto do hero são pintados já no primeiro quadro; o CSS é embutido no HTML.
