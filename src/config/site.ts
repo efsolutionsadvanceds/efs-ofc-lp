@@ -55,6 +55,7 @@ export const site = {
   legal: {
     privacyHref: '/politica-de-privacidade',
     termsHref: '/termos-de-uso',
+    cookiesHref: '/politica-de-cookies',
   },
   address: ADDRESS,
   /** Imagem de compartilhamento (Open Graph) — gerada por scripts/generate-brand-assets.cjs. */

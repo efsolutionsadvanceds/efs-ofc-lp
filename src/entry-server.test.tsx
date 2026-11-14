@@ -19,6 +19,7 @@ const H1_BY_PATH: Record<string, string> = {
   ...Object.fromEntries(CITY_INDEX.map((city) => [cityPath(city.slug), `Criação de sites em ${city.name}`])),
   '/politica-de-privacidade': 'Política de Privacidade',
   '/termos-de-uso': 'Termos de Uso',
+  '/politica-de-cookies': 'Política de Cookies',
   '/obrigado': 'Falta só enviar a mensagem.',
   '/404': 'Esta página não existe.',
 }

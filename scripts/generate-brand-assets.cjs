@@ -1,10 +1,11 @@
 /**
  * Script manual (não faz parte do bundle do navegador) que gera os
  * derivados da logo real a partir do arquivo-fonte
- * `public/assets/logo-efsolutions.jpeg`:
+ * `scripts/brand/logo-efsolutions.jpeg` (fora de `public/`: não é publicado):
  *
- * - `public/assets/logo-symbol.png`: só o símbolo (circuito "EF") com fundo
- *   transparente — usado no header ao lado do nome em texto;
+ * - `src/assets/brand/logo-symbol.png`: só o símbolo (circuito "EF") com
+ *   fundo transparente, usado no header ao lado do nome em texto. Importado
+ *   pelo Vite, sai com hash no nome (pode ter cache imutável);
  * - favicons e ícones de app (símbolo sobre o fundo da marca — o nome por
  *   extenso fica ilegível em 16-48px, por isso fica de fora);
  * - `public/og-image.jpg` (1200x630): cartão de compartilhamento Open Graph
@@ -20,8 +21,8 @@ const sharp = require('sharp')
 const pngToIco = require('png-to-ico').default
 
 const ROOT = path.resolve(__dirname, '..')
-const SRC_LOGO = path.join(ROOT, 'public/assets/logo-efsolutions.jpeg')
-const ASSETS_DIR = path.join(ROOT, 'public/assets')
+const SRC_LOGO = path.join(ROOT, 'scripts/brand/logo-efsolutions.jpeg')
+const ASSETS_DIR = path.join(ROOT, 'src/assets/brand')
 const PUBLIC_DIR = path.join(ROOT, 'public')
 
 /** Fundo da marca — mesmo valor de --color-ground em src/styles/app.css. */
@@ -115,7 +116,7 @@ async function main() {
   const symbolBox = contentBox(keyed, width, height, { maxY: SYMBOL_MAX_Y })
   const symbolMaster = await rawImage(keyed, width, height).extract(symbolBox).png().toBuffer()
   const symbolHeader = await sharp(symbolMaster).resize({ height: 96 }).png({ compressionLevel: 9, palette: true, quality: 95 }).toFile(path.join(ASSETS_DIR, 'logo-symbol.png'))
-  console.log(`gerado: assets/logo-symbol.png (${symbolHeader.width}x${symbolHeader.height})`)
+  console.log(`gerado: src/assets/brand/logo-symbol.png (${symbolHeader.width}x${symbolHeader.height})`)
 
   // 2) Favicons e ícones de app.
   const pngBuffers = []

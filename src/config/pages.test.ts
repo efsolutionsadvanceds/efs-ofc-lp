@@ -54,9 +54,10 @@ describe('sitemap.xml e robots.txt', () => {
     expect(xml).toContain('<loc>https://www.efsolutions.com.br/criacao-de-sites/sao-paulo</loc>')
     expect(xml).not.toContain('/obrigado')
     expect(xml).not.toContain('/404')
-    // Home, hub das cidades, 2 páginas legais e as 15 cidades.
+    expect(xml).toContain('<loc>https://www.efsolutions.com.br/politica-de-cookies</loc>')
+    // Home, hub das cidades, 3 páginas legais e as 15 cidades.
     const indexable = PRERENDERED_PAGES.filter((page) => page.sitemap && !page.noindex)
-    expect(indexable).toHaveLength(19)
+    expect(indexable).toHaveLength(20)
     expect(xml.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g)).toHaveLength(indexable.length)
   })
 

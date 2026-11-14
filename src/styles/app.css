@@ -196,6 +196,22 @@
   }
 }
 
+/* Aviso de cookies: sobe da base da tela (resposta de interface, 300ms). */
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+/* Diálogo: nunca de scale(0); parte de 0.97, como os botões. */
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
 /*
  * Vetores animados (src/components/vectors). Cada elemento animado é um
  * acréscimo sobre o desenho-base: no quadro inicial ele está invisível e,

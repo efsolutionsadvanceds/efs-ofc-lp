@@ -1,3 +1,4 @@
+import { useConsent } from '@/components/consent/ConsentContext'
 import { CLOSING_CTA_ID, HERO_CTA_ID } from '@/config/sections'
 import { describeSelectionCount, getSolutions } from '@/content/solutions'
 import { buttonStyles } from '@/components/ui/buttonStyles'
@@ -20,11 +21,13 @@ import { WhatsAppCta } from './WhatsAppCta'
  */
 export function ConversionBar() {
   const { selected } = useSelection()
+  const { bannerVisible } = useConsent()
   const heroCtaInView = useElementInView(HERO_CTA_ID, true)
   const closingCtaInView = useElementInView(CLOSING_CTA_ID, false)
 
   const count = selected.length
-  const isVisible = !closingCtaInView && (count > 0 || !heroCtaInView)
+  // Espera a escolha de cookies: os dois ocupam a base da tela no celular.
+  const isVisible = !bannerVisible && !closingCtaInView && (count > 0 || !heroCtaInView)
   const summary = getSolutions(selected)
     .map((solution) => solution.shortLabel)
     .join(' · ')

@@ -85,6 +85,15 @@ export const pages = {
     breadcrumbs: [HOME_CRUMB, { name: 'Política de Privacidade', path: '/politica-de-privacidade' }],
     sitemap: { lastmod: '2026-11-14', changefreq: 'yearly', priority: 0.3 },
   },
+  cookies: {
+    path: '/politica-de-cookies',
+    file: 'politica-de-cookies.html',
+    title: 'Política de Cookies | E.F Solutions',
+    description:
+      'Quais cookies o site da E.F Solutions usa, para quê e por quanto tempo. O Google Analytics e o Meta Pixel só funcionam depois da sua permissão.',
+    breadcrumbs: [HOME_CRUMB, { name: 'Política de Cookies', path: '/politica-de-cookies' }],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'yearly', priority: 0.3 },
+  },
   termos: {
     path: '/termos-de-uso',
     file: 'termos-de-uso.html',

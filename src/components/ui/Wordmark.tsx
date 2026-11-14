@@ -1,7 +1,12 @@
+import logoSymbol from '@/assets/brand/logo-symbol.png'
 import { cx } from '@/lib/cx'
 
-/** Dimensões reais do arquivo gerado por scripts/generate-brand-assets.cjs (evitam CLS). */
-const SYMBOL = { src: '/assets/logo-symbol.png', width: 161, height: 96 }
+/**
+ * Dimensões reais do arquivo gerado por scripts/generate-brand-assets.cjs
+ * (evitam CLS). Importado pelo Vite: o arquivo sai com hash no nome, então
+ * o cache imutável de /assets nunca prende uma versão antiga da logo.
+ */
+const SYMBOL = { src: logoSymbol, width: 161, height: 96 }
 
 interface WordmarkProps {
   className?: string

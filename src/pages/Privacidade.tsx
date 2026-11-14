@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { LegalPage, LegalSection } from '@/components/layout/LegalPage'
 import { inlineLinkStyles } from '@/components/ui/buttonStyles'
 import { pages } from '@/config/pages'
@@ -8,7 +10,7 @@ const PRIVACY_CONTACT_URL = buildWhatsAppUrl('Olá! Tenho uma dúvida sobre a Po
 
 export default function Privacidade() {
   return (
-    <LegalPage meta={pages.privacidade} title="Política de Privacidade" updatedAt="outubro de 2026">
+    <LegalPage meta={pages.privacidade} title="Política de Privacidade" updatedAt="novembro de 2026">
       <LegalSection title="Resumo">
         <p>
           O site da E.F Solutions não tem formulário e não pede nome, e-mail ou telefone. Você escolhe as soluções de
@@ -25,15 +27,28 @@ export default function Privacidade() {
         </p>
       </LegalSection>
 
+      <LegalSection title="Cookies e consentimento">
+        <p>
+          O Google Analytics e o Meta Pixel só funcionam se você permitir no aviso de cookies. Sem a sua permissão, os
+          scripts dessas ferramentas nem são carregados. Você pode mudar a escolha a qualquer momento pelo link
+          “Preferências de cookies”, no rodapé. A lista completa está na{' '}
+          <Link to={site.legal.cookiesHref} className={inlineLinkStyles}>
+            Política de Cookies
+          </Link>
+          .
+        </p>
+      </LegalSection>
+
       <LegalSection title="Google Analytics">
         <p>
-          Usamos o Google Analytics 4 para entender, de forma agregada, como o site é usado: páginas visitadas, origem
-          do acesso, tipo de dispositivo e cliques nos botões de WhatsApp, incluindo quais soluções estavam
-          selecionadas no momento do clique, sem nenhum dado que identifique você pessoalmente.
+          Com a sua permissão de medição, usamos o Google Analytics 4 para entender, de forma agregada, como o site é
+          usado: páginas visitadas, origem do acesso, tipo de dispositivo e cliques nos botões de WhatsApp, incluindo
+          quais soluções estavam selecionadas e a página de cidade de origem no momento do clique, sem nenhum dado que
+          identifique você pessoalmente.
         </p>
         <p>
-          A ferramenta usa cookies e identificadores do navegador. Você pode bloqueá-los nas configurações do navegador
-          ou instalar o{' '}
+          A ferramenta usa cookies e identificadores do navegador. Além do aviso de cookies, você pode bloqueá-los nas
+          configurações do navegador ou instalar o{' '}
           <a
             href="https://tools.google.com/dlpage/gaoptout"
             target="_blank"
@@ -48,11 +63,11 @@ export default function Privacidade() {
 
       <LegalSection title="Meta Pixel e medição de anúncios">
         <p>
-          Este site utiliza o Meta Pixel (Facebook/Instagram) para medir a efetividade de campanhas de anúncios. Essa
-          ferramenta usa cookies e tecnologias semelhantes para registrar visitas às páginas. Quando você clica em um
-          botão de WhatsApp, o Pixel registra esse clique como um evento de contato, sem enviar nome, telefone ou
-          qualquer dado digitado por você. Você pode gerenciar cookies e preferências de anúncios nas configurações do
-          seu navegador e da sua conta Meta.
+          Com a sua permissão de marketing, este site utiliza o Meta Pixel (Facebook/Instagram) para medir a
+          efetividade de campanhas de anúncios. Essa ferramenta usa cookies e tecnologias semelhantes para registrar
+          visitas às páginas. Quando você clica em um botão de WhatsApp, o Pixel registra esse clique como um evento de
+          contato, sem enviar nome, telefone ou qualquer dado digitado por você. Você pode retirar a permissão nas
+          preferências de cookies e gerenciar preferências de anúncios na sua conta Meta.
         </p>
       </LegalSection>
 
@@ -69,9 +84,10 @@ export default function Privacidade() {
 
       <LegalSection title="Por quanto tempo os dados são guardados">
         <p>
-          O site em si não guarda nenhum dado seu: não há banco de dados de visitantes nem de contatos. Os dados de
-          medição ficam com o Google e a Meta pelos prazos configurados em cada ferramenta, e as conversas iniciadas
-          ficam no WhatsApp, como qualquer conversa nesse aplicativo.
+          O site não tem banco de dados de visitantes nem de contatos. No seu navegador fica apenas a sua escolha sobre
+          cookies, por 12 meses. Os dados de medição, se você permitir, ficam com o Google e a Meta pelos prazos
+          configurados em cada ferramenta, e as conversas iniciadas ficam no WhatsApp, como qualquer conversa nesse
+          aplicativo.
         </p>
       </LegalSection>
 

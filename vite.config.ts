@@ -5,40 +5,25 @@ import react from '@vitejs/plugin-react'
 import { loadEnv, type Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 
-const GA_MEASUREMENT_ID_PATTERN = /^G-[A-Z0-9]{4,}$/
-
 /**
- * Google Analytics 4 (gtag.js) injetado no <head> apenas no build de
- * produção e apenas quando `VITE_GA_MEASUREMENT_ID` tiver um ID válido
- * (G-XXXXXXXXXX). Sem a variável, nenhum script do Google é carregado — e o
- * `yarn dev` nunca envia dados para o relatório real.
+ * Verificação de propriedade do Google Search Console (método "tag HTML"):
+ * com `VITE_GOOGLE_SITE_VERIFICATION` definido, a meta entra no <head> de
+ * todas as páginas no build. Sem a variável, nada é adicionado.
  *
- * Page views: o `config` registra o primeiro carregamento; navegações
- * internas (ex.: ida à página de obrigado) são capturadas pela "Medição
- * otimizada" do GA4 (eventos de histórico do navegador), ativa por padrão.
+ * O Google Analytics 4 e o Meta Pixel não entram mais no HTML: só carregam
+ * no navegador, depois do consentimento de cookies (src/lib/tracking.ts).
  */
-function googleAnalytics(measurementId: string | undefined): Plugin {
+function googleSiteVerification(token: string | undefined): Plugin {
   return {
-    name: 'efsolutions:google-analytics',
+    name: 'efsolutions:google-site-verification',
     apply: 'build',
     transformIndexHtml() {
-      if (!measurementId) return []
-      if (!GA_MEASUREMENT_ID_PATTERN.test(measurementId)) {
-        console.warn(`[google-analytics] VITE_GA_MEASUREMENT_ID inválido ("${measurementId}") — GA4 não será incluído.`)
+      if (!token) return []
+      if (!/^[\w-]{10,100}$/.test(token)) {
+        console.warn('[search-console] VITE_GOOGLE_SITE_VERIFICATION inválido: a meta de verificação não foi incluída.')
         return []
       }
-      return [
-        {
-          tag: 'script',
-          attrs: { async: true, src: `https://www.googletagmanager.com/gtag/js?id=${measurementId}` },
-          injectTo: 'head',
-        },
-        {
-          tag: 'script',
-          children: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${measurementId}');`,
-          injectTo: 'head',
-        },
-      ]
+      return [{ tag: 'meta', attrs: { name: 'google-site-verification', content: token }, injectTo: 'head' }]
     },
   }
 }
@@ -47,7 +32,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), 'VITE_')
 
   return {
-    plugins: [react(), tailwindcss(), googleAnalytics(env.VITE_GA_MEASUREMENT_ID?.trim())],
+    plugins: [react(), tailwindcss(), googleSiteVerification(env.VITE_GOOGLE_SITE_VERIFICATION?.trim())],
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),

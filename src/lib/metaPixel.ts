@@ -1,16 +1,13 @@
-declare global {
-  interface Window {
-    fbq?: (...args: unknown[]) => void
-  }
-}
+// A tipagem de `window.fbq` fica em ./tracking.ts, onde o Pixel é carregado.
+import './tracking'
 
 /**
  * Dispara o evento padrão "Contact" do Meta Pixel quando o visitante clica no
  * botão principal do WhatsApp — o evento correto para "visitante iniciou
  * contato", já que o site não coleta mais dados de um formulário (não há
- * "Lead" sem dados de lead). Silencioso se o Pixel não carregou (bloqueador
- * de anúncios, script ainda carregando) — o botão nunca deve falhar por
- * causa do rastreamento.
+ * "Lead" sem dados de lead). O Pixel só existe depois do consentimento de
+ * marketing (ver ./tracking.ts); sem ele, ou com bloqueador de anúncios, a
+ * chamada é ignorada: o botão nunca deve falhar por causa do rastreamento.
  */
 export function trackContactEvent(eventId: string): void {
   try {

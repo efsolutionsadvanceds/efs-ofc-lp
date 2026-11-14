@@ -3,6 +3,8 @@
 interface ImportMetaEnv {
   readonly VITE_WHATSAPP_NUMBER?: string
   readonly VITE_GA_MEASUREMENT_ID?: string
+  readonly VITE_META_PIXEL_ID?: string
+  readonly VITE_GOOGLE_SITE_VERIFICATION?: string
 }
 
 interface ImportMeta {

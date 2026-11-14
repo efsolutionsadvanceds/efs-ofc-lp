@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
+import { useConsent } from '@/components/consent/ConsentContext'
 import { WhatsAppCta } from '@/components/conversion/WhatsAppCta'
 import { navLinkStyles } from '@/components/ui/buttonStyles'
 import { Wordmark } from '@/components/ui/Wordmark'
@@ -28,6 +29,8 @@ function FooterColumn({ title, className, children }: { title: string; className
  * SEO local).
  */
 export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
+  const { openPreferences } = useConsent()
+
   return (
     <footer
       className={cx(
@@ -81,9 +84,19 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
             </Link>
           </li>
           <li>
+            <Link to={site.legal.cookiesHref} className={navLinkStyles}>
+              Política de Cookies
+            </Link>
+          </li>
+          <li>
             <Link to={site.legal.termsHref} className={navLinkStyles}>
               Termos de Uso
             </Link>
+          </li>
+          <li>
+            <button type="button" onClick={openPreferences} className={cx(navLinkStyles, 'text-left')}>
+              Preferências de cookies
+            </button>
           </li>
         </FooterColumn>
       </div>
