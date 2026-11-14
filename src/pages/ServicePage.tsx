@@ -140,7 +140,7 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
         <h2 id="veja-tambem-titulo" className="text-title">
           Veja também <span className="block text-muted">outros serviços.</span>
         </h2>
-        <ul className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <ul className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
           {content.related.map((relatedSlug) => {
             const related = findServiceEntry(relatedSlug)
             return related ? (
@@ -151,6 +151,9 @@ export default function ServicePage({ slug }: { slug: ServiceSlug }) {
           })}
           <li>
             <RelatedLink to={CITIES_HUB_PATH} label="criacao-de-sites/" title="Criação de sites por cidade" />
+          </li>
+          <li>
+            <RelatedLink to="/projetos" label="projetos/" title="Projetos entregues" />
           </li>
         </ul>
       </section>

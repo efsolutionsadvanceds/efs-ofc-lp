@@ -1,13 +1,14 @@
 import { Link } from 'react-router-dom'
 
 import { buttonStyles, navLinkStyles } from '@/components/ui/buttonStyles'
+import { SmartLink } from '@/components/ui/SmartLink'
 import { Wordmark } from '@/components/ui/Wordmark'
 import { SECTION_IDS } from '@/config/sections'
 import { site } from '@/config/site'
 import { cx } from '@/lib/cx'
 
 /**
- * Barra simples: marca, âncoras e uma ação. Fixa no topo a partir do
+ * Barra simples: marca, links principais e uma ação. Fixa no topo a partir do
  * tablet (fundo translúcido com desfoque e borda de 1px); no celular rola
  * com a página — a ação fica na barra de conversão da base da tela.
  */
@@ -29,9 +30,9 @@ export function SiteHeader() {
           <ul className="flex items-center gap-8 text-small">
             {site.nav.map((item) => (
               <li key={item.href}>
-                <a href={item.href} className={navLinkStyles}>
+                <SmartLink href={item.href} className={navLinkStyles}>
                   {item.label}
-                </a>
+                </SmartLink>
               </li>
             ))}
           </ul>

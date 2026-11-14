@@ -105,6 +105,26 @@ export const pages = {
     breadcrumbs: [HOME_CRUMB, { name: 'Política de Privacidade', path: '/politica-de-privacidade' }],
     sitemap: { lastmod: '2026-11-14', changefreq: 'yearly', priority: 0.3 },
   },
+  sobre: {
+    path: '/sobre',
+    file: 'sobre.html',
+    title: 'Sobre a E.F Solutions: Sites, Sistemas e IA',
+    description:
+      'Conheça a E.F Solutions: engenharia de software para sites, sistemas de gestão, atendimento com IA e SEO, com atendimento online e proposta por escrito.',
+    breadcrumbs: [HOME_CRUMB, { name: 'Sobre', path: '/sobre' }],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.6 },
+    pageType: 'AboutPage',
+  },
+  projetos: {
+    path: '/projetos',
+    file: 'projetos.html',
+    title: 'Projetos Entregues | E.F Solutions',
+    description:
+      'Projetos reais da E.F Solutions: os sites da FRD Locações e da Mark Assistência, o que cada empresa precisava e o que foi entregue, nas palavras dos clientes.',
+    breadcrumbs: [HOME_CRUMB, { name: 'Projetos', path: '/projetos' }],
+    sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.6 },
+    pageType: 'CollectionPage',
+  },
   cookies: {
     path: '/politica-de-cookies',
     file: 'politica-de-cookies.html',

@@ -1,6 +1,8 @@
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 import { Badge } from '@/components/ui/Badge'
+import { textLinkStyles } from '@/components/ui/buttonStyles'
 import { SectionHeader } from '@/components/ui/SectionHeader'
 import { SECTION_IDS } from '@/config/sections'
 import { TESTIMONIALS } from '@/content/testimonials'
@@ -54,6 +56,11 @@ export function TestimonialsSection() {
           </li>
         ))}
       </ul>
+
+      <Link to="/projetos" className={`${textLinkStyles} mt-10 text-small`}>
+        Ver o que foi entregue em cada projeto
+        <ArrowRight aria-hidden="true" className="size-4" />
+      </Link>
     </section>
   )
 }

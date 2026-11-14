@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom'
 import { useConsent } from '@/components/consent/ConsentContext'
 import { WhatsAppCta } from '@/components/conversion/WhatsAppCta'
 import { navLinkStyles } from '@/components/ui/buttonStyles'
+import { SmartLink } from '@/components/ui/SmartLink'
 import { Wordmark } from '@/components/ui/Wordmark'
 import { confirmedSocialProfiles, site } from '@/config/site'
 import { CITIES_HUB_PATH } from '@/content/cityIndex'
+import { SECTION_IDS } from '@/config/sections'
 import { SERVICE_PAGE_INDEX, servicePath } from '@/content/serviceIndex'
 import { cx } from '@/lib/cx'
 
@@ -14,6 +16,15 @@ interface SiteFooterProps {
   /** Reserva espaço para a barra de conversão fixa (páginas com `conversionBar`, no celular). */
   reserveBarSpace: boolean
 }
+
+/** Coluna "Empresa": páginas institucionais e as seções da home mais procuradas. */
+const COMPANY_LINKS = [
+  { href: '/sobre', label: 'Sobre' },
+  { href: '/projetos', label: 'Projetos' },
+  { href: `/#${SECTION_IDS.process}`, label: 'Como funciona' },
+  { href: `/#${SECTION_IDS.faq}`, label: 'Dúvidas' },
+  { href: `/#${SECTION_IDS.solutions}`, label: 'Orçamento' },
+]
 
 function FooterColumn({ title, className, children }: { title: string; className?: string; children: ReactNode }) {
   return (
@@ -69,12 +80,12 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
           ))}
         </FooterColumn>
 
-        <FooterColumn title="Navegação" className="md:col-span-2">
-          {site.nav.map((item) => (
+        <FooterColumn title="Empresa" className="md:col-span-2">
+          {COMPANY_LINKS.map((item) => (
             <li key={item.href}>
-              <a href={item.href} className={navLinkStyles}>
+              <SmartLink href={item.href} className={navLinkStyles}>
                 {item.label}
-              </a>
+              </SmartLink>
             </li>
           ))}
         </FooterColumn>

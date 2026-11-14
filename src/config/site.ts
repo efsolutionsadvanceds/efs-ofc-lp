@@ -54,8 +54,8 @@ export const site = {
   /** Âncoras da landing page — usadas no header e no rodapé. */
   nav: [
     { href: `/#${SECTION_IDS.services}`, label: 'Serviços' },
-    { href: `/#${SECTION_IDS.solutions}`, label: 'Orçamento' },
-    { href: `/#${SECTION_IDS.process}`, label: 'Como funciona' },
+    { href: '/projetos', label: 'Projetos' },
+    { href: '/sobre', label: 'Sobre' },
     { href: `/#${SECTION_IDS.faq}`, label: 'Dúvidas' },
   ],
   legal: {

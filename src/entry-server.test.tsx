@@ -26,6 +26,8 @@ const H1_BY_PATH: Record<string, string> = {
   '/politica-de-privacidade': 'Política de Privacidade',
   '/termos-de-uso': 'Termos de Uso',
   '/politica-de-cookies': 'Política de Cookies',
+  '/sobre': 'A E.F Solutions desenvolve sites, sistemas e atendimento com IA para empresas',
+  '/projetos': 'Projetos entregues para empresas reais',
   '/obrigado': 'Falta só enviar a mensagem.',
   '/404': 'Esta página não existe.',
 }
@@ -215,6 +217,28 @@ describe('seção de cidades na home', () => {
     expect(start).toBeGreaterThan(html.indexOf('id="duvidas"'))
     expect(section).toContain('href="/criacao-de-sites"')
     for (const city of CITY_INDEX) expect(section).toContain(`href="${cityPath(city.slug)}"`)
+  })
+})
+
+describe('sobre e projetos', () => {
+  it('/projetos: casos reais com o site entregue em nova aba; projeto em desenvolvimento sem link', async () => {
+    const { html, head } = await render('/projetos')
+    const text = textOf(html)
+    for (const client of ['FRD Locações', 'Mark Assistência', 'Celebrando seu Casamento']) expect(text).toContain(client)
+    const links = html.match(/<a\b[^>]*href="https:\/\/www\.(?:frdlocacoes|markassistencia)\.com\.br"[^>]*>/g) ?? []
+    expect(links).toHaveLength(2)
+    for (const link of links) expect(link).toContain('rel="noopener noreferrer"')
+    expect(html).not.toMatch(/href="[^"]*celebrandoseucasamento/)
+    expect(text).toContain('Em desenvolvimento')
+    expect(jsonLdGraph(head).find((node) => node['@id'] === 'https://www.efsolutions.com.br/projetos#pagina')?.['@type']).toBe('CollectionPage')
+  })
+
+  it('/sobre: página institucional ligada aos serviços e aos projetos', async () => {
+    const { html, head } = await render('/sobre')
+    for (const path of ['/criacao-de-sites', '/sistemas-personalizados', '/automacao-whatsapp', '/seo-e-divulgacao', '/landing-pages-e-lojas', '/projetos']) {
+      expect(html).toContain(`href="${path}"`)
+    }
+    expect(jsonLdGraph(head).find((node) => node['@id'] === 'https://www.efsolutions.com.br/sobre#pagina')?.['@type']).toBe('AboutPage')
   })
 })
 

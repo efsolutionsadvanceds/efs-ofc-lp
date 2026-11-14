@@ -16,6 +16,9 @@ const Cookies = lazy(() => import('@/pages/Cookies'))
 // Páginas por cidade: o texto das cidades só carrega nestas rotas.
 const CitiesHub = lazy(() => import('@/pages/CitiesHub'))
 const CityPage = lazy(() => import('@/pages/CityPage'))
+// Páginas de autoridade.
+const Sobre = lazy(() => import('@/pages/Sobre'))
+const Projetos = lazy(() => import('@/pages/Projetos'))
 // Páginas de serviço: uma rota por serviço, mesmo componente (carregado sob demanda).
 const ServicePage = lazy(() => import('@/pages/ServicePage'))
 
@@ -47,6 +50,8 @@ export default function App() {
             }
           />
         ))}
+        <Route path="sobre" element={<OnDemand><Sobre /></OnDemand>} />
+        <Route path="projetos" element={<OnDemand><Projetos /></OnDemand>} />
         <Route path="obrigado" element={<Obrigado />} />
         <Route path="politica-de-privacidade" element={<OnDemand><Privacidade /></OnDemand>} />
         <Route path="termos-de-uso" element={<OnDemand><Termos /></OnDemand>} />

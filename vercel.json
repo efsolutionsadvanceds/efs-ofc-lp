@@ -34,7 +34,6 @@
     },
     { "source": "/solucoes", "destination": "/#solucoes", "permanent": true },
     { "source": "/contato", "destination": "/#contato", "permanent": true },
-    { "source": "/sobre", "destination": "/", "permanent": true },
     { "source": "/privacidade", "destination": "/politica-de-privacidade", "statusCode": 301 },
     { "source": "/termos", "destination": "/termos-de-uso", "statusCode": 301 }
   ]
