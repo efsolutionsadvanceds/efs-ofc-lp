@@ -288,6 +288,22 @@
   }
 }
 
+/* Aparece e some (ex.: "digitando" antes da resposta): na cena pronta, fica invisível. */
+@keyframes v-flash {
+  0% {
+    opacity: 0;
+    transform: var(--from, none);
+  }
+  15%,
+  80% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Relógio invisível da cena: avisa quando o último elemento terminou. */
 @keyframes v-clock {
   from,
@@ -518,6 +534,7 @@
   }
 
   .v-halo,
+  .v-flash,
   .v-clock {
     opacity: 0;
   }
@@ -557,6 +574,9 @@
   }
   .vector[data-run] .v-swap {
     animation-name: v-swap;
+  }
+  .vector[data-run] .v-flash {
+    animation-name: v-flash;
   }
   .vector[data-run] .v-clock {
     animation-name: v-clock;

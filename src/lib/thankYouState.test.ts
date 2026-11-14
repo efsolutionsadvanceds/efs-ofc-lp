@@ -21,5 +21,7 @@ describe('estado da página de obrigado', () => {
     expect(readThankYouOrigin({ city: 'Campinas' })).toEqual({})
     expect(readThankYouOrigin({ city: { slug: '<script>', name: 'X' } })).toEqual({})
     expect(readThankYouOrigin({ city: { slug: 'campinas', name: 42 } })).toEqual({})
+    const service = { slug: 'seo-e-divulgacao', name: 'SEO e posicionamento no Google' }
+    expect(readThankYouOrigin(createThankYouState(['seo'], { service }))).toEqual({ service })
   })
 })

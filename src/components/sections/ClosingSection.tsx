@@ -9,7 +9,12 @@ import { getSolutions } from '@/content/solutions'
  * Fechamento em painel com grade e brilho. O botão usa a mesma seleção da
  * barra fixa (que se esconde enquanto este bloco está visível).
  */
-export function ClosingSection() {
+interface ClosingSectionProps {
+  /** Onde fica o seletor de soluções: na própria página (padrão) ou na home. */
+  pickerHref?: string
+}
+
+export function ClosingSection({ pickerHref = `#${SECTION_IDS.solutions}` }: ClosingSectionProps) {
   const { selected } = useSelection()
   const summary = getSolutions(selected)
     .map((solution) => solution.shortLabel)
@@ -44,7 +49,7 @@ export function ClosingSection() {
             {selected.length === 0 ? (
               <>
                 Ou{' '}
-                <a href={`#${SECTION_IDS.solutions}`} className={textLinkStyles}>
+                <a href={pickerHref} className={textLinkStyles}>
                   escolha as soluções
                 </a>{' '}
                 antes de enviar.
@@ -52,7 +57,7 @@ export function ClosingSection() {
             ) : (
               <>
                 Sua seleção: {summary}.{' '}
-                <a href={`#${SECTION_IDS.solutions}`} className={textLinkStyles}>
+                <a href={pickerHref} className={textLinkStyles}>
                   Editar
                 </a>
               </>

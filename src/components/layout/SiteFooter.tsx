@@ -5,8 +5,9 @@ import { useConsent } from '@/components/consent/ConsentContext'
 import { WhatsAppCta } from '@/components/conversion/WhatsAppCta'
 import { navLinkStyles } from '@/components/ui/buttonStyles'
 import { Wordmark } from '@/components/ui/Wordmark'
-import { site } from '@/config/site'
+import { confirmedSocialProfiles, site } from '@/config/site'
 import { CITIES_HUB_PATH } from '@/content/cityIndex'
+import { SERVICE_PAGE_INDEX, servicePath } from '@/content/serviceIndex'
 import { cx } from '@/lib/cx'
 
 interface SiteFooterProps {
@@ -38,8 +39,8 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
         reserveBarSpace && 'pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-0',
       )}
     >
-      <div className="frame grid grid-cols-1 gap-12 py-14 md:grid-cols-12 md:gap-6 md:py-16">
-        <div className="md:col-span-5">
+      <div className="frame grid grid-cols-2 gap-x-6 gap-y-12 py-14 md:grid-cols-12 md:py-16">
+        <div className="col-span-2 md:col-span-4">
           <Link
             to="/"
             aria-label={`${site.name}, página inicial`}
@@ -53,7 +54,22 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
           </p>
         </div>
 
-        <FooterColumn title="Navegação" className="md:col-span-2 md:col-start-7">
+        <FooterColumn title="Serviços" className="md:col-span-2">
+          <li>
+            <Link to={CITIES_HUB_PATH} className={navLinkStyles}>
+              Criação de sites
+            </Link>
+          </li>
+          {SERVICE_PAGE_INDEX.map((service) => (
+            <li key={service.slug}>
+              <Link to={servicePath(service.slug)} className={navLinkStyles}>
+                {service.name}
+              </Link>
+            </li>
+          ))}
+        </FooterColumn>
+
+        <FooterColumn title="Navegação" className="md:col-span-2">
           {site.nav.map((item) => (
             <li key={item.href}>
               <a href={item.href} className={navLinkStyles}>
@@ -61,11 +77,6 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
               </a>
             </li>
           ))}
-          <li>
-            <Link to={CITIES_HUB_PATH} className={navLinkStyles}>
-              Sites por cidade
-            </Link>
-          </li>
         </FooterColumn>
 
         <FooterColumn title="Contato" className="md:col-span-2">
@@ -75,6 +86,13 @@ export function SiteFooter({ reserveBarSpace }: SiteFooterProps) {
             </WhatsAppCta>
           </li>
           <li className="text-muted">Atendimento em todo o Brasil</li>
+          {confirmedSocialProfiles().map((profile) => (
+            <li key={profile.href}>
+              <a href={profile.href} target="_blank" rel="noopener noreferrer" className={navLinkStyles}>
+                {profile.label}
+              </a>
+            </li>
+          ))}
         </FooterColumn>
 
         <FooterColumn title="Legal" className="md:col-span-2">

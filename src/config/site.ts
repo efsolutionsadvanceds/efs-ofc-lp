@@ -25,12 +25,18 @@ interface PostalAddress {
 }
 
 /**
- * Endereço usado no schema LocalBusiness. Só o país é conhecido com certeza;
+ * Endereço usado no schema da empresa (ProfessionalService). Só o país é conhecido com certeza;
  * cidade, UF, rua e CEP ficam de fora até serem confirmados — nunca inventar.
  * O Google exige o endereço completo para exibir o painel de empresa local
  * nos resultados, então vale preencher assim que os dados reais existirem.
  */
 const ADDRESS: PostalAddress = { addressCountry: 'BR' }
+
+interface SocialProfile {
+  label: string
+  href: string | null
+  confirmed: boolean
+}
 
 export const site = {
   name: 'E.F Solutions',
@@ -66,18 +72,29 @@ export const site = {
     type: 'image/jpeg',
     alt: 'E.F Solutions, engenharia de software',
   },
-  /** Logo quadrada (≥112px) para o schema LocalBusiness. */
+  /** Logo quadrada (≥112px) para o schema da empresa. */
   logoPath: '/android-chrome-512x512.png',
   /**
-   * Perfis reais da E.F Solutions — propositalmente vazio. Nenhum perfil foi
-   * confirmado ainda; preencher assim que os endereços reais forem
-   * informados (não inventar URLs). Quando houver itens, eles entram no
-   * `sameAs` do schema LocalBusiness.
+   * Perfis oficiais da E.F Solutions. Um perfil só aparece no rodapé e no
+   * `sameAs` do schema depois de `confirmed: true`: publicar o perfil de
+   * outra empresa por engano confundiria o Google sobre quem é a marca.
+   * Para ativar, confira a URL exata e troque `confirmed` para `true`.
    */
-  social: [] as readonly { label: string; href: string }[],
+  social: [
+    { label: 'Instagram', href: 'https://www.instagram.com/efsolutions', confirmed: false },
+    // Preencher com a URL da página da empresa no LinkedIn (ex.: https://www.linkedin.com/company/...).
+    { label: 'LinkedIn', href: null, confirmed: false },
+  ] as readonly SocialProfile[],
 } as const
 
 export type SiteConfig = typeof site
+
+/** Perfis confirmados (com URL): os únicos publicados no rodapé e no schema. */
+export function confirmedSocialProfiles(): { label: string; href: string }[] {
+  return site.social.flatMap((profile) =>
+    profile.confirmed && profile.href ? [{ label: profile.label, href: profile.href }] : [],
+  )
+}
 
 /** Monta uma URL absoluta no domínio canônico a partir de um caminho ("/x"). */
 export function absoluteUrl(path: string): string {

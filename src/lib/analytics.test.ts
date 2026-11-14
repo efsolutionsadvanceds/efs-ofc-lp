@@ -50,6 +50,17 @@ describe('trackWhatsAppLead', () => {
     expect(gtag.mock.calls[1]?.[2]).not.toHaveProperty('page_city')
   })
 
+  it('envia page_service e page_article nas páginas de serviço e de conteúdo', () => {
+    const gtag = vi.fn()
+    vi.stubGlobal('window', { gtag })
+
+    trackWhatsAppLead({ services: ['seo'], location: 'hero', service: 'seo-e-divulgacao' })
+    trackWhatsAppLead({ services: [], location: 'closing', article: 'como-aparecer-no-google-seo-local-empresas' })
+
+    expect(gtag.mock.calls[0]?.[2]).toEqual(expect.objectContaining({ page_service: 'seo-e-divulgacao' }))
+    expect(gtag.mock.calls[1]?.[2]).toEqual(expect.objectContaining({ page_article: 'como-aparecer-no-google-seo-local-empresas' }))
+  })
+
   it('registra "nenhuma" quando o contato acontece sem seleção', () => {
     const gtag = vi.fn()
     vi.stubGlobal('window', { gtag })

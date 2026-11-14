@@ -32,6 +32,14 @@ describe('buildLeadMessage', () => {
     expect(buildLeadMessage(['site'], { city }).split('\n')[0]).toBe(
       'Olá, E.F Solutions! Vim pela página de criação de sites em Santos e quero um orçamento.',
     )
+    // Página de serviço e artigo também dizem de onde o contato veio.
+    const service = { slug: 'sistemas-personalizados', name: 'sistemas de gestão sob medida' }
+    expect(buildLeadMessage(['sistema'], { service }).split('\n')[0]).toBe(
+      'Olá, E.F Solutions! Vim pela página de sistemas de gestão sob medida e quero um orçamento.',
+    )
+    expect(buildLeadMessage([], { article: { slug: 'x', name: 'Como aparecer no Google' } })).toBe(
+      'Olá, E.F Solutions! Vim pelo artigo “Como aparecer no Google” e quero conversar sobre um projeto para a minha empresa.',
+    )
     // Sem origem, nada muda em relação à mensagem de sempre.
     expect(buildLeadMessage(['site'], {})).toBe(buildLeadMessage(['site']))
   })

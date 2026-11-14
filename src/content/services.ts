@@ -16,8 +16,10 @@ export interface Service {
   description: string
   /** Etiquetas com o que está incluído. */
   tags: readonly string[]
-  /** Texto do link do cartão para o orçamento. */
+  /** Texto do link do cartão para a página do serviço. */
   cta: string
+  /** Página dedicada do serviço (link interno do cartão). */
+  href: string
 }
 
 export const SERVICES: readonly Service[] = [
@@ -28,7 +30,8 @@ export const SERVICES: readonly Service[] = [
     description:
       'Sites rápidos, responsivos e prontos para o Google, pensados para transformar visitas em pedidos de orçamento.',
     tags: ['Site institucional', 'Landing page', 'Loja virtual'],
-    cta: 'Orçamento de site',
+    cta: 'Ver criação de sites',
+    href: '/criacao-de-sites',
   },
   {
     id: 'sistemas',
@@ -37,7 +40,8 @@ export const SERVICES: readonly Service[] = [
     description:
       'Vendas, estoque, agenda e financeiro em uma plataforma web feita para o seu processo, e não o contrário.',
     tags: ['Estoque', 'Vendas', 'Agenda', 'Financeiro'],
-    cta: 'Orçamento de sistema',
+    cta: 'Ver sistemas sob medida',
+    href: '/sistemas-personalizados',
   },
   {
     id: 'atendimento-ia',
@@ -46,7 +50,8 @@ export const SERVICES: readonly Service[] = [
     description:
       'Um atendente com IA que responde na hora, a qualquer hora, e passa para a sua equipe só o que precisa de atenção humana.',
     tags: ['Atendimento 24h', 'Qualificação de contatos', 'Transferência para humano'],
-    cta: 'Orçamento de atendente IA',
+    cta: 'Ver atendente com IA',
+    href: '/automacao-whatsapp',
   },
   {
     id: 'seo',
@@ -55,6 +60,7 @@ export const SERVICES: readonly Service[] = [
     description:
       'SEO técnico, conteúdo e Perfil da Empresa no Google, com indexação e desempenho acompanhados no Google Search Console.',
     tags: ['SEO técnico', 'Google Search Console', 'Perfil da Empresa'],
-    cta: 'Orçamento de SEO',
+    cta: 'Ver SEO para empresas',
+    href: '/seo-e-divulgacao',
   },
 ]

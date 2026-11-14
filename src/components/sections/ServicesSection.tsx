@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import type { ComponentType } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Badge } from '@/components/ui/Badge'
 import { SectionHeader } from '@/components/ui/SectionHeader'
@@ -24,8 +25,8 @@ const VECTORS: Record<string, ComponentType> = {
 
 /**
  * Os quatro serviços, com os termos de busca principais nos <h3>. O cartão
- * inteiro leva ao orçamento (link esticado sobre o cartão) e sobe 2px no
- * hover, só com mouse. Cada um traz uma ilustração animada que toca uma
+ * inteiro leva à página do serviço (link esticado sobre o cartão, que passa
+ * autoridade da home para ela) e sobe 2px no hover, só com mouse. Cada um traz uma ilustração animada que toca uma
  * vez ao aparecer e recomeça no hover.
  */
 export function ServicesSection() {
@@ -69,8 +70,8 @@ export function ServicesSection() {
                 ))}
               </ul>
 
-              <a
-                href={`#${SECTION_IDS.solutions}`}
+              <Link
+                to={service.href}
                 className="mt-auto inline-flex items-center gap-2 self-start pt-8 text-small font-medium focus-visible:outline-none"
               >
                 {/* Link esticado: o cartão todo é clicável, com um único nome acessível. */}
@@ -80,7 +81,7 @@ export function ServicesSection() {
                   aria-hidden="true"
                   className="size-4 transition-transform duration-200 ease-out group-hover/card:translate-x-1"
                 />
-              </a>
+              </Link>
             </article>
           </li>
         ))}

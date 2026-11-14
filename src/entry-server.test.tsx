@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { CITY_PAGES, PRERENDERED_PAGES } from './config/pages'
+import { CITY_PAGES, PRERENDERED_PAGES, SERVICE_PAGES } from './config/pages'
 import { CITY_INDEX, cityPath } from './content/cityIndex'
+import { SERVICE_PAGE_INDEX, servicePath } from './content/serviceIndex'
+import { SERVICE_CONTENT } from './content/servicePages'
+import { getSolutions } from './content/solutions'
 import { TESTIMONIALS } from './content/testimonials'
 import { llmsTxt, prerenderTargets, render, sitemapXml } from './entry-server'
 import { GENERIC_LEAD_MESSAGE } from './lib/whatsapp'
@@ -17,6 +20,9 @@ const H1_BY_PATH: Record<string, string> = {
   '/': 'Criação de Sites Profissionais, Sistemas Sob Medida e Atendimento Virtual com IA',
   '/criacao-de-sites': 'Criação de sites para empresas de todo o estado de São Paulo',
   ...Object.fromEntries(CITY_INDEX.map((city) => [cityPath(city.slug), `Criação de sites em ${city.name}`])),
+  ...Object.fromEntries(
+    SERVICE_PAGE_INDEX.map((service) => [servicePath(service.slug), SERVICE_CONTENT[service.slug].heading.join(' ')]),
+  ),
   '/politica-de-privacidade': 'Política de Privacidade',
   '/termos-de-uso': 'Termos de Uso',
   '/politica-de-cookies': 'Política de Cookies',
@@ -159,7 +165,7 @@ describe('páginas por cidade', () => {
     expect(service?.areaServed).toMatchObject({ '@type': 'City', name: city?.name, containedInPlace: { name: 'São Paulo' } })
     expect(service?.provider).toEqual({ '@id': 'https://www.efsolutions.com.br/#empresa' })
     // Atendimento online: o endereço da empresa continua só com o país.
-    const business = graph.find((node) => node['@type'] === 'LocalBusiness') as Record<string, any> | undefined
+    const business = graph.find((node) => node['@type'] === 'ProfessionalService') as Record<string, any> | undefined
     expect(business?.address).toEqual({ '@type': 'PostalAddress', addressCountry: 'BR' })
     expect(graph.some((node) => node['@type'] === 'FAQPage')).toBe(false)
     expect(head).toContain(`<link rel="canonical" href="https://www.efsolutions.com.br${path}" data-head />`)
@@ -198,6 +204,69 @@ describe('páginas por cidade', () => {
     // o texto próprio de cada cidade mantém a semelhança longe de um modelo (que daria 1).
     // Medido em nov/2026: máximo 0,43, média 0,39.
     expect(highest).toBeLessThan(0.5)
+  })
+})
+
+describe('páginas de serviço', () => {
+  it('os quatro serviços têm página própria, e os cartões da home levam até elas', async () => {
+    expect(SERVICE_PAGES.map((page) => page.path)).toEqual([
+      '/sistemas-personalizados',
+      '/automacao-whatsapp',
+      '/seo-e-divulgacao',
+      '/landing-pages-e-lojas',
+    ])
+    const { html } = await render('/')
+    const services = html.slice(html.indexOf('id="servicos"'), html.indexOf('id="depoimentos"'))
+    for (const path of ['/criacao-de-sites', '/sistemas-personalizados', '/automacao-whatsapp', '/seo-e-divulgacao']) {
+      expect(services).toContain(`href="${path}"`)
+    }
+  })
+
+  it.each(SERVICE_PAGE_INDEX)('/$slug: serviço já marcado no seletor e na mensagem do WhatsApp', async (service) => {
+    const { html } = await render(servicePath(service.slug))
+    for (const id of service.solutions) {
+      const input = html.match(new RegExp(`<input\\b[^>]*value="${id}"[^>]*>`))?.[0] ?? ''
+      expect(input, `checkbox de ${id}`).toContain('checked=""')
+    }
+    const message = decodeURIComponent(html.match(/href="https:\/\/wa\.me\/\d+\?text=([^"]+)"/)?.[1] ?? '')
+    expect(message).toContain(`pela página de ${service.messageName}`)
+    for (const solution of getSolutions(service.solutions)) expect(message).toContain(solution.messageLabel)
+  })
+
+  it.each(SERVICE_PAGE_INDEX)('/$slug: vetor exclusivo que toca na carga, FAQ visível e schema Service', async (service) => {
+    const { html, head } = await render(servicePath(service.slug))
+    const hero = html.match(/<div\b[^>]*class="vector vector-hero[^"]*"[^>]*>/)?.[0] ?? ''
+    expect(hero).toContain('data-run=""')
+    const clock = Number(html.match(/class="v-anim v-clock" style="--t:([\d.]+)s"/)?.[1])
+    expect(clock).toBeLessThanOrEqual(5)
+    expect(html.match(/<details\b/g)).toHaveLength(SERVICE_CONTENT[service.slug].faq.length)
+    const graph = jsonLdGraph(head)
+    expect(graph.find((node) => node['@type'] === 'Service')).toMatchObject({
+      name: service.name,
+      serviceType: service.schemaType,
+      areaServed: { '@type': 'Country', name: 'Brasil' },
+    })
+    expect(head).toContain(`<link rel="canonical" href="https://www.efsolutions.com.br/${service.slug}" data-head />`)
+  })
+
+  it('o texto de cada página de serviço é próprio', () => {
+    const texts = SERVICE_PAGE_INDEX.map((service) => {
+      const content = SERVICE_CONTENT[service.slug]
+      return shingles(
+        [
+          content.lead,
+          ...content.features.flatMap((item) => [item.title, item.text]),
+          ...content.audiences.flatMap((item) => [item.title, item.text]),
+          ...content.steps.flatMap((item) => [item.title, item.text]),
+          ...content.faq.flatMap((item) => [item.question, item.answer]),
+        ].join(' '),
+      )
+    })
+    let highest = 0
+    for (let a = 0; a < texts.length; a++) {
+      for (let b = a + 1; b < texts.length; b++) highest = Math.max(highest, jaccard(texts[a]!, texts[b]!))
+    }
+    expect(highest).toBeLessThan(0.1)
   })
 })
 

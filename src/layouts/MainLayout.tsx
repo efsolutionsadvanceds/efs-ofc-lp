@@ -18,20 +18,28 @@ import { useSeo } from '@/hooks/useSeo'
  * canonical, Open Graph e JSON-LD) vem do registro src/config/pages.ts — o
  * mesmo usado no pré-render — e o estado da seleção de soluções fica acima
  * das rotas para sobreviver à navegação. A cidade da página (se houver)
- * chega a todos os CTAs de WhatsApp pelo LeadOriginContext, e o
- * consentimento de cookies decide se o GA4 e o Meta Pixel carregam.
+ * chega a todos os CTAs de WhatsApp pelo LeadOriginContext (assim como o
+ * serviço ou o artigo), as soluções sugeridas pela página chegam marcadas no
+ * seletor, e o consentimento de cookies decide se o GA4 e o Meta Pixel carregam.
  */
 export function MainLayout() {
   const { pathname } = useLocation()
   const meta = getPageMeta(pathname)
-  const origin = useMemo(() => (meta.city ? { city: meta.city } : {}), [meta])
+  const origin = useMemo(
+    () => ({
+      ...(meta.city ? { city: meta.city } : {}),
+      ...(meta.leadService ? { service: meta.leadService } : {}),
+      ...(meta.article ? { article: { slug: meta.article.slug, name: meta.article.headline } } : {}),
+    }),
+    [meta],
+  )
 
   useSeo(meta)
   useScrollToTopOnNavigate()
 
   return (
     <ConsentProvider>
-      <SelectionProvider>
+      <SelectionProvider defaults={meta.defaultSolutions}>
         <LeadOriginContext value={origin}>
           <SkipLink />
           <SiteHeader />

@@ -10,6 +10,12 @@ interface VectorSceneProps {
   replayOn?: string
   /** Ilustração pura (padrão): fica fora da árvore de acessibilidade. */
   decorative?: boolean
+  /**
+   * Toca já na primeira pintura (CSS puro, antes mesmo do JavaScript): para
+   * ilustrações do topo da página, que estão na tela desde o carregamento.
+   * Fora da tela, pausa; ao terminar, o hover recomeça.
+   */
+  autoplay?: boolean
   className?: string
 }
 
@@ -33,14 +39,25 @@ type Status = 'static' | 'armed' | 'playing' | 'done' | 'resetting'
  * - Com `replayOn`, o hover do mouse ou o foco no cartão recomeça a cena
  *   depois que ela terminou.
  *
+ * - Com `autoplay` (ilustrações do topo da página), toca desde a primeira
+ *   pintura, em CSS puro, e termina na cena pronta.
+ *
  * Os elementos animados usam `v-anim` + o tipo (`v-in`, `v-grow`, `v-draw`,
- * `v-pulse`, `v-halo`, `v-press`, `v-swap`), com o tempo de cada um em
- * `anim()`. As regras ficam em src/styles/app.css.
+ * `v-pulse`, `v-halo`, `v-press`, `v-swap`, `v-flash`), com o tempo de cada
+ * um em `anim()`. As regras ficam em src/styles/app.css.
  */
-export function VectorScene({ children, duration, replayOn, decorative = true, className }: VectorSceneProps) {
+export function VectorScene({
+  children,
+  duration,
+  replayOn,
+  decorative = true,
+  autoplay = false,
+  className,
+}: VectorSceneProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const status = useRef<Status>('static')
-  const [running, setRunning] = useState(false)
+  const status = useRef<Status>(autoplay ? 'playing' : 'static')
+  // Com autoplay, `data-run` já sai no HTML estático: a cena toca desde a primeira pintura.
+  const [running, setRunning] = useState(autoplay)
   const [paused, setPaused] = useState(false)
   const [resetting, setResetting] = useState(false)
   // Remontar (nova `key`) recomeça todas as animações da cena.
@@ -57,6 +74,10 @@ export function VectorScene({ children, duration, replayOn, decorative = true, c
     function handle(entry: IntersectionObserverEntry) {
       if (firstReport) {
         firstReport = false
+        if (autoplay) {
+          setPaused(!entry.isIntersecting)
+          return
+        }
         if (entry.isIntersecting) {
           status.current = 'done'
         } else {
@@ -105,7 +126,7 @@ export function VectorScene({ children, duration, replayOn, decorative = true, c
       host?.removeEventListener('pointerenter', replay)
       host?.removeEventListener('focusin', replay)
     }
-  }, [replayOn])
+  }, [replayOn, autoplay])
 
   return (
     <div

@@ -1,5 +1,6 @@
 import type { PageMeta } from '@/config/pages'
-import { absoluteUrl, site } from '@/config/site'
+import { absoluteUrl, confirmedSocialProfiles, site } from '@/config/site'
+import { SERVICE_PAGE_INDEX, servicePath } from '@/content/serviceIndex'
 import { SERVICES } from '@/content/services'
 
 /**
@@ -13,9 +14,25 @@ const WEBSITE_ID = `${site.domain}/#site`
 
 type JsonLdNode = Record<string, unknown>
 
-export function buildLocalBusinessNode(): JsonLdNode {
+/** Página dedicada de cada serviço do catálogo da home (pelo `id` de src/content/services.ts). */
+const SERVICE_URLS: Record<string, string> = {
+  sites: absoluteUrl('/criacao-de-sites'),
+  sistemas: absoluteUrl(servicePath('sistemas-personalizados')),
+  'atendimento-ia': absoluteUrl(servicePath('automacao-whatsapp')),
+  seo: absoluteUrl(servicePath('seo-e-divulgacao')),
+}
+
+/**
+ * A empresa como `ProfessionalService` (um tipo de LocalBusiness, que também
+ * é Organization): serviços profissionais prestados online, sem endereço
+ * inventado. `sameAs` só recebe perfis confirmados em src/config/site.ts.
+ */
+export function buildBusinessNode(): JsonLdNode {
+  const sameAs = confirmedSocialProfiles().map((profile) => profile.href)
+  const landingPages = SERVICE_PAGE_INDEX.find((service) => service.slug === 'landing-pages-e-lojas')
+
   return {
-    '@type': 'LocalBusiness',
+    '@type': 'ProfessionalService',
     '@id': BUSINESS_ID,
     name: site.legalName,
     url: absoluteUrl('/'),
@@ -39,17 +56,40 @@ export function buildLocalBusinessNode(): JsonLdNode {
       'Atendente virtual com inteligência artificial',
       'Automação de atendimento no WhatsApp',
       'SEO',
+      'SEO local',
       'Google Search Console',
+      'Landing pages',
+      'Lojas virtuais',
     ],
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
       name: `Serviços ${site.name}`,
-      itemListElement: SERVICES.map((service) => ({
-        '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: service.title, description: service.description },
-      })),
+      itemListElement: [
+        ...SERVICES.map((service) => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: service.title,
+            description: service.description,
+            ...(SERVICE_URLS[service.id] ? { url: SERVICE_URLS[service.id] } : {}),
+          },
+        })),
+        ...(landingPages
+          ? [
+              {
+                '@type': 'Offer',
+                itemOffered: {
+                  '@type': 'Service',
+                  name: landingPages.name,
+                  description: landingPages.description,
+                  url: absoluteUrl(servicePath(landingPages.slug)),
+                },
+              },
+            ]
+          : []),
+      ],
     },
-    ...(site.social.length > 0 ? { sameAs: site.social.map((profile) => profile.href) } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   }
 }
 
@@ -66,8 +106,9 @@ export function buildWebSiteNode(): JsonLdNode {
 
 function buildWebPageNode(meta: PageMeta, hasBreadcrumb: boolean): JsonLdNode {
   const url = absoluteUrl(meta.path)
+  const mainEntity = meta.article ? `${url}#artigo` : meta.service ? `${url}#servico` : null
   return {
-    '@type': 'WebPage',
+    '@type': meta.pageType ?? 'WebPage',
     '@id': `${url}#pagina`,
     url,
     name: meta.title,
@@ -75,7 +116,7 @@ function buildWebPageNode(meta: PageMeta, hasBreadcrumb: boolean): JsonLdNode {
     inLanguage: site.locale,
     isPartOf: { '@id': WEBSITE_ID },
     about: { '@id': BUSINESS_ID },
-    ...(meta.service ? { mainEntity: { '@id': `${url}#servico` } } : {}),
+    ...(mainEntity ? { mainEntity: { '@id': mainEntity } } : {}),
     ...(hasBreadcrumb ? { breadcrumb: { '@id': `${url}#trilha` } } : {}),
   }
 }
@@ -88,23 +129,54 @@ function buildWebPageNode(meta: PageMeta, hasBreadcrumb: boolean): JsonLdNode {
 export function buildServiceNode(meta: PageMeta): JsonLdNode | null {
   if (!meta.service) return null
   const url = absoluteUrl(meta.path)
-  const { name, areaServed } = meta.service
-  const state = { '@type': 'State', name: 'São Paulo', containedInPlace: { '@type': 'Country', name: 'Brasil' } }
+  const { name, type, areaServed } = meta.service
+  const country = { '@type': 'Country', name: 'Brasil' }
+  const state = { '@type': 'State', name: 'São Paulo', containedInPlace: country }
+  const area =
+    areaServed.type === 'City'
+      ? { '@type': 'City', name: areaServed.name, containedInPlace: state }
+      : areaServed.type === 'State'
+        ? state
+        : country
 
   return {
     '@type': 'Service',
     '@id': `${url}#servico`,
     name,
-    serviceType: 'Criação de sites',
+    serviceType: type,
     description: meta.description,
     url,
     provider: { '@id': BUSINESS_ID },
-    areaServed: areaServed.type === 'City' ? { '@type': 'City', name: areaServed.name, containedInPlace: state } : state,
+    areaServed: area,
     availableChannel: {
       '@type': 'ServiceChannel',
       serviceUrl: url,
       availableLanguage: { '@type': 'Language', name: 'Português', alternateName: site.locale },
     },
+  }
+}
+
+/** Artigo da área de conteúdos, com a empresa como autora e editora. */
+export function buildArticleNode(meta: PageMeta): JsonLdNode | null {
+  if (!meta.article) return null
+  const url = absoluteUrl(meta.path)
+  const { headline, datePublished, dateModified, section, readingMinutes } = meta.article
+
+  return {
+    '@type': 'Article',
+    '@id': `${url}#artigo`,
+    headline,
+    description: meta.description,
+    image: absoluteUrl(site.ogImage.path),
+    datePublished,
+    dateModified,
+    articleSection: section,
+    timeRequired: `PT${readingMinutes}M`,
+    inLanguage: site.locale,
+    author: { '@id': BUSINESS_ID },
+    publisher: { '@id': BUSINESS_ID },
+    mainEntityOfPage: { '@id': `${url}#pagina` },
+    isPartOf: { '@id': WEBSITE_ID },
   }
 }
 
@@ -141,13 +213,14 @@ export function buildFaqNode(meta: PageMeta): JsonLdNode | null {
 
 export function buildStructuredData(meta: PageMeta) {
   const breadcrumb = meta.noindex ? null : buildBreadcrumbNode(meta)
-  const graph: JsonLdNode[] = [buildLocalBusinessNode(), buildWebSiteNode()]
+  const graph: JsonLdNode[] = [buildBusinessNode(), buildWebSiteNode()]
 
   if (!meta.noindex) graph.push(buildWebPageNode(meta, breadcrumb !== null))
   if (breadcrumb) graph.push(breadcrumb)
 
-  const service = meta.noindex ? null : buildServiceNode(meta)
-  if (service) graph.push(service)
+  for (const node of meta.noindex ? [] : [buildServiceNode(meta), buildArticleNode(meta)]) {
+    if (node) graph.push(node)
+  }
 
   const faq = buildFaqNode(meta)
   if (faq) graph.push(faq)

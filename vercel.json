@@ -34,9 +34,6 @@
     },
     { "source": "/solucoes", "destination": "/#solucoes", "permanent": true },
     { "source": "/contato", "destination": "/#contato", "permanent": true },
-    { "source": "/sistemas-personalizados", "destination": "/#solucoes", "permanent": true },
-    { "source": "/automacao-whatsapp", "destination": "/#solucoes", "permanent": true },
-    { "source": "/seo-e-divulgacao", "destination": "/#solucoes", "permanent": true },
     { "source": "/sobre", "destination": "/", "permanent": true },
     { "source": "/privacidade", "destination": "/politica-de-privacidade", "statusCode": 301 },
     { "source": "/termos", "destination": "/termos-de-uso", "statusCode": 301 }

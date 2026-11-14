@@ -1,5 +1,7 @@
 import { CITIES_HUB_PATH, CITY_INDEX, cityPath } from '@/content/cityIndex'
 import { FAQ_ITEMS, type FaqItem } from '@/content/faq'
+import { SERVICE_PAGE_INDEX, servicePath } from '@/content/serviceIndex'
+import type { SolutionId } from '@/content/solutions'
 
 /**
  * Registro central de páginas — fonte única para:
@@ -28,8 +30,17 @@ export interface SitemapEntry {
 
 /** Área atendida no schema `Service` (sem endereço: o atendimento é online). */
 export interface AreaServed {
-  type: 'City' | 'State'
+  type: 'City' | 'State' | 'Country'
   name: string
+}
+
+/** Artigo da área de conteúdos: vira schema `Article`. */
+export interface ArticleMeta {
+  headline: string
+  datePublished: string
+  dateModified: string
+  section: string
+  readingMinutes: number
 }
 
 export interface PageMeta {
@@ -44,9 +55,17 @@ export interface PageMeta {
   faq?: readonly FaqItem[]
   sitemap?: SitemapEntry
   /** Serviço oferecido na página e onde: vira schema `Service` com `areaServed`. */
-  service?: { name: string; areaServed: AreaServed }
+  service?: { name: string; type: string; areaServed: AreaServed }
   /** Cidade da página: entra na mensagem do WhatsApp e no GA4 (`page_city`). */
   city?: { slug: string; name: string }
+  /** Serviço da página: entra na mensagem do WhatsApp e no GA4 (`page_service`). */
+  leadService?: { slug: string; name: string }
+  /** Artigo da página: entra na mensagem do WhatsApp, no GA4 (`page_article`) e no schema. */
+  article?: ArticleMeta & { slug: string }
+  /** Soluções que já chegam marcadas no seletor de orçamento (até o visitante mexer). */
+  defaultSolutions?: readonly SolutionId[]
+  /** Tipo de página no schema (padrão: WebPage). */
+  pageType?: 'AboutPage' | 'CollectionPage'
   /** A página tem a barra fixa de conversão (o rodapé reserva espaço para ela no celular). */
   conversionBar?: boolean
 }
@@ -73,7 +92,8 @@ export const pages = {
       'Criação de sites profissionais para empresas da capital, da Grande São Paulo, do litoral e do interior paulista. Veja as cidades atendidas e peça orçamento.',
     breadcrumbs: [HOME_CRUMB, CITIES_CRUMB],
     sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.8 },
-    service: { name: 'Criação de sites', areaServed: { type: 'State', name: 'São Paulo' } },
+    service: { name: 'Criação de sites', type: 'Criação de sites', areaServed: { type: 'State', name: 'São Paulo' } },
+    defaultSolutions: ['site'],
     conversionBar: true,
   },
   privacidade: {
@@ -124,6 +144,24 @@ export const pages = {
 } as const satisfies Record<string, PageMeta>
 
 /**
+ * Uma página por serviço principal (src/content/serviceIndex.ts), na raiz do
+ * domínio. O conteúdo vem de src/content/servicePages.ts, carregado só com a
+ * rota. O seletor de orçamento já chega com o serviço marcado.
+ */
+export const SERVICE_PAGES: readonly PageMeta[] = SERVICE_PAGE_INDEX.map((service) => ({
+  path: servicePath(service.slug),
+  file: `${service.slug}.html`,
+  title: service.title,
+  description: service.description,
+  breadcrumbs: [HOME_CRUMB, { name: service.name, path: servicePath(service.slug) }],
+  sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.9 },
+  service: { name: service.name, type: service.schemaType, areaServed: { type: 'Country', name: 'Brasil' } },
+  leadService: { slug: service.slug, name: service.messageName },
+  defaultSolutions: service.solutions,
+  conversionBar: true,
+}))
+
+/**
  * Uma página por cidade (src/content/cityIndex.ts), gerada no build em
  * `dist/criacao-de-sites/<cidade>.html`. O conteúdo de cada uma vem de
  * src/content/cities.ts, carregado só com a rota.
@@ -135,13 +173,14 @@ export const CITY_PAGES: readonly PageMeta[] = CITY_INDEX.map((city) => ({
   description: city.description,
   breadcrumbs: [HOME_CRUMB, CITIES_CRUMB, { name: city.name, path: cityPath(city.slug) }],
   sitemap: { lastmod: '2026-11-14', changefreq: 'monthly', priority: 0.7 },
-  service: { name: `Criação de sites em ${city.name}`, areaServed: { type: 'City', name: city.name } },
+  service: { name: `Criação de sites em ${city.name}`, type: 'Criação de sites', areaServed: { type: 'City', name: city.name } },
   city: { slug: city.slug, name: city.name },
+  defaultSolutions: ['site'],
   conversionBar: true,
 }))
 
 /** Todas as páginas geradas como HTML estático no build. */
-export const PRERENDERED_PAGES: readonly PageMeta[] = [...Object.values(pages), ...CITY_PAGES]
+export const PRERENDERED_PAGES: readonly PageMeta[] = [...Object.values(pages), ...SERVICE_PAGES, ...CITY_PAGES]
 
 /** Resolve o meta da rota atual; qualquer caminho desconhecido cai na 404. */
 export function getPageMeta(pathname: string): PageMeta {

@@ -29,7 +29,13 @@ export function WhatsAppCta({ location, children, ...anchorProps }: WhatsAppCtaP
   const navigate = useNavigate()
 
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
-    trackWhatsAppLead({ services: selected, location, city: origin.city?.slug })
+    trackWhatsAppLead({
+      services: selected,
+      location,
+      city: origin.city?.slug,
+      service: origin.service?.slug,
+      article: origin.article?.slug,
+    })
 
     const isPlainClick = event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey
     if (!isPlainClick) return

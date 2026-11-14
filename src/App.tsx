@@ -2,6 +2,7 @@ import { lazy, Suspense, type ReactNode } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
 import { RouteSkeleton } from '@/components/layout/RouteSkeleton'
+import { SERVICE_PAGE_INDEX } from '@/content/serviceIndex'
 import { MainLayout } from '@/layouts/MainLayout'
 import Home from '@/pages/Home'
 import NotFound from '@/pages/NotFound'
@@ -15,6 +16,8 @@ const Cookies = lazy(() => import('@/pages/Cookies'))
 // Páginas por cidade: o texto das cidades só carrega nestas rotas.
 const CitiesHub = lazy(() => import('@/pages/CitiesHub'))
 const CityPage = lazy(() => import('@/pages/CityPage'))
+// Páginas de serviço: uma rota por serviço, mesmo componente (carregado sob demanda).
+const ServicePage = lazy(() => import('@/pages/ServicePage'))
 
 /**
  * Limite de Suspense próprio de cada rota sob demanda: numa navegação
@@ -33,6 +36,17 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="criacao-de-sites" element={<OnDemand><CitiesHub /></OnDemand>} />
         <Route path="criacao-de-sites/:cidade" element={<OnDemand><CityPage /></OnDemand>} />
+        {SERVICE_PAGE_INDEX.map((service) => (
+          <Route
+            key={service.slug}
+            path={service.slug}
+            element={
+              <OnDemand>
+                <ServicePage slug={service.slug} />
+              </OnDemand>
+            }
+          />
+        ))}
         <Route path="obrigado" element={<Obrigado />} />
         <Route path="politica-de-privacidade" element={<OnDemand><Privacidade /></OnDemand>} />
         <Route path="termos-de-uso" element={<OnDemand><Termos /></OnDemand>} />
